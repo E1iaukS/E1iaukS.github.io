@@ -25,27 +25,27 @@
 <meta name="description" content="二、寄存器16位结构CPU具有下面几方面的结构特性。  运算器一次最多可以处理16位的数据； 寄存器的最大宽度为16位； 寄存器和运算器之间的通路为16位。  8086CPU可以一次性处理以下两种尺寸的数据 字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。 字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU) 2、通用寄存器通用寄存器：通常用来存放">
 <meta property="og:type" content="article">
 <meta property="og:title" content="二、寄存器">
-<meta property="og:url" content="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/index.html">
+<meta property="og:url" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/index.html">
 <meta property="og:site_name" content="E1iaukのblog">
 <meta property="og:description" content="二、寄存器16位结构CPU具有下面几方面的结构特性。  运算器一次最多可以处理16位的数据； 寄存器的最大宽度为16位； 寄存器和运算器之间的通路为16位。  8086CPU可以一次性处理以下两种尺寸的数据 字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。 字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU) 2、通用寄存器通用寄存器：通常用来存放">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png">
-<meta property="og:image" content="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/01b8913924f71ec3efcc2149027c0fce.png">
-<meta property="og:image" content="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/9e4870bb770d055941f43c1d7f42c095.png">
-<meta property="og:image" content="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/28872220a96b232e1de8fa10b00e81c1.png">
-<meta property="article:published_time" content="2022-02-27T15:48:57.000Z">
-<meta property="article:modified_time" content="2022-01-27T16:41:59.476Z">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/01b8913924f71ec3efcc2149027c0fce.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/9e4870bb770d055941f43c1d7f42c095.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/28872220a96b232e1de8fa10b00e81c1.png">
+<meta property="article:published_time" content="2022-01-27T15:48:57.000Z">
+<meta property="article:modified_time" content="2022-01-29T09:53:54.375Z">
 <meta property="article:author" content="E1iauk_S">
 <meta property="article:tag" content="汇编语言">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png">
+<meta name="twitter:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png">
 
 
-<link rel="canonical" href="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
+<link rel="canonical" href="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/","path":"2022/02/27/二、寄存器/","title":"二、寄存器"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/","path":"2022/01/27/二、寄存器/","title":"二、寄存器"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
 <title>二、寄存器 | E1iaukのblog</title>
@@ -154,7 +154,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">3</span>
+          <span class="site-state-item-count">4</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +204,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -228,14 +228,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2022-02-27 23:48:57" itemprop="dateCreated datePublished" datetime="2022-02-27T23:48:57+08:00">2022-02-27</time>
+      <time title="创建时间：2022-01-27 23:48:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:48:57+08:00">2022-01-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-28 00:41:59" itemprop="dateModified" datetime="2022-01-28T00:41:59+08:00">2022-01-28</time>
+      <time title="修改时间：2022-01-29 17:53:54" itemprop="dateModified" datetime="2022-01-29T17:53:54+08:00">2022-01-29</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -322,7 +322,7 @@
 <p>(3) [address]表示一个偏移地址为address的内存单元。</p>
 <p>(4) 在内存和寄存器之间传送字型数据时，高地址单元和高8位寄存器、低地址单元和低8位寄存器相对应。</p>
 </blockquote>
-<p><u><em>8086CPU 不支持将数据直接送入段寄存器的操作，ds 是一个段寄存器，所以*<em>mov ds,1000H</em></em> 这条指令是非法的。*</u><br><img src="/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png" alt="screen-capture" style="zoom:100%;"></p>
+<p><u><em>8086CPU 不支持将数据直接送入段寄存器的操作，ds 是一个段寄存器，所以*<em>mov ds,1000H</em></em> 这条指令是非法的。*</u><br><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png" alt="screen-capture" style="zoom:100%;"></p>
 <ul>
 <li><h3 id="SS-和-SP"><a href="#SS-和-SP" class="headerlink" title="SS 和 SP"></a>SS 和 SP</h3></li>
 </ul>
@@ -337,15 +337,15 @@
 <p>将SS:SP指向的内存单元处的数据送入ax中；</p>
 <p>SP=SP+2，SS:SP指向当前栈顶下面的单元，以当前栈顶下面的单元为新的栈顶。</p>
 </blockquote>
-<p><img src="/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/01b8913924f71ec3efcc2149027c0fce.png" alt="111.png">            <em>no picture you say a ✔8</em> *（⬅就是SS：IP的位置）</p>
+<p><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/01b8913924f71ec3efcc2149027c0fce.png" alt="111.png">            <em>no picture you say a ✔8</em> *（⬅就是SS：IP的位置）</p>
 <blockquote>
 <p><strong><u>栈顶超界问题</u></strong></p>
-<p><img src="/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/9e4870bb770d055941f43c1d7f42c095.png" alt="uTools_1643295310057.png"></p>
+<p><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/9e4870bb770d055941f43c1d7f42c095.png" alt="uTools_1643295310057.png"></p>
 <p><strong>上图描述了在执行 push 指令后，栈顶超出栈空间的情况。</strong></p>
 <p>其中将10010H~1001FH 当作栈空间，该栈空间容量为 16 字节(8 字)，初始状态为空，SS=1000H、SP=0020H，SS:SP指向10020H；</p>
 <p>在执行8次push ax 后，向栈中压入8个字，栈满，SS:SP指向10010H；</p>
 <p>再次执行 push ax：sp=sp-2，SS:SP 指向 1000EH，栈顶超出了栈空间，ax 中的数据送入1000EH单元处，将栈空间外的数据覆盖。</p>
-<p><img src="/2022/02/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/28872220a96b232e1de8fa10b00e81c1.png" alt="uTools_1643295513756.png"></p>
+<p><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/28872220a96b232e1de8fa10b00e81c1.png" alt="uTools_1643295513756.png"></p>
 <p><strong>上图描述了在执行 pop 指令后，栈顶超出栈空间的情况。</strong></p>
 <p>其中，将 10010H~1001FH当作栈空间，该栈空间容量为16字节（8字），当前状态为满，SS=1000H、SP=0010H，SS:SP指向10010H；</p>
 <p>在执行 8 次 pop ax 后，从栈中弹出8个字，栈空，SS:SP指向 10020H；</p>
@@ -370,11 +370,14 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/02/27/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="prev" title="一、基础知识">
+                <a href="/2022/01/27/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="prev" title="一、基础知识">
                   <i class="fa fa-chevron-left"></i> 一、基础知识
                 </a>
             </div>
             <div class="post-nav-item">
+                <a href="/2022/01/29/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/" rel="next" title="三、第一个程序">
+                  三、第一个程序 <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
           </div>
     </footer>
