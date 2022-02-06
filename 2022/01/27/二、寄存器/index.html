@@ -22,32 +22,33 @@
   <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
 
 <script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
-<meta name="description" content="一、基础知识1、指令机器指令：CPU能直接识别并执行的二进制编码 汇编指令：汇编指令是机器指令的助记符，同机器指令一一对应。 指令：指令通常由操作码和地址码（操作数）两部分组成 指令集：每种CPU都有自己的汇编指令集。 汇编指令由3类指令组成。  伪指令：没有对应的机器码，由编译器执行，计算机并不执行 其他符号：如+、-、*、&#x2F;等，由编译器识别，没有对应的机器码。 编译器：够将汇编指令转换成机器指">
+<meta name="description" content="二、寄存器1、基础知识16位结构CPU具有下面几方面的结构特性。  运算器一次最多可以处理16位的数据； 寄存器的最大宽度为16位； 寄存器和运算器之间的通路为16位。  8086CPU可以一次性处理以下两种尺寸的数据 字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。 字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU)">
 <meta property="og:type" content="article">
-<meta property="og:title" content="一、基础知识">
-<meta property="og:url" content="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/index.html">
+<meta property="og:title" content="二、寄存器">
+<meta property="og:url" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/index.html">
 <meta property="og:site_name" content="E1iaukのblog">
-<meta property="og:description" content="一、基础知识1、指令机器指令：CPU能直接识别并执行的二进制编码 汇编指令：汇编指令是机器指令的助记符，同机器指令一一对应。 指令：指令通常由操作码和地址码（操作数）两部分组成 指令集：每种CPU都有自己的汇编指令集。 汇编指令由3类指令组成。  伪指令：没有对应的机器码，由编译器执行，计算机并不执行 其他符号：如+、-、*、&#x2F;等，由编译器识别，没有对应的机器码。 编译器：够将汇编指令转换成机器指">
+<meta property="og:description" content="二、寄存器1、基础知识16位结构CPU具有下面几方面的结构特性。  运算器一次最多可以处理16位的数据； 寄存器的最大宽度为16位； 寄存器和运算器之间的通路为16位。  8086CPU可以一次性处理以下两种尺寸的数据 字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。 字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU)">
 <meta property="og:locale" content="zh_CN">
-<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/ed4f6692a9013e8ddda58fd0371f48e8.png">
-<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/948cb70dc92ef4d5234844865bbdee20.png">
-<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/207ee0d7b6378d236e7334f842059ba2.png">
-<meta property="article:published_time" content="2022-01-27T15:12:57.000Z">
-<meta property="article:modified_time" content="2022-01-31T08:09:20.781Z">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/01b8913924f71ec3efcc2149027c0fce.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/9e4870bb770d055941f43c1d7f42c095.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/28872220a96b232e1de8fa10b00e81c1.png">
+<meta property="article:published_time" content="2022-01-27T15:48:57.000Z">
+<meta property="article:modified_time" content="2022-01-31T08:08:26.464Z">
 <meta property="article:author" content="E1iauk_S">
 <meta property="article:tag" content="汇编语言">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:image" content="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/ed4f6692a9013e8ddda58fd0371f48e8.png">
+<meta name="twitter:image" content="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png">
 
 
-<link rel="canonical" href="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+<link rel="canonical" href="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
 
 
 
-<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/","path":"2022/01/27/新建文件夹/一、基础知识/","title":"一、基础知识"}</script>
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/","path":"2022/01/27/二、寄存器/","title":"二、寄存器"}</script>
 
 <script class="next-config" data-name="calendar" type="application/json">""</script>
-<title>一、基础知识 | E1iaukのblog</title>
+<title>二、寄存器 | E1iaukのblog</title>
   
 
   <script data-pjax>
@@ -138,7 +139,7 @@
       <div class="sidebar-panel-container">
         <!--noindex-->
         <div class="post-toc-wrap sidebar-panel">
-            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.</span> <span class="nav-text">一、基础知识</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E6%8C%87%E4%BB%A4"><span class="nav-number">1.1.</span> <span class="nav-text">1、指令</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E5%AD%98%E5%82%A8%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">2、存储器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81%E6%80%BB%E7%BA%BF"><span class="nav-number">1.3.</span> <span class="nav-text">3、总线</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%9C%B0%E5%9D%80%E6%80%BB%E7%BA%BF"><span class="nav-number">1.3.1.</span> <span class="nav-text">地址总线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%95%B0%E6%8D%AE%E6%80%BB%E7%BA%BF"><span class="nav-number">1.3.2.</span> <span class="nav-text">数据总线</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%8E%A7%E5%88%B6%E6%80%BB%E7%BA%BF"><span class="nav-number">1.3.3.</span> <span class="nav-text">控制总线</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%A9%BA%E9%97%B4"><span class="nav-number">1.4.</span> <span class="nav-text">4、内存地址空间</span></a></li></ol></li></ol></div>
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.</span> <span class="nav-text">二、寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86"><span class="nav-number">1.1.</span> <span class="nav-text">1、基础知识</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81%E9%80%9A%E7%94%A8%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.2.</span> <span class="nav-text">2、通用寄存器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%818086CPU%E7%BB%99%E5%87%BA%E7%89%A9%E7%90%86%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.3.</span> <span class="nav-text">3、8086CPU给出物理地址的方法</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4%E3%80%81%E6%AE%B5%E5%AF%84%E5%AD%98%E5%99%A8"><span class="nav-number">1.4.</span> <span class="nav-text">4、段寄存器</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#CS-%E5%92%8C-IP"><span class="nav-number">1.4.1.</span> <span class="nav-text">CS 和 IP</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#DS-%E5%92%8C-address"><span class="nav-number">1.4.2.</span> <span class="nav-text">DS 和 [address]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#SS-%E5%92%8C-SP"><span class="nav-number">1.4.3.</span> <span class="nav-text">SS 和 SP</span></a></li></ol></li></ol></li></ol></div>
         </div>
         <!--/noindex-->
 
@@ -153,7 +154,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">6</span>
+          <span class="site-state-item-count">8</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -204,7 +205,7 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="image" content="/images/avatar.gif">
@@ -217,7 +218,7 @@
     </span>
       <header class="post-header">
         <h1 class="post-title" itemprop="name headline">
-          一、基础知识
+          二、寄存器
         </h1>
 
         <div class="post-meta-container">
@@ -228,14 +229,14 @@
       </span>
       <span class="post-meta-item-text">发表于</span>
 
-      <time title="创建时间：2022-01-27 23:12:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:12:57+08:00">2022-01-27</time>
+      <time title="创建时间：2022-01-27 23:48:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:48:57+08:00">2022-01-27</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
         <i class="far fa-calendar-check"></i>
       </span>
       <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-01-31 16:09:20" itemprop="dateModified" datetime="2022-01-31T16:09:20+08:00">2022-01-31</time>
+      <time title="修改时间：2022-01-31 16:08:26" itemprop="dateModified" datetime="2022-01-31T16:08:26+08:00">2022-01-31</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -264,47 +265,94 @@
     
     
     <div class="post-body" itemprop="articleBody">
-        <h1 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h1><h2 id="1、指令"><a href="#1、指令" class="headerlink" title="1、指令"></a>1、指令</h2><p>机器指令：CPU能直接识别并执行的二进制编码</p>
-<p>汇编指令：汇编指令是机器指令的助记符，同机器指令一一对应。</p>
-<p>指令：指令通常由操作码和地址码（操作数）两部分组成</p>
-<p>指令集：每种CPU都有自己的汇编指令集。</p>
-<p>汇编指令由3类指令组成。</p>
+        <h1 id="二、寄存器"><a href="#二、寄存器" class="headerlink" title="二、寄存器"></a>二、寄存器</h1><h2 id="1、基础知识"><a href="#1、基础知识" class="headerlink" title="1、基础知识"></a>1、基础知识</h2><p>16位结构CPU具有下面几方面的结构特性。</p>
 <ul>
-<li>伪指令：没有对应的机器码，由编译器执行，计算机并不执行</li>
-<li>其他符号：如+、-、*、/等，由编译器识别，没有对应的机器码。</li>
-<li>编译器：够将汇编指令转换成机器指令的翻译程序每一种CPU都有自己的汇编指令集。</li>
+<li>运算器一次最多可以处理16位的数据；</li>
+<li>寄存器的最大宽度为16位；</li>
+<li>寄存器和运算器之间的通路为16位。</li>
 </ul>
+<p>8086CPU可以一次性处理以下两种尺寸的数据</p>
+<p>字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。</p>
+<p>字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU)</p>
 <span id="more"></span>
 
-<p><img src="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/ed4f6692a9013e8ddda58fd0371f48e8.png" alt="截图"></p>
-<p>在内存或磁盘上，指令和数据没有任何区别，都是二进制信息</p>
-<h2 id="2、存储器"><a href="#2、存储器" class="headerlink" title="2、存储器"></a>2、存储器</h2><p>随机存储器（RAM）在程序的执行过程中可读可写，必须带电存储</p>
-<p>只读存储器（ROM）在程序的执行过程中只读，关机数据不丢失</p>
-<h2 id="3、总线"><a href="#3、总线" class="headerlink" title="3、总线"></a>3、总线</h2><blockquote>
-<p>地址总线的宽度决定了CPU的寻址能力；<br>数据总线的宽度决定了CPU与其他器件进行数据传送时的一次数据传送量；<br>控制总线的宽度决定了CPU对系统中其他器件的控制能力。</p>
-</blockquote>
-<p>内部总线实现CPU内部各个器件之间的联系，外部总线实现CPU和主板上其他器件的联系。</p>
+<h2 id="2、通用寄存器"><a href="#2、通用寄存器" class="headerlink" title="2、通用寄存器"></a>2、通用寄存器</h2><p>通用寄存器：通常用来存放一般性的16位数据，有AX、BX、CX、DX，它们可分为两个可独立使用的8位寄存器，如AL、AH</p>
+<p><strong>在进行数据传送或运算时，要注意指令的两个操作对象的位数应当是一致的</strong></p>
+<p>一个8位寄存器所能存储的数据范围是0 ~2^8-1</p>
+<h2 id="3、8086CPU给出物理地址的方法"><a href="#3、8086CPU给出物理地址的方法" class="headerlink" title="3、8086CPU给出物理地址的方法"></a>3、8086CPU给出物理地址的方法</h2><p>8086CPU有20位的地址总线，但是只能存储16位的地址</p>
+<p>当8086CPU要读写内存时：</p>
 <ul>
-<li><h3 id="地址总线"><a href="#地址总线" class="headerlink" title="地址总线"></a>地址总线</h3></li>
+<li>CPU中的相关部件提供两个16位的地址，一个称为<strong>段地址</strong>，另一个称为<strong>偏移地址</strong></li>
+<li>偏移地址；地址加法器将两个16位地址合成为一个20位的物理地址；</li>
 </ul>
-<p>CPU通过地址总线来指定存储单元</p>
-<img src="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/948cb70dc92ef4d5234844865bbdee20.png" alt="截图" style="zoom:40%;">
-
-<p>1根导线可以传送的稳定状态只有两种，高电平或是低电平。用二进制表示就是1或0      </p>
-<p>图示有10根地址线即一次可以传输10位，访问存储单元地址为1011，寻址范围为0 ~ (2^10-1)</p>
-<ul>
-<li><h3 id="数据总线"><a href="#数据总线" class="headerlink" title="数据总线"></a>数据总线</h3></li>
-</ul>
-<p>CPU与内存或其他器件之间的数据传送是通过数据总线来进行的</p>
-<img src="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/207ee0d7b6378d236e7334f842059ba2.png" alt="截图" style="zoom:40%;">
-
-<p>8根数据线一次可传送一个8位二进制数据（即一个字节），传送2个字节需要两次；</p>
-<p>16根数据线一次可传送2个字节（内存对齐核心原理）</p>
-<h3 id="控制总线"><a href="#控制总线" class="headerlink" title="控制总线"></a>控制总线</h3><p>CPU对外部器件的控制是通过控制总线来进行的。</p>
-<p>有多少根控制总线，就意味着CPU提供了对外部器件的多少种控制。<br>所以，控制总线的宽度决定了CPU对外部器件的控制能力。</p>
-<h2 id="4、内存地址空间"><a href="#4、内存地址空间" class="headerlink" title="4、内存地址空间"></a>4、内存地址空间</h2><p>最终运行程序的是CPU，我们用汇编语言编程的时候，必须要从CPU的角度考虑问题。对CPU来讲，系统中的所有存储器中的存储单元都处于一个统一的逻辑存储器中，它的容量受 CPU 寻址能力的限制。这个逻辑存储器即是我们所说的内存地址空间。</p>
 <blockquote>
-<p>（由于涉及到计算机组成原理 专业的部分有所摘录 <a target="_blank" rel="noopener" href="https://www.jb51.net/article/178773.htm">原出处</a>）                                                                        </p>
+<p><strong>物理地址</strong> = <strong>段地址</strong> ×16 + <strong>偏移地址</strong><br>例如，8086CPU要访问地址为 <strong>123C8H</strong> 的内存单元，<strong>1230H</strong> 左移一位(空出4位)加上 <strong>00C8H</strong> 合成 <strong>123C8H</strong></p>
+</blockquote>
+<h2 id="4、段寄存器"><a href="#4、段寄存器" class="headerlink" title="4、段寄存器"></a>4、段寄存器</h2><blockquote>
+<p>用一个段存放数据，将它定义为“数据段”（DS 和 [address]）；<br>用一个段存放代码，将它定义为“代码段”  (CS 和 IP) ；<br>用一个段当作栈，将它定义为“栈段”（SS 和 SP）。</p>
+</blockquote>
+<p>一个段的起始地址一定是16的倍数；</p>
+<p>偏移地址为16位，变化范围为0-FFFFH，所以一个段的长度最大为64KB。</p>
+<p>CPU可以用<strong>不同</strong>的段地址和偏移地址形成<strong>同一个</strong>物理地址。</p>
+<p>段寄存器：8086CPU有4个段寄存器：<strong>CS</strong>、<strong>DS</strong>、<strong>SS</strong>、<strong>ES</strong>，提供内存单元的段地址。</p>
+<ul>
+<li><h3 id="CS-和-IP"><a href="#CS-和-IP" class="headerlink" title="CS 和 IP"></a>CS 和 IP</h3></li>
+</ul>
+<p>CS为代码段寄存器，IP为指令指针寄存器</p>
+<p><strong>CPU执行的即为CS：IP指向的内容</strong></p>
+<p>8086CPU的工作过程简要描述</p>
+<ol>
+<li>从CS:IP指向的内存单元读取指令，<strong>读取的指令进入指令缓冲器</strong>；</li>
+<li><strong>IP=IP+所读取指令的长度，从而指向下一条指令</strong>；</li>
+<li>执行指令。转到步骤1，重复这个过程。</li>
+</ol>
+<blockquote>
+<p><em>在8086CPU加电启动或复位后（即CPU刚开始工作时）CS和IP被设置为CS=FFFFH，IP=0000H，即在8086PC机刚启动时，FFFF0H单元中的指令是8086PC机开机后执行的第一条指令。</em></p>
+</blockquote>
+<p>8086CPU提供转移指令修改CS、IP的内容。</p>
+<ul>
+<li><strong>jmp 段地址:偏移地址</strong>：用指令中给出的段地址修改CS，偏移地址修改IP。如：jmp 2AE3:3</li>
+<li><strong>jmp 某一合法寄存器</strong>：仅修改IP的内容。如：jmp ax。在含义上好似：mov IP，ax</li>
+</ul>
+<p><u><em>8086CPU不支持将数据直接送入段寄存器的操作，这属于8086CPU硬件设计</em></u></p>
+<ul>
+<li><h3 id="DS-和-address"><a href="#DS-和-address" class="headerlink" title="DS 和 [address]"></a>DS 和 [address]</h3></li>
+</ul>
+<p>DS寄存器：通常用来存放要访问数据的段地址</p>
+<blockquote>
+<p>(1) 字在内存中存储时，要用两个地址连续的内存单元来存放，字的低位字节存放在低地址单元中，高位字节存放在高地址单元中。</p>
+<p>(2) 用 mov 指令访问内存单元，可以在 mov 指令中只给出单元的偏移地址，此时，段地址默认在DS寄存器中。</p>
+<p>(3) [address]表示一个偏移地址为address的内存单元。</p>
+<p>(4) 在内存和寄存器之间传送字型数据时，高地址单元和高8位寄存器、低地址单元和低8位寄存器相对应。</p>
+</blockquote>
+<p><u><em>8086CPU 不支持将数据直接送入段寄存器的操作，ds 是一个段寄存器，所以*<em>mov ds,1000H</em></em> 这条指令是非法的。*</u><br><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/950d53992a0b1c965917d7218c370426.png" alt="screen-capture" style="zoom:100%;"></p>
+<ul>
+<li><h3 id="SS-和-SP"><a href="#SS-和-SP" class="headerlink" title="SS 和 SP"></a>SS 和 SP</h3></li>
+</ul>
+<p>在基于8086CPU编程的时候，可以将一段内存当作栈来使用。</p>
+<p>栈段寄存器SS，存放段地址，SP寄存器存放偏移地址，<strong>任意时刻，SS:SP指向栈顶元素</strong></p>
+<p>8086CPU中，入栈时，栈顶<strong>从高地址向低地址方向增长</strong>。</p>
+<blockquote>
+<p><strong>push ax</strong> 表示将寄存器ax中的数据送入栈中</p>
+<p>SP=SP-2，SS:SP指向当前栈顶前面的单元，以当前栈顶前面的单元为新的栈顶；</p>
+<p>将ax中的内容送入SS:SP指向的内存单元处，SS:SP此时指向新栈顶。</p>
+<p><strong>pop ax</strong> 表示从栈顶取出数据送入ax</p>
+<p>将SS:SP指向的内存单元处的数据送入ax中；</p>
+<p>SP=SP+2，SS:SP指向当前栈顶下面的单元，以当前栈顶下面的单元为新的栈顶。</p>
+</blockquote>
+<p><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/01b8913924f71ec3efcc2149027c0fce.png" alt="111.png">            <em>no picture you say a ✔8</em> *（⬅就是SS：IP的位置）</p>
+<blockquote>
+<p><strong><u>栈顶超界问题</u></strong></p>
+<p><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/9e4870bb770d055941f43c1d7f42c095.png" alt="uTools_1643295310057.png"></p>
+<p><strong>上图描述了在执行 push 指令后，栈顶超出栈空间的情况。</strong></p>
+<p>其中将10010H~1001FH 当作栈空间，该栈空间容量为 16 字节(8 字)，初始状态为空，SS=1000H、SP=0020H，SS:SP指向10020H；</p>
+<p>在执行8次push ax 后，向栈中压入8个字，栈满，SS:SP指向10010H；</p>
+<p>再次执行 push ax：sp=sp-2，SS:SP 指向 1000EH，栈顶超出了栈空间，ax 中的数据送入1000EH单元处，将栈空间外的数据覆盖。</p>
+<p><img src="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/28872220a96b232e1de8fa10b00e81c1.png" alt="uTools_1643295513756.png"></p>
+<p><strong>上图描述了在执行 pop 指令后，栈顶超出栈空间的情况。</strong></p>
+<p>其中，将 10010H~1001FH当作栈空间，该栈空间容量为16字节（8字），当前状态为满，SS=1000H、SP=0010H，SS:SP指向10010H；</p>
+<p>在执行 8 次 pop ax 后，从栈中弹出8个字，栈空，SS:SP指向 10020H；</p>
+<p>再次执行 pop ax：sp=sp+2，SS:SP 指向 10022H，栈顶超出了栈空间。此后，如果再执行 push 指令，10020H、10021H 中的数据将被覆盖。</p>
 </blockquote>
 <hr>
 <pre><code>                                                                                          END
@@ -325,13 +373,13 @@
 
           <div class="post-nav">
             <div class="post-nav-item">
-                <a href="/2022/01/26/hello-world/" rel="prev" title="Hello World">
-                  <i class="fa fa-chevron-left"></i> Hello World
+                <a href="/2022/01/27/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="prev" title="一、基础知识">
+                  <i class="fa fa-chevron-left"></i> 一、基础知识
                 </a>
             </div>
             <div class="post-nav-item">
-                <a href="/2022/01/27/%E6%96%B0%E5%BB%BA%E6%96%87%E4%BB%B6%E5%A4%B9/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/" rel="next" title="二、寄存器">
-                  二、寄存器 <i class="fa fa-chevron-right"></i>
+                <a href="/2022/01/29/%E4%B8%89%E3%80%81%E7%AC%AC%E4%B8%80%E4%B8%AA%E7%A8%8B%E5%BA%8F/" rel="next" title="三、第一个程序">
+                  三、第一个程序 <i class="fa fa-chevron-right"></i>
                 </a>
             </div>
           </div>
