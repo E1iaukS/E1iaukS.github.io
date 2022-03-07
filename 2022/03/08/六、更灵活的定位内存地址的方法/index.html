@@ -1,0 +1,454 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="六、更灵活的定位内存地址的方法1、and 和 or and指令：逻辑与指令，按位进行与运算。 mov al, 01100011Band al, 00111011B 执行后：al&#x3D;00100011B即都为1才为1   or指令：逻辑或指令，按位进行或运算。 mov al, 01100011Bor al, 00111011B 执行后：al&#x3D;01111011B 即只要有一个为1就为1">
+<meta property="og:type" content="article">
+<meta property="og:title" content="六、更灵活的定位内存地址的方法">
+<meta property="og:url" content="https://e1iauks.github.io/2022/03/08/%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="六、更灵活的定位内存地址的方法1、and 和 or and指令：逻辑与指令，按位进行与运算。 mov al, 01100011Band al, 00111011B 执行后：al&#x3D;00100011B即都为1才为1   or指令：逻辑或指令，按位进行或运算。 mov al, 01100011Bor al, 00111011B 执行后：al&#x3D;01111011B 即只要有一个为1就为1">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2022-03-07T16:54:59.000Z">
+<meta property="article:modified_time" content="2022-03-07T17:06:25.157Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="汇编语言">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2022/03/08/%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/03/08/%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95/","path":"2022/03/08/六、更灵活的定位内存地址的方法/","title":"六、更灵活的定位内存地址的方法"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>六、更灵活的定位内存地址的方法 | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95"><span class="nav-number">1.</span> <span class="nav-text">六、更灵活的定位内存地址的方法</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#1%E3%80%81and-%E5%92%8C-or"><span class="nav-number">1.1.</span> <span class="nav-text">1、and 和 or</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%A4%A7%E5%B0%8F%E5%86%99%E8%BD%AC%E6%8D%A2%E7%9A%84%E9%97%AE%E9%A2%98"><span class="nav-number">1.1.1.</span> <span class="nav-text">大小写转换的问题</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2%E3%80%81-bx-idata"><span class="nav-number">1.2.</span> <span class="nav-text">2、[bx+idata]</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3%E3%80%81SI-%E3%80%81DI-%E4%B8%8E-%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F%E7%9A%84%E7%81%B5%E6%B4%BB%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.</span> <span class="nav-text">3、SI 、DI 与 寻址方式的灵活应用</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81si-%E3%80%81di"><span class="nav-number">1.3.1.</span> <span class="nav-text">1、si 、di</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81-bx-si-%E5%92%8C-bx-di"><span class="nav-number">1.3.2.</span> <span class="nav-text">2、[bx + si] 和 [bx + di]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#3%E3%80%81-bx-si-idata-%E5%92%8C-bx-di-idata"><span class="nav-number">1.3.3.</span> <span class="nav-text">3、[bx+si+idata]和[bx+di+idata]</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#4%E3%80%81%E4%B8%8D%E5%90%8C%E7%9A%84%E5%AF%BB%E5%9D%80%E6%96%B9%E5%BC%8F%E7%9A%84%E7%81%B5%E6%B4%BB%E5%BA%94%E7%94%A8"><span class="nav-number">1.3.4.</span> <span class="nav-text">4、不同的寻址方式的灵活应用</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/03/08/%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          六、更灵活的定位内存地址的方法
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-03-08 00:54:59 / 修改时间：01:06:25" itemprop="dateCreated datePublished" datetime="2022-03-08T00:54:59+08:00">2022-03-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="六、更灵活的定位内存地址的方法"><a href="#六、更灵活的定位内存地址的方法" class="headerlink" title="六、更灵活的定位内存地址的方法"></a>六、更灵活的定位内存地址的方法</h1><h2 id="1、and-和-or"><a href="#1、and-和-or" class="headerlink" title="1、and 和 or"></a>1、and 和 or</h2><blockquote>
+<p><strong>and</strong>指令：逻辑与指令，按位进行与运算。</p>
+<p><strong>mov al, 01100011B</strong><br><strong>and al, 00111011B</strong></p>
+<p>执行后：<strong>al=00100011B</strong>即都为1才为1</p>
+</blockquote>
+<blockquote>
+<p><strong>or</strong>指令：逻辑或指令，按位进行或运算。</p>
+<p><strong>mov al, 01100011B<br>or al, 00111011B</strong></p>
+<p>执行后：<strong>al=01111011B</strong> 即只要有一个为1就为1</p>
+</blockquote>
+<span id="more"></span>
+
+<h3 id="大小写转换的问题"><a href="#大小写转换的问题" class="headerlink" title="大小写转换的问题"></a>大小写转换的问题</h3><p>小写字母的ASCII码值比大写字母的ASCII码值大20H</p>
+<p>大写字母ASCII码的第5位为0，小写字母的第5位为1(其他一致)</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br></pre></td><td class="code"><pre><span class="line">assume cs:codesg,ds:datasg </span><br><span class="line"></span><br><span class="line">datasg segment </span><br><span class="line">	db &#x27;BaSiC&#x27;</span><br><span class="line">	db &#x27;iNfOrMaTion&#x27;</span><br><span class="line">datasg end</span><br><span class="line"></span><br><span class="line">codesg segment </span><br><span class="line">	start:	mov ax, datasg </span><br><span class="line">			mov ds, ax	;设置ds 指向 datasg段</span><br><span class="line">		</span><br><span class="line">			mov bx, 0	;设置（bx）=0，ds:bx指向’BaSic’的第一个字母</span><br><span class="line">			</span><br><span class="line">			mov cx, 5     	 ;设置循环次数5，因为’Basic&#x27;有5个字母</span><br><span class="line">	s:	mov al, [bx]     ;将ASCII码从ds:bx所指向的单元中取出</span><br><span class="line">			and al, 11011111B;将al中的ASCII码的第5位置为0，变为大写字母</span><br><span class="line">			mov [bx], al	 ;将转变后的ASCII码写回原单元</span><br><span class="line">			inc bx		     ;（bx）加1，ds:bx指向下一个字母</span><br><span class="line">			loop s </span><br><span class="line">			</span><br><span class="line">			mov bx, 5	;设置（bx）=5，ds:bx指向，iNfOrMaTion&#x27;的第一个字母</span><br><span class="line">			</span><br><span class="line">			mov cx, 11	;设置循环次数11，因为‘iNfOrMaTion&#x27;有11个字母</span><br><span class="line">	s0:	mov al, [bx]</span><br><span class="line">			or al, 00100000B;将a1中的ASCII码的第5位置为1，变为小写字母</span><br><span class="line">			mov [bx], al </span><br><span class="line">			inc bx</span><br><span class="line">			loop s0</span><br><span class="line">			</span><br><span class="line">			mov ax, 4c00h </span><br><span class="line">			int 21h </span><br><span class="line">codesg ends</span><br></pre></td></tr></table></figure>
+
+<h2 id="2、-bx-idata"><a href="#2、-bx-idata" class="headerlink" title="2、[bx+idata]"></a>2、[bx+idata]</h2><blockquote>
+<p>**[bx+idata]**表示一个内存单元, 例如：mov ax, [bx+200]<br>该指令也可以写成如下格式：</p>
+<p><strong>mov ax, [200+bx]</strong></p>
+<p><strong>mov ax, 200[bx]</strong></p>
+<p><strong>mov ax, [bx].200</strong></p>
+</blockquote>
+<p>用[bx+idata]的方式进行<strong>数组</strong>的处理</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br></pre></td><td class="code"><pre><span class="line">assume cs:codesg,ds:datasg </span><br><span class="line"></span><br><span class="line">datasg segment </span><br><span class="line">	db &#x27;BaSiC&#x27;;转为大写</span><br><span class="line">	db &#x27;MinIx&#x27;;转为小写</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment</span><br><span class="line">	start:</span><br><span class="line">		mov ax, datasg </span><br><span class="line">		mov ds, ax </span><br><span class="line">		mov bx, 0  ;初始ds:bx</span><br><span class="line">	</span><br><span class="line">		mov cx, 5</span><br><span class="line">	s:mov al, 0[bx]  </span><br><span class="line">		and al, 11011111b ;转为大写字母</span><br><span class="line">		mov 0[bx], al ;写回</span><br><span class="line">		mov al, 5[bx]  ;[5 + bx]</span><br><span class="line">		or al, 00100000b ;转为小写字母</span><br><span class="line">		mov 5[bx], al </span><br><span class="line">		inc bx</span><br><span class="line">		loop s</span><br><span class="line">		</span><br><span class="line">		mov ax, 4c00h </span><br><span class="line">		int 21h</span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<h2 id="3、SI-、DI-与-寻址方式的灵活应用"><a href="#3、SI-、DI-与-寻址方式的灵活应用" class="headerlink" title="3、SI 、DI 与 寻址方式的灵活应用"></a>3、SI 、DI 与 寻址方式的灵活应用</h2><h3 id="1、si-、di"><a href="#1、si-、di" class="headerlink" title="1、si 、di"></a>1、si 、di</h3><p>si和di是8086CPU中和bx功能相近的寄存器，si和di不能够分成两个8位寄存器来使用。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line">assume cs: codesg, ds: datasg </span><br><span class="line"></span><br><span class="line">datasg segment </span><br><span class="line">	db &#x27;welcome to masm!&#x27;;用si和di实现将字符串‘welcome to masm！&quot;复制到它后面的数据区中。</span><br><span class="line">	db &#x27;................&#x27;</span><br><span class="line">datasg ends</span><br><span class="line"></span><br><span class="line">codesg segment </span><br><span class="line">start:mov ax, datasg </span><br><span class="line">			mov ds, ax </span><br><span class="line">			mov si, 0</span><br><span class="line">			</span><br><span class="line">			mov cx, 8</span><br><span class="line">	s:	mov ax, 0[si] ;[0 + si]</span><br><span class="line">			mov 16[si], ax ;[16 + si] 使用[bx +idata]方式代替di，使程序更简洁</span><br><span class="line">			add si, 2 </span><br><span class="line">			loop s </span><br><span class="line">			</span><br><span class="line">			mov ax, 4c00h </span><br><span class="line">			int 21h </span><br><span class="line">codesg ends </span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<h3 id="2、-bx-si-和-bx-di"><a href="#2、-bx-si-和-bx-di" class="headerlink" title="2、[bx + si] 和 [bx + di]"></a>2、[bx + si] 和 [bx + di]</h3><p>[bx+si]和[bx+di]的含义相似</p>
+<p>[bx+si]表示一个内存单元，它的偏移地址为（bx）+（si）</p>
+<p>指令**mov ax, [bx + si]**的含义：将一个内存单元字数据的内容送入ax，段地址在ds中</p>
+<p>该指令也可以写成如下格式：<strong>mov ax, [bx] [si]</strong></p>
+<h3 id="3、-bx-si-idata-和-bx-di-idata"><a href="#3、-bx-si-idata-和-bx-di-idata" class="headerlink" title="3、[bx+si+idata]和[bx+di+idata]"></a>3、[bx+si+idata]和[bx+di+idata]</h3><p>[bx+si+idata]表示一个内存单元，它的偏移地址为（bx）+（si）+idata</p>
+<p>指令 <strong>mov ax，[bx+si+idata]</strong> 的含义：将一个内存单元字数据的内容送入ax，段地址在ds中</p>
+<h3 id="4、不同的寻址方式的灵活应用"><a href="#4、不同的寻址方式的灵活应用" class="headerlink" title="4、不同的寻址方式的灵活应用"></a>4、不同的寻址方式的灵活应用</h3><p>**[idata] **用一个常量来表示地址，可用于直接定位一个内存单元；<br><strong>[bx]</strong> 用一个变量来表示内存地址，可用于间接定位一个内存单元；<br>**[bx+idata] **用一个变量和常量表示地址，可在一个起始地址的基础上用变量间接定位一个内存单元；<br><strong>[bx+si]</strong> 用两个变量表示地址；<br><strong>[bx+si+idata]</strong> 用两个变量和一个常量表示地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br></pre></td><td class="code"><pre><span class="line">assume cs:codesg,ds:datasg,ss:stacksg ;将datasg段中每个单词改为大写字母</span><br><span class="line"></span><br><span class="line">datasg segment</span><br><span class="line">	db &#x27;ibm            &#x27; ;16</span><br><span class="line">	db &#x27;dec            &#x27; </span><br><span class="line">	db &#x27;dos            &#x27;</span><br><span class="line">	db &#x27;vax            &#x27;  ;看成二维数组</span><br><span class="line">datasg ends </span><br><span class="line"></span><br><span class="line">stacksg segment ;定义一个段，用来做栈段，容量为16个字节</span><br><span class="line">	dw 0, 0, 0, 0, 0, 0, 0, 0</span><br><span class="line">stacksg ends </span><br><span class="line"></span><br><span class="line">codesg segment </span><br><span class="line">	start:	mov ax, stacksg </span><br><span class="line">			mov ss, ax</span><br><span class="line">			mov sp, 16 </span><br><span class="line">			mov ax, datasg </span><br><span class="line">			mov ds, ax </span><br><span class="line">			mov bx, 0 ;初始ds:bx</span><br><span class="line">			</span><br><span class="line">			;cx为默认循环计数器，二重循环只有一个计数器，所以外层循环先保存cx值，再恢复，我们采用栈保存</span><br><span class="line">			mov cx, 4</span><br><span class="line">	s0:	push cx	;将外层循环的cx值入栈</span><br><span class="line">			mov si, 0</span><br><span class="line">			mov cx, 3	;cx设置为内层循环的次数</span><br><span class="line">	s:	mov al, [bx+si]</span><br><span class="line">			and al, 11011111b ;每个字符转为大写字母</span><br><span class="line">			mov [bx+si], al </span><br><span class="line">			inc si</span><br><span class="line">			loop s </span><br><span class="line">			</span><br><span class="line">			add bx, 16 ;下一行</span><br><span class="line">			pop cx	;恢复cx值</span><br><span class="line">			loop s0 ;外层循环的loop指令将cx中的计数值减1</span><br><span class="line">			</span><br><span class="line">			mov ax，4c00H </span><br><span class="line">			int 21H </span><br><span class="line">codesg ends</span><br><span class="line">end start</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>END</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E6%B1%87%E7%BC%96%E8%AF%AD%E8%A8%80/" rel="tag"> <i class="fa fa-tag"></i> 汇编语言</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/03/08/%E4%BA%94%E3%80%81%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E6%AE%B5%E7%9A%84%E7%A8%8B%E5%BA%8F/" rel="prev" title="五、包含多个段的程序">
+                  <i class="fa fa-chevron-left"></i> 五、包含多个段的程序
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
