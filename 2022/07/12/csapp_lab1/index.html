@@ -1,0 +1,869 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="csapp_DataLab tip：全文引用部分皆如此段标识所示 摘处后附  **1、综述：留张图 其他的这里就不提了嗷**（看v5比赛去咯   可以细看大佬笔记orz[读书笔记]CSAPP：2[B]计算机系统漫游 - 知乎 (zhihu.com) 2、信息的表示和处理先列出个人觉得重要的几个知识点：  计算机使用二值信号存储和表示信息 当计算结果太大以至于不能表示时，就会产生溢出。 浮点数表示的">
+<meta property="og:type" content="article">
+<meta property="og:title" content="csapp_DataLab">
+<meta property="og:url" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="csapp_DataLab tip：全文引用部分皆如此段标识所示 摘处后附  **1、综述：留张图 其他的这里就不提了嗷**（看v5比赛去咯   可以细看大佬笔记orz[读书笔记]CSAPP：2[B]计算机系统漫游 - 知乎 (zhihu.com) 2、信息的表示和处理先列出个人觉得重要的几个知识点：  计算机使用二值信号存储和表示信息 当计算结果太大以至于不能表示时，就会产生溢出。 浮点数表示的">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic1.zhimg.com/v2-2cafa537bff05cc3e40cdaec022ec7b4_r.jpg">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711210344347.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=0%5Cleq+k%3Cw">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=B2T_w">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=B2T_w=-x_%7Bw-1%7D2%5E%7Bw-1%7D+%5Csum_%7Bi=0%7D%5E%7Bw-2%7Dx_iw%5Ei">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=x_%7Bw-1%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=-2%5E%7Bw-1%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5B1,0,...,0%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=TMin_w=-2%5E%7Bw-1%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5B0,1,...,1%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=TMax_w=%5Csum_%7Bi=0%7D%5E%7Bw-2%7D%7B2%5Ei%7D=2%5E%7Bw-1%7D-1">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5B1,1,...,1%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=UMax_w">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711211133065.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5Bx_%7Bw-1%7D,x_%7Bw-2%7D,...,x_0%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=2%5E%7Bw-1%7D">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711213601650.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=UMax_w">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=V=x%5Ctimes+2%5Ey">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711214945223.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711215031269.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711215114984.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=(1-2%5E%7B-n%7D)%5Ctimes+2%5E%7B2-2%5E%7Bk-1%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=2%5E%7B2-2%5E%7Bk-1%7D%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=2%5E%7B-n%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=Bias=2%5E%7Bk-1%7D-1=2%5E%7B7%7D-1=127">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5B11000000111001%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=0.11000000111001%5Ctimes+2%5E%7B14%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=1-Bias=-126">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=1.1000000111001%5Ctimes+2%5E%7B13%7D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=M=1.1000000111001">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E=14">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=M=1+frac">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=%5B1000000111001%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=E=exp-Bias=exp-127">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=exp=127+13=140=%5B10001100%5D">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=010001100+10000001110010000000000">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/12/csapp_lab1/Users/Eliauk/AppData/Roaming/Typora/typora-user-images/image-20220711215247134.png">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=(3.14+1e10)-1e10=0">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=3.14+(1e10-1e10)=3.14">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=a%5Cgeq+b">
+<meta property="og:image" content="https://www.zhihu.com/equation?tex=x+a%5Cgeq+x+b">
+<meta property="article:published_time" content="2022-07-11T16:00:01.000Z">
+<meta property="article:modified_time" content="2022-07-11T14:19:05.699Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="二进制">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="csapp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic1.zhimg.com/v2-2cafa537bff05cc3e40cdaec022ec7b4_r.jpg">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2022/07/12/csapp_lab1/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/07/12/csapp_lab1/","path":"2022/07/12/csapp_lab1/","title":"csapp_DataLab"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>csapp_DataLab | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#csapp-DataLab"><span class="nav-number">1.</span> <span class="nav-text">csapp_DataLab</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#1%E3%80%81%E7%BB%BC%E8%BF%B0%EF%BC%9A%E7%95%99%E5%BC%A0%E5%9B%BE-%E5%85%B6%E4%BB%96%E7%9A%84%E8%BF%99%E9%87%8C%E5%B0%B1%E4%B8%8D%E6%8F%90%E4%BA%86%E5%97%B7-%EF%BC%88%E7%9C%8Bv5%E6%AF%94%E8%B5%9B%E5%8E%BB%E5%92%AF"><span class="nav-number">1.0.1.</span> <span class="nav-text">**1、综述：留张图 其他的这里就不提了嗷**（看v5比赛去咯</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2%E3%80%81%E4%BF%A1%E6%81%AF%E7%9A%84%E8%A1%A8%E7%A4%BA%E5%92%8C%E5%A4%84%E7%90%86"><span class="nav-number">1.0.2.</span> <span class="nav-text">2、信息的表示和处理</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-1-%E4%BF%A1%E6%81%AF%E5%AD%98%E5%82%A8"><span class="nav-number">1.0.3.</span> <span class="nav-text">2.1 信息存储</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-1-%E4%BD%8D%E7%BA%A7%E8%BF%90%E7%AE%97"><span class="nav-number">1.0.4.</span> <span class="nav-text">1.2.1 位级运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-2-%E9%80%BB%E8%BE%91%E8%BF%90%E7%AE%97"><span class="nav-number">1.0.5.</span> <span class="nav-text">1.2.2 逻辑运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#1-2-3-%E7%A7%BB%E4%BD%8D%E8%BF%90%E7%AE%97"><span class="nav-number">1.0.6.</span> <span class="nav-text">1.2.3 移位运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-2-%E6%95%B4%E6%95%B0%E8%A1%A8%E7%A4%BA"><span class="nav-number">1.0.7.</span> <span class="nav-text">2.2 整数表示</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%EF%BC%88%E8%A1%A5%E5%85%85%EF%BC%89%E4%B8%8D%E5%90%8C%E5%AD%97%E9%95%BF%E7%9A%84%E7%B1%BB%E5%9E%8B%E8%BD%AC%E6%8D%A2"><span class="nav-number">1.0.8.</span> <span class="nav-text">（补充）不同字长的类型转换</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-3-%E6%95%B4%E6%95%B0%E8%BF%90%E7%AE%97"><span class="nav-number">1.0.9.</span> <span class="nav-text">2.3 整数运算</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#2-4-%E6%B5%AE%E7%82%B9%E6%95%B0"><span class="nav-number">1.0.10.</span> <span class="nav-text">2.4 浮点数</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/07/12/csapp_lab1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          csapp_DataLab
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-12 00:00:01" itemprop="dateCreated datePublished" datetime="2022-07-12T00:00:01+08:00">2022-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-07-11 22:19:05" itemprop="dateModified" datetime="2022-07-11T22:19:05+08:00">2022-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">PWN学习</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="csapp-DataLab"><a href="#csapp-DataLab" class="headerlink" title="csapp_DataLab"></a>csapp_DataLab</h1><blockquote>
+<p>tip：全文引用部分皆如此段标识所示 摘处后附</p>
+</blockquote>
+<h3 id="1、综述：留张图-其他的这里就不提了嗷-（看v5比赛去咯"><a href="#1、综述：留张图-其他的这里就不提了嗷-（看v5比赛去咯" class="headerlink" title="**1、综述：留张图 其他的这里就不提了嗷**（看v5比赛去咯"></a>**1、综述：留张图 <del>其他的这里就不提了嗷</del>**（看v5比赛去咯</h3><p><img src="https://pic1.zhimg.com/v2-2cafa537bff05cc3e40cdaec022ec7b4_r.jpg" alt="img"></p>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711210344347.png" alt="image-20220711210344347" style="zoom:40%;">
+
+<p>可以细看大佬笔记orz[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103969274">读书笔记]CSAPP：2[B]计算机系统漫游 - 知乎 (zhihu.com)</a></p>
+<h3 id="2、信息的表示和处理"><a href="#2、信息的表示和处理" class="headerlink" title="2、信息的表示和处理"></a><strong>2、信息的表示和处理</strong></h3><p>先列出个人觉得重要的几个知识点：</p>
+<ul>
+<li>计算机使用二值信号存储和表示信息</li>
+<li>当计算结果太大以至于不能表示时，就会产生<strong>溢出</strong>。</li>
+<li>浮点数表示的精度有限，因而浮点运算是不可结合的。</li>
+<li>整数的表示范围小但是精确，浮点数表示的范围大但是是近似的。</li>
+<li>许多安全漏洞是由算术运算的微妙细节导致的。</li>
+<li>模运算相当于忽略某些位的值，比如计算x mod 8，则只保留x低三位的值。</li>
+<li>比较有符号数和无符号数之间的大小，先将其转化为二进制编码，再根据特定编码计算比较。</li>
+<li>所有性质都可以直接通过二进制以及对应的编码去解释，首先考虑二进制的值是什么。</li>
+<li>补码和无符号数对应的位向量，在计算结果上都是相同的，大部分计算机中使用相同的机器指令进行计算，所以可以先将补码转换为无符号数进行推导，再转为补码会更容易。</li>
+<li>加法逆元的求法就是通过溢出实现的，比如求x的加法逆元，直接计算~x+1，就能保证有效位里都是0。</li>
+<li>尽量不使用无符号数。</li>
+</ul>
+<span id="more"></span>
+
+<h3 id="2-1-信息存储"><a href="#2-1-信息存储" class="headerlink" title="2.1 信息存储"></a><strong>2.1 信息存储</strong></h3><p>计算机一般使用字节作为最小的可寻址的内存单位。</p>
+<p>在机器级程序中不包含关于数据类型的信息。</p>
+<p>指针的值是某个存储块的第一个字节的<strong>虚拟地址</strong>。</p>
+<p><strong>每个程序对象可以视为一个字节块。</strong></p>
+<p><strong>2.1.1 十六进制表示法</strong></p>
+<p>十六进制以 0x 开头。</p>
+<p>A：10；C:12；F：15</p>
+<p><strong>2.1.2 字数据大小</strong></p>
+<p>每个计算机有对应的字长，虚拟地址用一个字来编码，所以<strong>字长决定了虚拟地址空间的大小</strong>。<strong>64 位机器的指针类型长度为 8 字节</strong></p>
+<p>32位机器的虚拟地址空间为 <strong>4GB</strong>，64 位字长的虚拟地址空间位 16 EB。</p>
+<p><strong>int32_t</strong> 和 <strong>int64_t</strong> 类型分别为 4 字节和 8 字节，不受机器影响。使用确定大小的整数类型很有用。</p>
+<p>对 32 位和 64 位机器而言，char、short、int、long long 长度都是一样的，为  1，2，4，8。long 的长度不一样。</p>
+<p>float 和 double 的长度一样，分别为 4，8</p>
+<p>程序对 char 有无符号一般不敏感。</p>
+<p><strong>2.1.3 寻址和字节顺序</strong></p>
+<p>对于跨越多字节的对象，它的地址是它所用字节中的<strong>最小地址</strong>。</p>
+<p><strong>两种字节存储法：</strong></p>
+<ul>
+<li><strong>小端法</strong>：数字的低位在前（前就是最小地址）</li>
+<li><strong>大端法</strong>：数字的高位在前</li>
+</ul>
+<p>大多数 Intel 都是小端法，不是所有。</p>
+<p><strong>2.1.4 表示字符串</strong></p>
+<p>C 语言字符串是以 null 字符结尾的字符数组，即 ‘\0’</p>
+<p>ASCII 字符适合编码英文文档。</p>
+<p>Unicode（UTF-8）使用 <strong>4 字节</strong>表示字符，一些常用的字符只需要 1 或 2 个字节。所有 ASCII 字符在 UTF-8 中是一样的。</p>
+<p>JAVA 使用 UTF-8 来编码字符串。</p>
+<p><strong>2.1.5 表示代码</strong></p>
+<p>二进制代码是<strong>不兼容</strong>的，一般无法在不同机器间移植。</p>
+<p>从机器的角度看，<strong>程序就是一个字节序列</strong>。</p>
+<p><strong>2.1.6 布尔代数</strong></p>
+<p><strong>布尔代数</strong>是在 0 和 1 基础上的定义</p>
+<p>可以把字节看作是一个长为 8 的<strong>位向量</strong>。</p>
+<p>位向量的一个应用是表示有限集合。如位向量 [0110 1001] 表示集合 A = {0,3,5,6}。</p>
+<p><strong>2.1.7 C 语言中的位级运算</strong></p>
+<p>位运算的常见应用是实现<strong>掩码</strong>。掩码表示从一个字中选出的位的集合，如掩码 0xFF 表示一个字的低 8 位。</p>
+<p>表达式 <strong>~0</strong> 可以生成一个全 1 的掩码，不管机器的字大小是多少。</p>
+<p><strong>2.1.8 C 语言中的逻辑运算</strong></p>
+<p>逻辑运算符 &amp;&amp; 和 || 如果第一个参数就能确定结果，就不再计算第二个参数</p>
+<p><strong>2.1.9 C 语言中的移位运算</strong></p>
+<p>左移 k 位丢掉最高的 k 位，并在右端补 k 个 0。</p>
+<p>右移分为<strong>逻辑右移</strong>和<strong>算术右移</strong>。<strong>逻辑右移左端补 0，算术右移左端补最高有效位的值。</strong></p>
+<p>一般都对有符号数使用算术右移，即补符号位的值。无符号数，<strong>只能是逻辑右移</strong>，即补 0</p>
+<blockquote>
+<p><em><strong>引用大佬列举的一些细节性的东西：</strong></em></p>
+<h3 id="1-2-1-位级运算"><a href="#1-2-1-位级运算" class="headerlink" title="1.2.1 位级运算"></a>1.2.1 位级运算</h3><p>C中的整型数据类型是使用二进制数进行编码的，二进制数可以对应为布尔代数的位向量，所以它可以支持按位的布尔运算，比如<code>|</code>表示OR、<code>&amp;</code>表示AND、<code>~</code>表示NOT、<code>^</code>表示XOR。</p>
+<p>位向量的一个重要应用就是表示<strong>有限集合</strong>，所以一个字节可以表示8种情况，比如<code>[01101001]</code>表示集合<code>&#123;0,3,5,6&#125;</code>，这样布尔运算的<code>|</code>和分别对应于集合的并和交，而<code>~</code>对应于集合的补、<code>^</code>对应于集合的对称差。</p>
+<p>其次，位级运算的一个常见用法就是实现<strong>掩码运算</strong>。这里的掩码就是一个位模式，表示从一个字中选出的为的集合。比如提取最低有效字节<code>x&amp;0xFF</code>，保留除了最低有效字节以外的字节<code>x&amp;~0xFF</code>。</p>
+<blockquote>
+<p>布尔代数的<code>&amp;</code>对<code>|</code>具有分配率，而<code>|</code>对<code>&amp;</code>也具有分配率。元素与自身异或会得到0。0异或任意元素保持不变。与全F取异或是取反。</p>
+</blockquote>
+<h3 id="1-2-2-逻辑运算"><a href="#1-2-2-逻辑运算" class="headerlink" title="1.2.2 逻辑运算"></a>1.2.2 逻辑运算</h3><p>C提供了一组逻辑运算符<code>||</code>、<code>&amp;&amp;</code>和<code>!</code>分别对应于命题逻辑中的<code>OR</code>、<code>AND</code>和<code>NOT</code>运算。要注意逻辑运算和位级运算的区别，在逻辑运算中，只要是非零的数据就表示为<code>TRUE</code>，全零的数据就表示为<code>FALSE</code>，所以计算时候先将其转换为<code>TRUE</code>和<code>FALSE</code>，然后计算出来的结果只会是<code>0x00</code>或<code>0x01</code>，分别对应<code>FALSE</code>和<code>TRUE</code>。</p>
+<p>逻辑运算中有一个特点：<strong>提早终止（Early Termination）</strong>。当计算逻辑与和逻辑或时，如果只通过左侧的式子就已经能得到最终的结果，就不会再计算右侧的式子了。比如</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">int</span> i=<span class="number">0</span>;</span><br><span class="line"><span class="keyword">int</span> ans1=i&amp;&amp;(++i);</span><br><span class="line"><span class="comment">//因为i=0，所以计算逻辑与时能够直接得到结果是FALSE，就无需计算右侧的++i了。所以ans=0，i=0</span></span><br><span class="line"><span class="keyword">int</span> ans2=i||(++i);</span><br><span class="line"><span class="comment">//由于i=0计算逻辑或时无法直接得到结果，所以还需要计算右侧的式子，此时i=1，所以ans=1，i=1</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="1-2-3-移位运算"><a href="#1-2-3-移位运算" class="headerlink" title="1.2.3 移位运算"></a>1.2.3 移位运算</h3><p>C语言表示的二进制编码，可以对其进行移位操作。x向左移k位，表示为<code>x&lt;&lt;k</code>，此时会丢弃最高的k位，并在右侧补充k个零。x向右移k位，表示为<code>x&gt;&gt;k</code>，由于整型编码的问题，会将右移操作分为逻辑右移和算数右移，逻辑右移就是丢弃最低的k位，并在左侧补充k个零，而算数右移中，因为有符号数使用最高位来表示数字的正负性，为了保证数字的正负性不变，就丢弃最低的k位，并在左侧补充最高有效位的值，本文后续会有介绍。</p>
+<p>C语言没有对何时使用逻辑右移和算数右移进行规定，但是一般编译器/及其组合都对有符号数使用算数右移， 而对于无符号数，就使用逻辑右移。</p>
+<p><strong>注意：</strong>当k的值大于数据类型的位数w时，有些机器和JAVA会通过计算<code>k mod w</code>来确定位移量，所以对于8位的数左移8位，该数不变。但是C语言没有限制，所以要自己保证 <img src="https://www.zhihu.com/equation?tex=0%5Cleq+k%3Cw" alt="[公式]"> 。</p>
+</blockquote>
+<h3 id="2-2-整数表示"><a href="#2-2-整数表示" class="headerlink" title="2.2 整数表示"></a><strong>2.2 整数表示</strong></h3><p>无符号表示与补码表示</p>
+<p>有符号数到无符号数的转换会产生漏洞，<strong>避免错误的方法之一是绝不使用无符号数</strong>。</p>
+<p>除了 C 以外<strong>很少有语言支持无符号整数</strong>，Java 就只支持有符号数</p>
+<p><strong>2.2.1 整数数据类型</strong></p>
+<blockquote>
+<p><em><strong><u>书上是这么写的 咱也看不懂 ：</u></strong></em></p>
+<p>我们定义一个函数 <img src="https://www.zhihu.com/equation?tex=B2T_w" alt="[公式]"> （Binary to Two’s complement)表示将w位的二进制转化为补码编码的有符号数，我们定义该函数的表达式为</p>
+<p><img src="https://www.zhihu.com/equation?tex=B2T_w=-x_%7Bw-1%7D2%5E%7Bw-1%7D+%5Csum_%7Bi=0%7D%5E%7Bw-2%7Dx_iw%5Ei" alt="[公式]"></p>
+<p>补码将最高有效位 <img src="https://www.zhihu.com/equation?tex=x_%7Bw-1%7D" alt="[公式]"> 当做<strong>符号位（Sign Bit）</strong>，并且赋予了权重 <img src="https://www.zhihu.com/equation?tex=-2%5E%7Bw-1%7D" alt="[公式]"> 。</p>
+<ul>
+<li><strong>最小值：</strong>位向量为 <img src="https://www.zhihu.com/equation?tex=%5B1,0,...,0%5D" alt="[公式]"> ，表示为 <img src="https://www.zhihu.com/equation?tex=TMin_w=-2%5E%7Bw-1%7D" alt="[公式]"></li>
+<li><strong>最大值：</strong>位向量为 <img src="https://www.zhihu.com/equation?tex=%5B0,1,...,1%5D" alt="[公式]"> ，表示为 <img src="https://www.zhihu.com/equation?tex=TMax_w=%5Csum_%7Bi=0%7D%5E%7Bw-2%7D%7B2%5Ei%7D=2%5E%7Bw-1%7D-1" alt="[公式]"> 。</li>
+<li><strong>-1：</strong>位向量为 <img src="https://www.zhihu.com/equation?tex=%5B1,1,...,1%5D" alt="[公式]"> ，刚好和 <img src="https://www.zhihu.com/equation?tex=UMax_w" alt="[公式]"> 的编码方式相同。</li>
+</ul>
+</blockquote>
+<p>在 64 位系统上</p>
+<ul>
+<li>i<strong>nt</strong>：4字节，可表示十进制数字位数：<strong>10位（-20~20亿以内）</strong></li>
+<li><strong>long long</strong>：8字节，可表示十进制数字位数：<strong>19位（千亿亿级）</strong></li>
+<li><strong>long</strong>：8字节</li>
+<li><strong>double</strong>：8字节，<strong>精度15位</strong>，可表示十进制数字位数<strong>308位</strong></li>
+<li><strong>float</strong>：4字节，<strong>精度6位</strong>，可表示十进制数字<strong>38位</strong></li>
+<li><strong>char</strong>：**-128~127**</li>
+</ul>
+<p>java 只支持有符号数。</p>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711211133065.png" style="zoom:55%;">
+
+<p><strong>2.2.2 无符号数的编码</strong></p>
+<p>无符号表示、补码表示与数据的映射都是双射，即一一对应。</p>
+<p><strong>2.2.3 补码编码</strong></p>
+<p>补码的定义实际就是<strong>将符号位解释为负权</strong>。</p>
+<p>C 库头文件  定义了一组常量来限定不同整数数据类型的取值范围。INT_MAX、INT_MIN、UINT_MAX</p>
+<p>C 库头文件 中定义了 uint16_t, int32_t 等类型，用于声明确定宽度类型的整数。</p>
+<p><strong>2.2.4 有符号数和无符号数之间的转换</strong></p>
+<p>在有符号数与无符号数之间进行强制类型转换的结果是<strong>保持位值不变，只改变解释位的方式。</strong></p>
+<blockquote>
+<p>C语言可以在各种不同的数字类型之间做强制类型转换，它的具体实现要从位级角度来看，它保持位值不变，只是改变了解释这些位的方式。比如对于一个位模式 <img src="https://www.zhihu.com/equation?tex=%5Bx_%7Bw-1%7D,x_%7Bw-2%7D,...,x_0%5D" alt="[公式]"> ，通过采用有符号的编码和补码达到在有符号数和无符号数之间的类型转换，对于位模式中的值并不会改变。而有符号数编码和补码之间的区别只有 <img src="https://www.zhihu.com/equation?tex=2%5E%7Bw-1%7D" alt="[公式]"> 符号的变化。</p>
+</blockquote>
+<p><strong>补码 x 转无符号数</strong></p>
+<ul>
+<li>x &gt;= 0，值不变</li>
+<li>x &lt; 0，转换后的值为 2^w + x</li>
+</ul>
+<p><strong>无符号数 x 转补码</strong></p>
+<ul>
+<li>x &lt; 2^(w-1)，值不变</li>
+<li>x &gt;= 2^(w-1)，转换后的值为 x - 2^w</li>
+</ul>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711213601650.png" alt="image-20220711213601650" style="zoom: 33%;">
+
+<p><strong>2.2.5 C 语言中的有符号数和无符号数</strong></p>
+<p>C 语言中有符号数和无符号数相加减，有符号被转换成无符号。</p>
+<blockquote>
+<h3 id="（补充）不同字长的类型转换"><a href="#（补充）不同字长的类型转换" class="headerlink" title="（补充）不同字长的类型转换"></a>（补充）不同字长的类型转换</h3><p>在不同字长的整数之间进行类型转换，要保持在数据类型范围内的数值是不变的。以下有两种情况：从较短字长的数据类型转换到较长字长的数据类型，比如short到int，就需要进行扩展位；从较长字长的数据类型转换到较短字长的数据类型，比如int到short，就需要截断位。</p>
+</blockquote>
+<p><strong>2.2.6 扩展一个数字的位表示</strong>（就是扩展位</p>
+<p>扩展无符号数使用零扩展，即在最高位前加 0</p>
+<p>扩展有符号数使用符号扩展，即在最高位前加最高有效位的值</p>
+<p><strong>2.2.7 截断数字</strong>（就是截断位</p>
+<p>对一个 w 位的数字截断为一个 k 位数字，将丢弃高 w-k 位。</p>
+<p>对于无符号数而言，截断后的数字实际上等于 w mod 2^k，即取余。</p>
+<h3 id="2-3-整数运算"><a href="#2-3-整数运算" class="headerlink" title="2.3 整数运算"></a><strong>2.3 整数运算</strong></h3><blockquote>
+<p>书上写的过于晦涩 看了一点不看了：（</p>
+</blockquote>
+<p><strong>2.3.1 无符号加法</strong></p>
+<p>考虑溢出，C 语言不会将溢出作为错误发出信号</p>
+<p>当 x+y &gt;= 2^w，实际结果为 s = x+y-2^w</p>
+<p>对任意的 x+y，<strong>s = (x+y) % 2^w</strong></p>
+<p><strong>溢出的结果：</strong>和小于两个加数</p>
+<p><strong>检验溢出的方式：</strong>如果 <strong>s，说明溢出</strong></p>
+<p><strong>无符号数的非</strong>：~x = 2^w - x (x&gt;0)</p>
+<p><strong>2.3.2 补码加法</strong></p>
+<p>当 x+y &gt;= 2^(w-1)， s = x+y-2^w</p>
+<p>当 x+y &lt; -2^(w-1)，s = x+y+2^w</p>
+<p><strong>正溢出的结果是负数，负溢出的结果是正数。</strong></p>
+<p><strong>检验溢出的方式：</strong>当 x,y&gt;0 而 s&lt;=0 是正溢出；当 x,y&lt;0 而 s&gt;=0 是负溢出</p>
+<p><strong>2.3.3 补码的非</strong></p>
+<p>当 x = TMin，-x = TMin；当 x ≠ TMin，-x = -x</p>
+<p><strong>补码非的位级表示：****对每一位求补，结果再加 1</strong></p>
+<p><strong>计算补码非的第二种方法：</strong>假设 k 是最右边的 1 的位置，对 k 左边的所有位取反</p>
+<p><strong>2.3.4 无符号乘法</strong></p>
+<p><strong>无符号乘法的积</strong> <strong>m = (x*y) % 2^w</strong></p>
+<p><strong>2.3.5 补码乘法</strong></p>
+<p>可以认为补码乘法和无符号乘法的<strong>位级表示</strong>是一样的</p>
+<p>C语言在运算时将 x,y 视为无符号数进行乘法运算，结果取余后将其按补码方式解释</p>
+<p><strong>补码乘法的积</strong> <strong>m = (x*y) % 2^w</strong></p>
+<p><strong>2.3.6 乘以常数</strong></p>
+<p>大多数机器上，整数乘法需要 <strong>10 个或更多</strong>的时钟周期，而加法、减法、位级运算和移位只需要 1 个时钟周期</p>
+<p><strong>编译器对整数乘法进行优化的方式</strong>：用<strong>移位和加法或减法</strong>运算的组合来代替常数因子的乘法。</p>
+<p>左移 k 位等于乘以 2^k</p>
+<p>如 x * 14  =  (x&lt;&lt;3)+(x&lt;&lt;2)+(x&lt;&lt;1)   =   (x&lt;&lt;4)-(x&lt;&lt;2)</p>
+<p><strong>判断如何移动的方式</strong>很简单：14 的位级表示为 1110，所以分别左移 3，2，1</p>
+<p><strong>2.3.7 除以 2 的幂</strong></p>
+<p>大多数机器上，整数除法更慢，需要 <strong>30 个或更多</strong>的始终周期。</p>
+<p>（只有）除以 2 的幂可以用移位运算来代替，<strong>无符号采用<strong><strong>逻辑右移</strong></strong>，补码采用****算术右移</strong></p>
+<p>对于有符号数而言，算术右移的结果相当于进行除法运算后<strong>向下舍入</strong></p>
+<p>使用 <strong>(x+(1&lt;&gt;k</strong> 的结果相当于进行除法运算然后<strong>向零舍入</strong></p>
+<p>代码实现</p>
+<p>​                (x&lt;0 ? x+(1&lt;&lt;k)-1 : x) &gt;&gt; k;              </p>
+<p><strong>2.3.8 关于整数运算的最后思考</strong></p>
+<p><strong>补码使用了与无符号算术运算相同的位级实现</strong>，包括加法、减法、乘法甚至除法。都有完全一样或非常类似的位级行为。</p>
+<blockquote>
+<p>如果使用无符号数***<u>存在几种比较诡异的情况：</u>***</p>
+<p><strong>例子1：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">for(unsigned i=n-1;i&gt;=0;i--)&#123;</span><br><span class="line">    //loop</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>当运行到i=0时，对应的位模式为全零，这时候再减一，得到的是全一，对应到无符号编码得到的就是 <img src="https://www.zhihu.com/equation?tex=UMax_w" alt="[公式]"> ，所以i不会小于0，所以循环不会停止，或者出现索引错误。</p>
+<p><strong>例子2：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">#define DELTA sizeof(int)</span><br><span class="line">int i;</span><br><span class="line">for (i = CNT; i-DELTA &gt;= 0; i-= DELTA)</span><br></pre></td></tr></table></figure>
+
+<p>这里因为sizeof函数返回的是size_t类型的数，它是unsigned long的，所以还是会出现上面的问题。</p>
+<p>比较好的代码模式是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">unsigned i;</span><br><span class="line">for (i = cnt-2; i &lt; cnt; i--)</span><br><span class="line">  a[i] += a[i+1];</span><br></pre></td></tr></table></figure>
+
+<p>当出现溢出时，刚好可以停止。更好的是使用<code>size_t</code>，因为<code>unsigned</code>是32位的，而<code>size_t</code>定义为字长，是64位的。</p>
+<p>这里如果cnt是有符号数，并且小于0时，i就会会变成很大的正值。</p>
+</blockquote>
+<h3 id="2-4-浮点数"><a href="#2-4-浮点数" class="headerlink" title="2.4 浮点数"></a><strong>2.4 浮点数</strong></h3><p>浮点数对于非常大，非常接近零，近似值计算都很有用</p>
+<blockquote>
+<p><em><strong><u>先列课本看得懂的部分嗷</u></strong></em></p>
+<p>浮点表示对形如 <img src="https://www.zhihu.com/equation?tex=V=x%5Ctimes+2%5Ey" alt="[公式]"> 的有理数进行编码，比较适用于非常大的数字、非常接近0的数字。它常常不会太多关注运算的准确性，而是把实现的速度和简便性看得比数字精确性更重要。1985年提出了IEEE标准754，仔细制定了表示浮点数机器运算的标准，后续所有计算机都支持这个标准，极大提高了程序可移植性。</p>
+<p>首先会介绍IEEE浮点表示方法，然后由于数字不能精确被表示，所以会介绍浮点数的舍入问题。最后介绍浮点数相关的运算。</p>
+</blockquote>
+<p><strong>2.4.1 二进制小数</strong></p>
+<p>小数的二进制表示法只能表示那些能够写为 <strong>x * 2^w</strong> 的数，<strong>其他的数都是近似表示。x 必须可以由形如 2^i + 2^j + … + 2^n 的多项式表示</strong></p>
+<p>浮点运算的不精确性可能产生严重后果</p>
+<p><strong>2.4.2 IEEE 浮点表示</strong></p>
+<p><strong>IEEE 浮点标准</strong>的表示形式为：<strong>V = (-1)^S * M * 2^E</strong>，它分为三部分：</p>
+<ol>
+<li><p><strong>符号</strong>：<strong>S</strong> 决定是负数还是正数</p>
+</li>
+<li><p><strong>阶码</strong>：<strong>E</strong> 的作用是对浮点数加权</p>
+</li>
+<li><p><strong>尾数</strong>：<strong>M</strong> 是一个二进制小数，范围是 1<del>2-ε 或 0</del>1-ε</p>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711214945223.png" alt="image-20220711214945223" style="zoom:50%;"></li>
+</ol>
+<p><strong>在对浮点数的位编码</strong>时：</p>
+<ol>
+<li>一个单独的符号位编码直接编码 S</li>
+<li>k 位的<strong>阶码字段 e</strong> 编码 E；float 中 k=8，double 中 <strong>k=11</strong></li>
+<li>n 位的<strong>小数字段 f</strong> 编码 M；float 中 n=23，double 中 <strong>n=52</strong></li>
+</ol>
+<p>E 和 M 的编码方式分为<strong>三种情况</strong>：</p>
+<ol>
+<li><strong>规格化的值：</strong>阶码字段即不全为 0 也不全为 1 时属于规格化值（0001~1110）</li>
+<li><ol>
+<li>阶码字段解释方式：**E = e - (2^(k-1)-1)**；如 k=4 时，E 的范围是 -6<del>7；单精度为 -126</del>127</li>
+<li>小数字段解释方式：<strong>M = 1 + f</strong></li>
+</ol>
+</li>
+<li><strong>非规格化的值</strong>：阶码字段全为 0 时属于非规格化形式</li>
+<li><ol>
+<li>阶码字段解释方式：<strong>E = 1 - (2^(k-1)-1)<strong>；</strong>与规格化值中 e = 1 时的 E 相同</strong></li>
+<li>小数字段解释方式：<strong>M = f</strong></li>
+</ol>
+</li>
+<li><strong>特殊值：</strong>阶码字段全为 1 时，分两种情况：</li>
+<li><ol>
+<li><strong>小数字段全为 0：表示无穷</strong></li>
+<li><strong>小数字段非零：表示 NaN。</strong>比如 ∞-∞ 的结果就返回 NaN</li>
+</ol>
+</li>
+</ol>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711215031269.png" alt="image-20220711215031269" style="zoom:55%;">
+
+<p><strong>2.4.3 数字示例</strong></p>
+<p>0 有 +0.0 和 -0.0 两种表示方式</p>
+<p>最大非规格化数到最小规格化数的过渡是平滑的。</p>
+<p>浮点数能够使用正数排序函数来排序，即浮点数的位级表示当用整数方式来解释时是顺序的（正数升序负数降序）。</p>
+<p>浮点数可表示的数的分布是不均匀的，越接近零时越稠密</p>
+<p><strong>几个特殊的值的位级表示：</strong></p>
+<ol>
+<li>+0.0 全为 0</li>
+<li><strong>最小的正非规格化值：</strong>最低有效位为 1，其他为 0</li>
+<li><strong>最大的非规格化值：</strong>小数字段全为 1，其他为 0</li>
+<li><strong>最小的正规格化值：</strong>阶码字段最低位为 1，其他为 0</li>
+<li><strong>最大的规格化值：</strong>阶码字段最低位为 0，符号位为 0，其他为 1</li>
+</ol>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711215114984.png" alt="image-20220711215114984" style="zoom:65%;">
+
+<blockquote>
+<p><strong>IEEE设计的好处：</strong></p>
+<ol>
+<li>最大非规格化值 <img src="https://www.zhihu.com/equation?tex=(1-2%5E%7B-n%7D)%5Ctimes+2%5E%7B2-2%5E%7Bk-1%7D%7D" alt="[公式]"> 和最小规格化值 <img src="https://www.zhihu.com/equation?tex=2%5E%7B2-2%5E%7Bk-1%7D%7D" alt="[公式]"> 之间的幅度是 <img src="https://www.zhihu.com/equation?tex=2%5E%7B-n%7D" alt="[公式]"> ，是n位尾数所能表示的最小值，可以看成是<strong>光滑转变</strong>。</li>
+<li>从最小非规格化数到最大规格化数的位向量的变化是顺序的，和无符号整数的排序相同。所以可以用无符号数的排序函数来对浮点数进行排序。<strong>注意：</strong>负无穷转化为无符号数进行比较时会有问题。</li>
+</ol>
+<p><strong>（补充）将十进制化为浮点数表示：</strong></p>
+<p>以12345为例，我们推算单精度浮点数的编码</p>
+<ol>
+<li>计算 <img src="https://www.zhihu.com/equation?tex=Bias=2%5E%7Bk-1%7D-1=2%5E%7B7%7D-1=127" alt="[公式]"></li>
+<li>将12345化为二进制数 <img src="https://www.zhihu.com/equation?tex=%5B11000000111001%5D" alt="[公式]"></li>
+<li>首先将二进制数其化成小于1的科学技术法 <img src="https://www.zhihu.com/equation?tex=0.11000000111001%5Ctimes+2%5E%7B14%7D" alt="[公式]"> ，很明显指数14不为 <img src="https://www.zhihu.com/equation?tex=1-Bias=-126" alt="[公式]"> ，所以是规格化数，所以将其转化为大于1的科学计数法 <img src="https://www.zhihu.com/equation?tex=1.1000000111001%5Ctimes+2%5E%7B13%7D" alt="[公式]"> ，所以 <img src="https://www.zhihu.com/equation?tex=M=1.1000000111001" alt="[公式]"> ， <img src="https://www.zhihu.com/equation?tex=E=14" alt="[公式]"> 。</li>
+<li>因为 <img src="https://www.zhihu.com/equation?tex=M=1+frac" alt="[公式]"> ，所以frac的编码为 <img src="https://www.zhihu.com/equation?tex=%5B1000000111001%5D" alt="[公式]"> 。因为 <img src="https://www.zhihu.com/equation?tex=E=exp-Bias=exp-127" alt="[公式]"> ，所以 <img src="https://www.zhihu.com/equation?tex=exp=127+13=140=%5B10001100%5D" alt="[公式]"> 。</li>
+<li>将frac和exp的二进制编码扩展到对应位数并拼接在一起，补上符号位就为最终结果 <img src="https://www.zhihu.com/equation?tex=010001100+10000001110010000000000" alt="[公式]"> 。</li>
+</ol>
+<p><strong>注意：</strong>要在exp前面补0，在frac后面补0。因为exp表示整数，frac表示小数。</p>
+<p><strong>对比无符号数的编码，我们可以发现：</strong>因为无符号数一定大于0，所以相同的数想用浮点数编码只能使用规范化数进行编码，而规范化数会将frac的最高有效位1去掉，所以无符号数的编码和浮点数编码，在frac部分是相似的，浮点数会少了最高有效位的1。而无符号数的其他部分就是0，而浮点数的其他部分是表示指数的编码。</p>
+</blockquote>
+<p><strong>2.4.4 舍入</strong></p>
+<p>因为范围和精度有限，浮点运算只能近似表示实数运算。</p>
+<p>在浮点数的近似匹配上，IEEE 浮点格式定义了<strong>四种舍入方式（默认第一种）：</strong></p>
+<ol>
+<li><strong>向偶数舍入（向最接近的值舍入）</strong>：非中间值 (0.5) 四舍五入，中间值向偶数舍入。</li>
+<li>向零舍入</li>
+<li>向下舍入</li>
+<li>向上舍入</li>
+</ol>
+<p>向偶数舍入可以计算一组数的平均数时避免统计偏差。</p>
+<p>实际上这种舍入是发生在二进制小数上的。</p>
+<p><img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711215247134.png" alt="image-20220711215247134"></p>
+<p><strong>2.4.5 浮点运算</strong></p>
+<p>IEEE 标准定义 1/-0 = -∞，1/+0 = +∞</p>
+<p>浮点运算是<strong>可交换不可结合也不可分配</strong>的。</p>
+<p>浮点加法满足<strong>加法和乘法上的单调性</strong>。如果 a&gt;=b，则 x+a &gt;= x+b</p>
+<p>缺乏结合性和分配性会使一些简单问题变得很复杂</p>
+<blockquote>
+<p><strong>数学性质：</strong></p>
+<ul>
+<li>由于溢出，可能得到无穷之。</li>
+<li>可交换</li>
+<li>不可结合（由于舍入），因为较大的数和较小的数相加，由于舍入问题，会将较小的数舍入，比如 <img src="https://www.zhihu.com/equation?tex=(3.14+1e10)-1e10=0" alt="[公式]"> 而 <img src="https://www.zhihu.com/equation?tex=3.14+(1e10-1e10)=3.14" alt="[公式]"> 。</li>
+<li>除了无穷和NaN，存在加法逆元。</li>
+<li>满足单调性，如果 <img src="https://www.zhihu.com/equation?tex=a%5Cgeq+b" alt="[公式]"> ，则对于任意a、b和x，都有 <img src="https://www.zhihu.com/equation?tex=x+a%5Cgeq+x+b" alt="[公式]"> 。NaN除外。无符号数和补码由于溢出会发生值的跳变，所以不满足单调性。</li>
+</ul>
+</blockquote>
+<p><strong>2.4.6 C 语言中的浮点数</strong></p>
+<p>在 int、float、double 间进行<strong>强制类型转换时的几种情况：</strong></p>
+<ol>
+<li>int 到 float：不会溢出，可能舍入</li>
+<li>int 或 float 到 double：不会溢出也不会舍入</li>
+<li>double 到 float：可能溢出和舍入</li>
+<li><strong>float 或 double 到 int：</strong>向零舍入，很大时可能溢出，很接近零时也可能溢出。当从浮点转换到整数时如果溢出，转变结果都为 [1000]，因此一个正浮点可能得到一个负整数</li>
+</ol>
+<p><strong>把大的浮点数转换为整数是一种常见的错误。</strong></p>
+<p><strong>要小心地使用浮点运算。</strong></p>
+<p><strong>总结：</strong>超过数值表示范围，会发生溢出；尾数较短，会发生输入。</p>
+<p><em><strong><u>罗列一些问题 也是在看大手子博客的时候发现的 浅浅搬来用咯</u></strong></em></p>
+<blockquote>
+<p><strong>问题 2.1~2.2</strong></p>
+<ol>
+<li>十六进制中 A,C,F 分别是多少。</li>
+<li>如何定义有确定字长的整数，在哪个头文件中</li>
+<li>计算机的字长是什么？字长决定了什么？</li>
+<li>short, int, long long 长度分别是多少，long 长度是多少</li>
+<li>一个 int 对象的地址是它所占哪个字节的地址</li>
+<li>多字节类型的小端法和大端法分别是什么，一般计算机是哪种方法</li>
+<li>ASCII 和 Unicode 分别应用于哪些情况？两者的关系是什么</li>
+<li>掩码是什么？如何生成全 1 的数字</li>
+<li>什么是逻辑右移和算术右移，有符号数用哪个？无符号数用哪个</li>
+<li>int, long long,  char，short 可表示的范围分别是多少</li>
+<li>float, double 的精度和可表示范围分别是多少</li>
+<li>补码如何解释位</li>
+<li> 有符号数和无符号数的强制类型转换是如何转换的</li>
+<li>有符号转无符号数值如何变化？无符号转有符号数值如何变化？</li>
+<li>如何扩展有符号数？如何扩展无符号数？</li>
+<li>截断一个无符号数从数学运算上如何理解？</li>
+</ol>
+<p><strong>回答</strong></p>
+<ol>
+<li>A 是 10，C 是 12，F 是 15</li>
+<li>使用 int32_t, int64_t, uint32_t, uint64_t。定义在头文件  中</li>
+<li>分别是 2，4，8 位，long 在 32 位程序中是 4 位，在 64 位机器中是 8位</li>
+<li>32 位计算机的字长是 32 位，64 位计算机的字长是 64 位，字长w决定了虚拟空间的大小：&lt;= 2^w。</li>
+<li>最小字节的地址</li>
+<li>小端法将低位表示在低字节，大端法将高位表示在低字节。大部分是小端法。</li>
+<li>ASCII 用于英文文档，UTF-8 用于多语言，所有的 ASCII 字符在 UTF-8 中是一样的</li>
+<li>掩码用来筛选一个数字的某几位，~0 的结果是全 1</li>
+<li>逻辑右移左边补 0，算术右移左端补符号位，有符号数用算术右移，无符号数用逻辑右移</li>
+<li>10位，-20亿<del>20亿； 19位，千亿亿级； -128</del>127；-32768~32767</li>
+<li><strong>6位</strong>，10 的 38 次方以内；<strong>15位</strong>，10 的 308 次方以内；</li>
+<li>最高位解释为负权</li>
+<li>位值不变，改变解释的方式</li>
+<li>int x&lt;0, ux = x + 2^w；unsigned int ux &gt;= 2^(w-1), x = ux - 2^w；</li>
+<li>左端填充为符号位；左端填充为 0</li>
+<li>对 2^k 取模</li>
+</ol>
+<p><strong>问题 2.3~2.4</strong></p>
+<ol>
+<li>考虑溢出，无符号加法的计算公式，无符号乘法的计算公式？如何检验溢出？</li>
+<li>考虑溢出，补码加法的计算公式，补码加法溢出的特点是什么？如何检验溢出？</li>
+<li>考虑溢出，补码乘法的计算方法</li>
+<li>补码的非怎么求？</li>
+<li>整数乘法的计算速度？整数乘法的优化方式？如何判断移动的方式？</li>
+<li>整数除法的计算速度？除以 2 的幂的优化方式？</li>
+<li>整数补码运算与无符号运算的关系</li>
+<li>浮点数表示法的限制</li>
+<li>浮点数位级表示的三个部分？double 分别有多少位？</li>
+<li>阶码和尾数的三种编码方式分别是什么？</li>
+<li>最小的正非规格化值、最大的非规格化值、最小的正规格化值、最大的规格化值的位级表示分别是怎样的？</li>
+<li>什么是向偶数舍入？浮点数的近似匹配采用哪种舍入方式？有什么优点</li>
+<li>浮点运算满足什么运算性质？不满足什么性质？</li>
+<li>从 float 或 double 转换到 int 可能会发生什么情况？</li>
+</ol>
+<p><strong>回答</strong></p>
+<ol>
+<li>s=(x+y)%2^w；m=(x*y)%2^w；检验加法溢出：s</li>
+<li>分三种情况，不溢出，正溢出，负溢出；特点：正溢出的结果是负数，负溢出的结果是正数；检验溢出：结果变号了就是溢出了</li>
+<li>将两个乘数当成无符号数进行乘法计算，截断溢出的部分后，将剩余部分用补码方式解释</li>
+<li>按位求反再加一</li>
+<li>大于等于 10 个时钟周期；用移位+加法/减法优化；根据移位程度 k 的位级表示来判断</li>
+<li>大于等于 30 个时钟周期；逻辑右移或算术右移；算术右移的结果是向下舍入，可以调整为向零舍入</li>
+<li><strong>在位级表示上完全相同或非常相似</strong></li>
+<li>只能表示 x * 2^y 类的数，其他数字只能近似表示</li>
+<li>符号、阶码、尾数；1，11位，52位</li>
+<li>规格化值：阶码非全 0 非全 1，减去 2^(k-1)-1，尾数+1；非规格化值：阶码全 0，值为 1 - (2^(k-1) - 1)，尾数不变；特殊值：阶码全 1，尾数全 0 表示无穷，尾数非全 0 表示 NaN</li>
+<li>末位为1，其他为0；尾数全1，其他全0；阶码末位为1，其他全0；阶码末位和符号位为0，其他全1；</li>
+<li>非中间值向近舍入，中间值向偶数舍入；采用向偶数舍入；优点是统计结果不偏差</li>
+<li>满足交换性和单调性，不满足结合性和分配性</li>
+<li>可能溢出和舍入；如果溢出，转换结果都是 100000，是一个负数。</li>
+</ol>
+</blockquote>
+<blockquote>
+<p>附引用部分网址：</p>
+<p>[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/104019655">读书笔记]CSAPP：3[VB]整型数据类型 - 知乎 (zhihu.com)</a></p>
+<p>[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/104270134">读书笔记]CSAPP：4[VB]浮点数据类型 - 知乎 (zhihu.com)</a></p>
+<p><a target="_blank" rel="noopener" href="https://www.bilibili.com/video/BV1kE411X7S5?p=15&spm_id_from=pageDriver&vd_source=1d26423cdc85f2608becac8f2a0840e9">南京大学 计算机系统基础(一)主讲：袁春风老师_哔哩哔哩_bilibili</a></p>
+</blockquote>
+<hr>
+<p>CONTINUE</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="tag"> <i class="fa fa-tag"></i> 二进制</a>
+              <a href="/tags/pwn/" rel="tag"> <i class="fa fa-tag"></i> pwn</a>
+              <a href="/tags/csapp/" rel="tag"> <i class="fa fa-tag"></i> csapp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/" rel="prev" title="堆入坑ガイド（yibudao胃）">
+                  <i class="fa fa-chevron-left"></i> 堆入坑ガイド（yibudao胃）
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

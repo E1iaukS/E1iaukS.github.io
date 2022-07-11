@@ -145,18 +145,18 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">10</span>
+          <span class="site-state-item-count">13</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
       <div class="site-state-item site-state-categories">
           <a href="/categories/">
-        <span class="site-state-item-count">4</span>
+        <span class="site-state-item-count">6</span>
         <span class="site-state-item-name">分类</span></a>
       </div>
       <div class="site-state-item site-state-tags">
           <a href="/tags/">
-        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-count">9</span>
         <span class="site-state-item-name">标签</span></a>
       </div>
   </nav>
@@ -195,6 +195,291 @@
   
 
   <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/07/12/csapp_lab1/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/07/12/csapp_lab1/" class="post-title-link" itemprop="url">csapp_DataLab</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2022-07-12 00:00:01" itemprop="dateCreated datePublished" datetime="2022-07-12T00:00:01+08:00">2022-07-12</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-07-11 22:19:05" itemprop="dateModified" datetime="2022-07-11T22:19:05+08:00">2022-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">PWN学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="csapp-DataLab"><a href="#csapp-DataLab" class="headerlink" title="csapp_DataLab"></a>csapp_DataLab</h1><blockquote>
+<p>tip：全文引用部分皆如此段标识所示 摘处后附</p>
+</blockquote>
+<h3 id="1、综述：留张图-其他的这里就不提了嗷-（看v5比赛去咯"><a href="#1、综述：留张图-其他的这里就不提了嗷-（看v5比赛去咯" class="headerlink" title="**1、综述：留张图 其他的这里就不提了嗷**（看v5比赛去咯"></a>**1、综述：留张图 <del>其他的这里就不提了嗷</del>**（看v5比赛去咯</h3><p><img src="https://pic1.zhimg.com/v2-2cafa537bff05cc3e40cdaec022ec7b4_r.jpg" alt="img"></p>
+<img src="/2022/07/12/csapp_lab1/Users\Eliauk\AppData\Roaming\Typora\typora-user-images\image-20220711210344347.png" alt="image-20220711210344347" style="zoom:40%;">
+
+<p>可以细看大佬笔记orz[<a target="_blank" rel="noopener" href="https://zhuanlan.zhihu.com/p/103969274">读书笔记]CSAPP：2[B]计算机系统漫游 - 知乎 (zhihu.com)</a></p>
+<h3 id="2、信息的表示和处理"><a href="#2、信息的表示和处理" class="headerlink" title="2、信息的表示和处理"></a><strong>2、信息的表示和处理</strong></h3><p>先列出个人觉得重要的几个知识点：</p>
+<ul>
+<li>计算机使用二值信号存储和表示信息</li>
+<li>当计算结果太大以至于不能表示时，就会产生<strong>溢出</strong>。</li>
+<li>浮点数表示的精度有限，因而浮点运算是不可结合的。</li>
+<li>整数的表示范围小但是精确，浮点数表示的范围大但是是近似的。</li>
+<li>许多安全漏洞是由算术运算的微妙细节导致的。</li>
+<li>模运算相当于忽略某些位的值，比如计算x mod 8，则只保留x低三位的值。</li>
+<li>比较有符号数和无符号数之间的大小，先将其转化为二进制编码，再根据特定编码计算比较。</li>
+<li>所有性质都可以直接通过二进制以及对应的编码去解释，首先考虑二进制的值是什么。</li>
+<li>补码和无符号数对应的位向量，在计算结果上都是相同的，大部分计算机中使用相同的机器指令进行计算，所以可以先将补码转换为无符号数进行推导，再转为补码会更容易。</li>
+<li>加法逆元的求法就是通过溢出实现的，比如求x的加法逆元，直接计算~x+1，就能保证有效位里都是0。</li>
+<li>尽量不使用无符号数。</li>
+</ul>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/07/12/csapp_lab1/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/" class="post-title-link" itemprop="url">堆入坑ガイド（yibudao胃）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-11 23:48:57 / 修改时间：22:15:58" itemprop="dateCreated datePublished" datetime="2022-07-11T23:48:57+08:00">2022-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">PWN学习</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="堆入坑ガイド（yibudao胃）"><a href="#堆入坑ガイド（yibudao胃）" class="headerlink" title="堆入坑ガイド（yibudao胃）"></a>堆入坑ガイド（yibudao胃）</h1><p><strong><u><em><del>加个前言：很大一部分是借鉴的 因为读完觉得大手子写的太好了 没完结 后续还会加（不附网址了</del></em></u></strong></p>
+<h2 id="什么是堆？"><a href="#什么是堆？" class="headerlink" title="什么是堆？"></a>什么是堆？</h2><p>首先先明确一下堆的概念，堆不同于栈，堆是动态分配的（由操作系统内核或者堆管理器），只有在程序中需要时才会分配。在 CTF 的 pwn 程序中，栈是程序加载进内存后就会出现，而堆是由 malloc、alloc、realloc 函数分配内存后才会出现。</p>
+<ul>
+<li>windows 和 linux 下的堆分配、管理方式都不同，<strong>这里主要讲到的是 CTF 中常出现的 linux 下的堆分配知识</strong></li>
+</ul>
+<p>先看看堆在虚拟内存中的位置</p>
+<ul>
+<li><strong>堆的生长方向是从低地址向高地址生长的，而栈是从高地址向低地址生长的。</strong></li>
+</ul>
+<p>实际上堆可以申请到的内存空间比栈要大很多，在 linux 的 4G 的虚拟内存空间里最高可以达到 2.9 G 的空间</p>
+<p>下面的分析都是以 <strong>glibc 库下的 ptmalloc2 堆管理器</strong>来讲解的。</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/07/11/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%EF%BC%88%E6%9E%84%E5%BB%BArop%E6%A8%A1%E6%9D%BF%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2022/07/11/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%EF%BC%88%E6%9E%84%E5%BB%BArop%E6%A8%A1%E6%9D%BF%EF%BC%89/" class="post-title-link" itemprop="url">ELF文件结构解析（构建rop模板）</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-11 18:30:59 / 修改时间：22:14:27" itemprop="dateCreated datePublished" datetime="2022-07-11T18:30:59+08:00">2022-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN/" itemprop="url" rel="index"><span itemprop="name">PWN</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="（待更新）ELF文件结构解析（构建rop模板）"><a href="#（待更新）ELF文件结构解析（构建rop模板）" class="headerlink" title="（待更新）ELF文件结构解析（构建rop模板）"></a>（待更新）ELF文件结构解析（构建rop模板）</h1><p><em><strong><u><del>一道wdnmd题目恶心四小时 不得已完成以下内容</del></u></strong></em> </p>
+<p> <img src="https://img-blog.csdn.net/20160521110434854" alt="这里写图片描述"></p>
+<p><strong>程序头部表</strong>（Program Header Table），如果存在的话，告诉系统如何创建进程映像。<br><strong>节区头部表</strong>（Section Header Table）包含了描述文件节区的信息，比如大小、偏移等。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">- ELF header： 描述整个文件的组织。</span><br><span class="line">- Program Header Table: 描述文件中的各种segments，用来告诉系统如何创建进程映像的。</span><br><span class="line">- sections 或者 segments：segments是从运行的角度来描述elf文件，sections是从链接的角度来描述elf文件，也就是说，在链接阶段，我们可以忽略program header table来处理此文件，在运行阶段可以忽略section header table来处理此程序（所以很多加固手段删除了section header table）。从图中我们也可以看出，segments与sections是包含的关系，一个segment包含若干个section。</span><br><span class="line">- Section Header Table: 包含了文件各个segction的属性信息，我们都将结合例子来解释。</span><br></pre></td></tr></table></figure>
+
+<hr>
+<p>为了更好的用户体验和内存CPU的利用率，程序编译时会采用两种表进行辅助，一个为<strong>PLT</strong>表，一个为<strong>GOT</strong>表，<strong>PLT</strong>表可以称为内部函数表，<strong>GOT</strong>表为全局函数表（也可以说是动态函数表这是个人自称），这两个表是相对应的，什么叫做相对应呢，PLT表中的数据就是GOT表中的一个地址，可以理解为一定是<strong>一一对应</strong>的</p>
+          <!--noindex-->
+            <div class="post-button">
+              <a class="btn" href="/2022/07/11/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%EF%BC%88%E6%9E%84%E5%BB%BArop%E6%A8%A1%E6%9D%BF%EF%BC%89/#more" rel="contents">
+                阅读全文 &raquo;
+              </a>
+            </div>
+          <!--/noindex-->
+        
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
     <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/03/08/%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -218,9 +503,15 @@
         <i class="far fa-calendar"></i>
       </span>
       <span class="post-meta-item-text">发表于</span>
-      
 
-      <time title="创建时间：2022-03-08 00:54:59 / 修改时间：01:06:25" itemprop="dateCreated datePublished" datetime="2022-03-08T00:54:59+08:00">2022-03-08</time>
+      <time title="创建时间：2022-03-08 00:54:59" itemprop="dateCreated datePublished" datetime="2022-03-08T00:54:59+08:00">2022-03-08</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2022-07-11 21:24:29" itemprop="dateModified" datetime="2022-07-11T21:24:29+08:00">2022-07-11</time>
     </span>
     <span class="post-meta-item">
       <span class="post-meta-item-icon">
@@ -917,274 +1208,9 @@
 
 
 
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/" class="post-title-link" itemprop="url">二、寄存器</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-01-27 23:48:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:48:57+08:00">2022-01-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-02-06 19:10:45" itemprop="dateModified" datetime="2022-02-06T19:10:45+08:00">2022-02-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="二、寄存器"><a href="#二、寄存器" class="headerlink" title="二、寄存器"></a>二、寄存器</h1><h2 id="1、基础知识"><a href="#1、基础知识" class="headerlink" title="1、基础知识"></a>1、基础知识</h2><p>16位结构CPU具有下面几方面的结构特性。</p>
-<ul>
-<li>运算器一次最多可以处理16位的数据；</li>
-<li>寄存器的最大宽度为16位；</li>
-<li>寄存器和运算器之间的通路为16位。</li>
-</ul>
-<p>8086CPU可以一次性处理以下两种尺寸的数据</p>
-<p>字节：记为byte，一个字节由8个bit组成，可以存在8位寄存器中。</p>
-<p>字：记为word，一个字由两个字节组成，可以存在一个16位寄存器中(16位CPU)</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/27/%E4%BA%8C%E3%80%81%E5%AF%84%E5%AD%98%E5%99%A8/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/27/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/27/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" class="post-title-link" itemprop="url">一、基础知识</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-
-      <time title="创建时间：2022-01-27 23:12:57" itemprop="dateCreated datePublished" datetime="2022-01-27T23:12:57+08:00">2022-01-27</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar-check"></i>
-      </span>
-      <span class="post-meta-item-text">更新于</span>
-      <time title="修改时间：2022-02-06 19:10:50" itemprop="dateModified" datetime="2022-02-06T19:10:50+08:00">2022-02-06</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="一、基础知识"><a href="#一、基础知识" class="headerlink" title="一、基础知识"></a>一、基础知识</h1><h2 id="1、指令"><a href="#1、指令" class="headerlink" title="1、指令"></a>1、指令</h2><p>机器指令：CPU能直接识别并执行的二进制编码</p>
-<p>汇编指令：汇编指令是机器指令的助记符，同机器指令一一对应。</p>
-<p>指令：指令通常由操作码和地址码（操作数）两部分组成</p>
-<p>指令集：每种CPU都有自己的汇编指令集。</p>
-<p>汇编指令由3类指令组成。</p>
-<ul>
-<li>伪指令：没有对应的机器码，由编译器执行，计算机并不执行</li>
-<li>其他符号：如+、-、*、/等，由编译器识别，没有对应的机器码。</li>
-<li>编译器：够将汇编指令转换成机器指令的翻译程序每一种CPU都有自己的汇编指令集。</li>
-</ul>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/01/27/%E4%B8%80%E3%80%81%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/01/26/hello-world/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/01/26/hello-world/" class="post-title-link" itemprop="url">Hello World</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-01-26 08:11:35 / 修改时间：14:46:50" itemprop="dateCreated datePublished" datetime="2022-01-26T08:11:35+08:00">2022-01-26</time>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>Welcome to <a target="_blank" rel="noopener" href="https://hexo.io/">Hexo</a>! This is your very first post. Check <a target="_blank" rel="noopener" href="https://hexo.io/docs/">documentation</a> for more info. If you get any problems when using Hexo, you can find the answer in <a target="_blank" rel="noopener" href="https://hexo.io/docs/troubleshooting.html">troubleshooting</a> or you can ask me on <a target="_blank" rel="noopener" href="https://github.com/hexojs/hexo/issues">GitHub</a>.</p>
-<h2 id="Hello"><a href="#Hello" class="headerlink" title="Hello"></a>Hello</h2><h2 id="Quick-Start"><a href="#Quick-Start" class="headerlink" title="Quick Start"></a>Quick Start</h2><h3 id="Create-a-new-post"><a href="#Create-a-new-post" class="headerlink" title="Create a new post"></a>Create a new post</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo new <span class="string">&quot;My New Post&quot;</span></span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/writing.html">Writing</a></p>
-<h3 id="Run-server"><a href="#Run-server" class="headerlink" title="Run server"></a>Run server</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo server</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/server.html">Server</a></p>
-<h3 id="Generate-static-files"><a href="#Generate-static-files" class="headerlink" title="Generate static files"></a>Generate static files</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo generate</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/generating.html">Generating</a></p>
-<h3 id="Deploy-to-remote-sites"><a href="#Deploy-to-remote-sites" class="headerlink" title="Deploy to remote sites"></a>Deploy to remote sites</h3><figure class="highlight bash"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ hexo deploy</span><br></pre></td></tr></table></figure>
-
-<p>More info: <a target="_blank" rel="noopener" href="https://hexo.io/docs/one-command-deployment.html">Deployment</a></p>
-
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
+  <nav class="pagination">
+    <span class="page-number current">1</span><a class="page-number" href="/page/2/">2</a><a class="extend next" rel="next" href="/page/2/"><i class="fa fa-angle-right" aria-label="下一页"></i></a>
+  </nav>
 
 </div>
   </main>

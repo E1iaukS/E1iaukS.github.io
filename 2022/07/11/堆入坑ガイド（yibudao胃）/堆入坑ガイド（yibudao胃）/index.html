@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="堆入坑ガイド（yibudao胃）加个前言：很大一部分是借鉴的 因为读完觉得大手子写的太好了 没完结 后续还会加（不附网址了 什么是堆？首先先明确一下堆的概念，堆不同于栈，堆是动态分配的（由操作系统内核或者堆管理器），只有在程序中需要时才会分配。在 CTF 的 pwn 程序中，栈是程序加载进内存后就会出现，而堆是由 malloc、alloc、realloc 函数分配内存后才会出现。  windows">
+<meta property="og:type" content="article">
+<meta property="og:title" content="堆入坑ガイド（yibudao胃）">
+<meta property="og:url" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="堆入坑ガイド（yibudao胃）加个前言：很大一部分是借鉴的 因为读完觉得大手子写的太好了 没完结 后续还会加（不附网址了 什么是堆？首先先明确一下堆的概念，堆不同于栈，堆是动态分配的（由操作系统内核或者堆管理器），只有在程序中需要时才会分配。在 CTF 的 pwn 程序中，栈是程序加载进内存后就会出现，而堆是由 malloc、alloc、realloc 函数分配内存后才会出现。  windows">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://i.imgur.com/RlseGG7.png">
+<meta property="og:image" content="https://i.imgur.com/VejSHfX.png">
+<meta property="og:image" content="https://i.imgur.com/lpMMPHl.png">
+<meta property="og:image" content="https://i.imgur.com/9mQhGPF.png">
+<meta property="og:image" content="https://i.imgur.com/n366Lzt.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/OHeE6wZ.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/AmbgBDz.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/4J2yIhn.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/YTz6loS.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/TEiVMUc.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/MK9NWa8.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/SkUxKXN.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/iifOKJV.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/r5Vjflz.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/yKHQ6fT.png">
+<meta property="og:image" content="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog/E1iaukBlog/source/_posts/堆入坑ガイド（yibudao胃）/KYQmNPN.png">
+<meta property="article:published_time" content="2022-07-11T15:48:57.000Z">
+<meta property="article:modified_time" content="2022-07-11T14:15:58.584Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="二进制">
+<meta property="article:tag" content="pwn">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://i.imgur.com/RlseGG7.png">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/","path":"2022/07/11/堆入坑ガイド（yibudao胃）/堆入坑ガイド（yibudao胃）/","title":"堆入坑ガイド（yibudao胃）"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>堆入坑ガイド（yibudao胃） | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89"><span class="nav-number">1.</span> <span class="nav-text">堆入坑ガイド（yibudao胃）</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%80%E4%B9%88%E6%98%AF%E5%A0%86%EF%BC%9F"><span class="nav-number">1.1.</span> <span class="nav-text">什么是堆？</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E5%A0%86%E7%9A%84%E5%9F%BA%E6%9C%AC%E7%BB%93%E6%9E%84"><span class="nav-number">1.2.</span> <span class="nav-text">堆的基本结构</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#IDA-%E4%B8%AD%E5%B8%B8%E8%A7%81%E7%9A%84%E6%8C%87%E9%92%88%E8%A1%A8%E7%A4%BA%E5%BD%A2%E5%BC%8F"><span class="nav-number">1.2.1.</span> <span class="nav-text">IDA 中常见的指针表示形式</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#%E9%93%BE%E8%A1%A8"><span class="nav-number">1.2.2.</span> <span class="nav-text">链表</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E7%94%B3%E8%AF%B7%E5%A0%86%E5%9D%97%E7%9A%84%E6%9C%AC%E8%B4%A8"><span class="nav-number">1.3.</span> <span class="nav-text">申请堆块的本质</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E6%9F%A5%E7%9C%8B%E5%B7%B2%E5%88%86%E9%85%8D%E7%9A%84%E5%A0%86%E5%86%85%E5%AD%98%E5%88%86%E5%B8%83"><span class="nav-number">1.3.1.</span> <span class="nav-text">查看已分配的堆内存分布</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#main-arena-%E4%B8%8E-top-chunk"><span class="nav-number">1.4.</span> <span class="nav-text">main_arena 与 top chunk</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#main-arena"><span class="nav-number">1.4.1.</span> <span class="nav-text">main_arena</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#top-chunk"><span class="nav-number">1.4.2.</span> <span class="nav-text">top chunk</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#free-%E5%87%BD%E6%95%B0%E5%92%8C-bins"><span class="nav-number">1.5.</span> <span class="nav-text">free 函数和 bins</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#free-%E5%87%BD%E6%95%B0"><span class="nav-number">1.5.1.</span> <span class="nav-text">free 函数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#fast-bin"><span class="nav-number">1.5.2.</span> <span class="nav-text">fast bin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#small-bin"><span class="nav-number">1.5.3.</span> <span class="nav-text">small bin</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#unsorted-bin"><span class="nav-number">1.5.4.</span> <span class="nav-text">unsorted bin</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">13</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          堆入坑ガイド（yibudao胃）
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-11 23:48:57 / 修改时间：22:15:58" itemprop="dateCreated datePublished" datetime="2022-07-11T23:48:57+08:00">2022-07-11</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">PWN学习</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="堆入坑ガイド（yibudao胃）"><a href="#堆入坑ガイド（yibudao胃）" class="headerlink" title="堆入坑ガイド（yibudao胃）"></a>堆入坑ガイド（yibudao胃）</h1><p><strong><u><em><del>加个前言：很大一部分是借鉴的 因为读完觉得大手子写的太好了 没完结 后续还会加（不附网址了</del></em></u></strong></p>
+<h2 id="什么是堆？"><a href="#什么是堆？" class="headerlink" title="什么是堆？"></a>什么是堆？</h2><p>首先先明确一下堆的概念，堆不同于栈，堆是动态分配的（由操作系统内核或者堆管理器），只有在程序中需要时才会分配。在 CTF 的 pwn 程序中，栈是程序加载进内存后就会出现，而堆是由 malloc、alloc、realloc 函数分配内存后才会出现。</p>
+<ul>
+<li>windows 和 linux 下的堆分配、管理方式都不同，<strong>这里主要讲到的是 CTF 中常出现的 linux 下的堆分配知识</strong></li>
+</ul>
+<p>先看看堆在虚拟内存中的位置</p>
+<ul>
+<li><strong>堆的生长方向是从低地址向高地址生长的，而栈是从高地址向低地址生长的。</strong></li>
+</ul>
+<p>实际上堆可以申请到的内存空间比栈要大很多，在 linux 的 4G 的虚拟内存空间里最高可以达到 2.9 G 的空间</p>
+<p>下面的分析都是以 <strong>glibc 库下的 ptmalloc2 堆管理器</strong>来讲解的。</p>
+<span id="more"></span>
+
+<h2 id="堆的基本结构"><a href="#堆的基本结构" class="headerlink" title="堆的基本结构"></a>堆的基本结构</h2><p>先简单的画一个图吧：</p>
+<img src="https://i.imgur.com/RlseGG7.png" alt="img size" style="zoom:50%;">
+
+<p>1.pre size 字段。<strong>只有在前面一个堆块是空闲的时候才有指</strong>，用来指示前一个堆块的大小。前面一个堆块在使用时，他的值始终为 0<br>2.size 字段。是用来指示当前堆块的大小的（头部加上 user data 的大小）。但是这个字段的最后三位相当于三个 flag ，有另外的作用。</p>
+<p>这三位的作用分别是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">1.NON_MAIN_ARENA     这个堆块是否位于主线程</span><br><span class="line">2.IS_MAPPED          记录当前 chunk 是否是由 mmap 分配的</span><br><span class="line">3.PREV_INUSE         记录前一个 chunk 块是否被分配</span><br></pre></td></tr></table></figure>
+
+<img src="https://i.imgur.com/VejSHfX.png" alt="img size" style="zoom:50%;">
+
+<p>这里重点讲解最后一位：<strong>用来记录前一个 chunk 块是否被分配，被分配的话这个字段的值为 1</strong>，所以经常会在已分配的堆块中的 size 字段中发现值比原来大 1 个字节。</p>
+<ul>
+<li>所以前一个堆块的释放与否都和这两个字段（pre_size、size）的值有关，这是因为便于内存的释放操作（free）<br>4.user data 顾名思义就是用来存放用户数据的。</li>
+</ul>
+<p>使用 malloc 函数分配到的内存的返回值指针是<strong>指向 user data （用户数据区）</strong>，在后面的例子中也会讲到这个问题。</p>
+<p><strong>例如在 64 位程序中：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">malloc(8)</span><br></pre></td></tr></table></figure>
+
+<p>申请到的堆块总大小为 16 + 8 + 8 + 1 = 0x21</p>
+<p>1.第一个 16 字节是<strong>系统最小分配的内存</strong>，也就是说你如果想要申请的内存小于系统最小分配的内存的话，就会按照最小的内存来分配。</p>
+<ul>
+<li>在 64 位系统中这个值是 16 个字节，在 32 位系统中是 8 个字节</li>
+<li>例如，如果代码中是 malloc(0) 的话，<strong>堆管理器也会分配最小内存空间给你</strong></li>
+</ul>
+<p>2.第二个 8 字节是 pre size 字段的大小（32 位的为 4 字节）<br>3.第三个 8 字节为 size 字段的大小（32 位的为 4 字节）<br>4.最后一个 1 字节是 <strong>PREV_INUSE 的值，只有 0 或 1两个值</strong></p>
+<p>说了这么多的理论肯定会有点头大，不过没关系。在后面会有实例讲解，动手调试的时候对照着每一个字段分析就会好点。</p>
+<p> 指针与地址</p>
+<p>指针这一块知识在 c 语言里学的不太好的，可以在学习堆的过程中慢慢巩固一下知识。</p>
+<ul>
+<li>熟练掌握指针的使用在堆的题目分析中还是很有帮助的。下面简单说一下堆分配中的指针会用到了地方。</li>
+</ul>
+<p>首先要明确用户在调用 malloc 函数时返回的值为<strong>一个指针，指向分配到堆空间（用户数据区）</strong>，这个在最前面的那个图片也已经标出来了。</p>
+<p>有时候题目是以更复杂的情况，用指针来表示某个数据结构的，例如下面的这个图中的例子：</p>
+<img src="https://i.imgur.com/lpMMPHl.png" alt="img" style="zoom:67%;">
+
+<p>first chunk（second chunk）表示第一和第二个结构，<strong>每个结构中都有一个 point_heap 指针来指向存储用户数据的堆块（chunk）。</strong></p>
+<p><strong>左边的这个本身就是一个堆块，用来存放一些全局信息</strong>。比如 max_size 存储了能够存储的最大结构数量；exist_num 表示已经存储的结构的数量。</p>
+<h3 id="IDA-中常见的指针表示形式"><a href="#IDA-中常见的指针表示形式" class="headerlink" title="IDA 中常见的指针表示形式"></a>IDA 中常见的指针表示形式</h3><p>在 IDA 伪代码中的指针形式形如下面的情况：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*(qword_6020A8 + 8)</span><br></pre></td></tr></table></figure>
+
+<p><strong>表示取到 qword_6020A8 这个地址加 8 偏移的那个地址存储的值</strong></p>
+<p>汇编代码等同于：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">.text:0000000000400F85                 mov     rax, cs:qword_6020A8</span><br><span class="line">.text:0000000000400F8C                 mov     rax, [rax+8]</span><br></pre></td></tr></table></figure>
+
+<p>简单转化一下，也就是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">*(addr) = [addr]</span><br></pre></td></tr></table></figure>
+
+<h3 id="链表"><a href="#链表" class="headerlink" title="链表"></a>链表</h3><p>在 pwn 的堆题目中，经常会有像一些”笔记管理系统”之类的题目，例如下面这里例子</p>
+<img src="https://i.imgur.com/9mQhGPF.png" alt="img" style="zoom:75%;">
+
+<p>代码提供了最基本的增删查改的功能。这个”笔记”的数据结构<strong>通常就是使用链表连接起来的</strong>，记录了当前 note 的大小、属性、内容等等。</p>
+<p><strong>例如，下面这个例子就是以指针为基础来存储这个 note 结构的</strong>。这里的 i 代表 note 的索引，若这里的 i = 0 时：</p>
+<p><img src="https://i.imgur.com/n366Lzt.png" alt="img"></p>
+<p><em>(qword_6020A8 + 16) 就*<em>代表从 qword_6020A8 这个地址出再往后偏移 16 个字节，取到这个地址存储的值，接着把 1 赋值给这个地方（也就是把 1 存入这个地址）</em></em></p>
+<p>同样的 *(qword_6020A8 + 24) 就代表偏移 24 个字节处的值为 len</p>
+<p>依次类推就可以在<strong>不连续的内存空间中</strong>，把整个 note 的数据结构存储下来了。</p>
+<h2 id="申请堆块的本质"><a href="#申请堆块的本质" class="headerlink" title="申请堆块的本质"></a>申请堆块的本质</h2><blockquote>
+<p>堆管理器 ptmalloc2 主要是通过 malloc/free 函数来分配和释放内存块。</p>
+</blockquote>
+<p>ptmalloc2 的作用通俗的讲就是<strong>相当于一个”中间商”</strong>，在程序想要申请向系统申请堆空间时，这里的 ptmalloc2 就会申请一块很大的空间，并根据算法从这些内存中把空间真正的分配给程序。</p>
+<p>简单点说就是下面这个图中的情况：</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\OHeE6wZ.png" alt="OHeE6wZ" style="zoom:67%;">
+
+<p>这里的举一个最简单的例子：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;malloc.h&gt;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line"></span><br><span class="line">        char *p;</span><br><span class="line">        p = malloc(10);</span><br><span class="line"></span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>在 gdb 中进行调试，在 call malloc 处下一个断点，<strong>在这里使用 vmmap 命令，查看内存分布</strong>。可以看到此时并没有发现堆段</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\AmbgBDz.png" alt="AmbgBDz" style="zoom:80%;">
+
+<p>单步 n ，vmmap 命令再次查看内存，发现出现了堆段</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\4J2yIhn.png" alt="4J2yIhn" style="zoom:80%;">
+
+<p>但是这里我们明明只是申请了 10 字节的大小，但是为什么这里的为什么给了这么大的堆段呢？</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">0x00602000     ~    0x00623000</span><br></pre></td></tr></table></figure>
+
+<p>计算一下，刚好是 132 kB</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">(0x00623000-0x00602000)/1024 = 132 kB</span><br></pre></td></tr></table></figure>
+
+<blockquote>
+<p>原来这132KB的堆空间叫做arena，此时因为是主线程分配的，所以这个区域叫做 main arena</p>
+</blockquote>
+<p>也就是说这 132 KB 是”厂家”（内核）批发给”中间商”（ptmalloc2）的货物，<strong>以便下次程序在向系统申请小内存的时候，直接去”中间商”去取就行了</strong>，他就会在这 132KB 中按照要申请”货物”的多少进行分配下去。若”中间商”缺货了话，ptmalloc2 就继续去找”厂家”（系统内核）去取货</p>
+<h3 id="查看已分配的堆内存分布"><a href="#查看已分配的堆内存分布" class="headerlink" title="查看已分配的堆内存分布"></a>查看已分配的堆内存分布</h3><p>在上面我们动态调试的时候已经执行了 malloc 函数，申请到的堆指针是保存在 eax 中的<br><img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\YTz6loS.png" alt="YTz6loS" style="zoom:80%;"></p>
+<p>我们这里使用下面这个命令来查看内存堆块情况：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x/32gx 0x602010-0x10</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>32位的程序使用 x/32xw 比较直观一点</li>
+</ul>
+<p>这里减去 0x10 表示从堆块的头部开始观察（包含 pre size 和 size 字段）</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\TEiVMUc.png" alt="TEiVMUc" style="zoom:80%;">
+
+<h2 id="main-arena-与-top-chunk"><a href="#main-arena-与-top-chunk" class="headerlink" title="main_arena 与 top chunk"></a>main_arena 与 top chunk</h2><h3 id="main-arena"><a href="#main-arena" class="headerlink" title="main_arena"></a>main_arena</h3><p>这个 main_arena 其实就是 ptmalloc2 堆管理器通过与操作系统内核进行交互申请到的，也就是相当于上面所说的”批发”到的一堆货物</p>
+<blockquote>
+<p>因为是主线程分配的，所以叫做main arena，通过增加 program break location 的方式来增加 main arena 的大小。</p>
+</blockquote>
+<p><strong>使用 brk 方式扩展内存的方式这里就不说了，感兴趣可以自己去查一下资料</strong></p>
+<p>参考 ctf-wiki：<br><a target="_blank" rel="noopener" href="https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/heap_overview/#_4">https://ctf-wiki.github.io/ctf-wiki/pwn/linux/glibc-heap/heap_overview/#_4</a></p>
+<p>在 gdb 调试中，使用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">x/32gx &amp;main_arena</span><br></pre></td></tr></table></figure>
+
+<p>可以看到 main_arena 的内存分配情况。</p>
+<h3 id="top-chunk"><a href="#top-chunk" class="headerlink" title="top chunk"></a>top chunk</h3><p>顾名思义，是堆中第一个堆块。相当于一个”带头大哥”，程序以后分配到的内存到要放在他的后面。</p>
+<blockquote>
+<p>在系统当前的所有 free chunk(无论那种 bin)，都无法满足用户请求的内存大小的时候，将此 chunk 当做一个应急消防员，分配给用户使用。</p>
+</blockquote>
+<p>简单点说，也就是在程序在向堆管理器申请内存时，<strong>没有合适的内存空间可以分配给他，此时就会从 top chunk 上”剪切”一部分作为 chunk 分配给他</strong></p>
+<h2 id="free-函数和-bins"><a href="#free-函数和-bins" class="headerlink" title="free 函数和 bins"></a>free 函数和 bins</h2><p>bins 这个概念是与内存回收相关的，也就是堆管理器会根据用户已经申请到的内存空间大小进行释放，<strong>来决定放入哪类 bins 当作去</strong>。bins 直接翻译过来就是”垃圾桶”的意思，所以在系统在决定使用哪个 bins 时可以看作为”垃圾的分类”。</p>
+<p>主要的 bins 分为以下几类，这里重点讲解一下 fast bin，因为 fast bin 是使用到的最多的一类，也是其中结构最为简单的。</p>
+<h3 id="free-函数"><a href="#free-函数" class="headerlink" title="free 函数"></a>free 函数</h3><p>free 函数的使用是和 bins 的分配息息相关的。用一个简单的例子来理解一下 free 函数的实现原理。</p>
+<p>代码如下：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">#include &lt;stdlib.h&gt;</span><br><span class="line">#include &lt;string.h&gt;</span><br><span class="line"></span><br><span class="line">int main()&#123;</span><br><span class="line"></span><br><span class="line">        char *p;</span><br><span class="line"></span><br><span class="line">        p = malloc(10);</span><br><span class="line"></span><br><span class="line">        memcpy(p,&quot;Hello&quot;,5);</span><br><span class="line">        free(p);</span><br><span class="line">        return 0;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<ul>
+<li>程序将 “Hello” 字符串复制到申请到的堆内存空间中。</li>
+</ul>
+<p>编译后用 gdb 调试，在 call memcpy 处下一个断点，单步后将 “Hello” 复制到堆块中</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\MK9NWa8.png" alt="MK9NWa8" style="zoom:80%;">
+
+<p>继续使用 x/32gx 0x602010-0x10 命令查看堆块情况</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\SkUxKXN.png" alt="SkUxKXN" style="zoom:80%;">
+
+<p>继续单步 n，执行 free 函数之后，查看堆块情况</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\iifOKJV.png" alt="iifOKJV" style="zoom:80%;">
+
+<p>这里可以看出原本堆块中存储的内容已经被清空，然后<strong>查看一下 main_arena 的值，发现其中 +0x8 的偏移处</strong>，存储了指向已经 free 了的指针（指向头部，而不是 user data）</p>
+<p><strong>小总结</strong></p>
+<p>所以调用 free 函数以后程序做了两件事：<br><strong>1.清空此堆块的 user data<br>2.将此堆块的指针存储到 main_arena 中了（或是 fast bin 中）</strong></p>
+<h3 id="fast-bin"><a href="#fast-bin" class="headerlink" title="fast bin"></a>fast bin</h3><p>顾名思义，就是为了快速重新分配回内存而存在的一个结构。</p>
+<blockquote>
+<p>fastbin所包含chunk的大小为16 Bytes, 24 Bytes, 32 Bytes, … , 80 Bytes。当分配一块较小的内存(mem&lt;=64 Bytes)时，会首先检查对应大小的fastbin中是否包含未被使用的chunk，如果存在则直接将其从fastbin中移除并返回；否则通过其他方式（剪切top chunk）得到一块符合大小要求的chunk并返回。</p>
+</blockquote>
+<p>引用一张图：</p>
+<ul>
+<li>这里的横向排列的就是 main_arene（fast bin）的内存地址</li>
+</ul>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\r5Vjflz.png" alt="r5Vjflz" style="zoom:67%;">
+
+<p>假如此时 0x0804a000 处的堆块（实际堆块中的 size 字段要减去 PREV_INUSE 字段值 1，）已经被 free 了，那么他就会被存储<strong>在表示 40 bytes 的 fast bin 的内存地址里</strong></p>
+<ul>
+<li>注意：<strong>这里把指针和地址区别开。地址存储的是指针，64 位的指针占 8 个字节</strong>。</li>
+</ul>
+<p><strong>假设我们现在还是以 64 位下的 malloc(10) 为例子。</strong></p>
+<p>根据前面那个 free 函数的例子，查看 main_arena 地址中的指针值我们可以看出来，**+0x8 偏移处才是指向 malloc(10) 的堆块的指针**（这个堆块分配后的 user data 实际大小是 16 字节）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gdb-peda$ x/2gx &amp;main_arena                           (16 bytes 的链表头)</span><br><span class="line">0x7ffff7dd3760 &lt;main_arena&gt;:    0x0000000000000000    0x0000000000602000</span><br></pre></td></tr></table></figure>
+
+<p>所以这个 16 字节的堆块的指针会被插入属于他的这个链表队列中，也就是如下的情况。</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\yKHQ6fT.png" alt="yKHQ6fT" style="zoom:67%;">
+
+<p>所以这也就印证了在 main_arena 中分别表示 16 Bytes, 24 Bytes, 32 Bytes, … , 80 Bytes 的内存地址中分别存储着已经 free 的而且满足这个大小的 chunk的指针。</p>
+<p><strong>fast bin 的特性</strong></p>
+<p><strong>1.使用单链表来维护释放的堆块</strong><br>也就是和上图一样，从main_arena 到 free 第一个块的地方是采用单链表形式进行存储的，若还有 free 掉的堆块，则这个堆块的 fk 指针域就会指针前一个堆块。</p>
+<p>如下图所示，此时就是一个单链表结构</p>
+<img src="/2022/07/11/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/%E5%A0%86%E5%85%A5%E5%9D%91%E3%82%AC%E3%82%A4%E3%83%89%EF%BC%88yibudao%E8%83%83%EF%BC%89/Blog\E1iaukBlog\source\_posts\堆入坑ガイド（yibudao胃）\KYQmNPN.png" alt="KYQmNPN" style="zoom:67%;">
+
+<p><strong>2.采用后进先出的方式维护链表（类似于栈的结构）</strong><br>当程序需要重新 malloc 内存并且需要从fastbin 中挑选堆块时，<strong>会选择后面新加入的堆块拿来先进行内存分配</strong></p>
+<p>如上图，如果程序重新请求和上面的堆块大小一样时候（malloc），堆管理器就会直接使用 fast bin 里的堆块。</p>
+<p><strong>这里的话也就是直接使用第二次释放的这个堆块，然后将这个堆块从链表中移除，接着根据堆块的 fk 指针找到这个堆块</strong>，此时 main_arena 就指向了这里。也就是恢复到了上面第一个图中的情况。</p>
+<h3 id="small-bin"><a href="#small-bin" class="headerlink" title="small bin"></a>small bin</h3><p>顾名思义，这个是一个 small chunk ，满足的内存空间比 fast bin 大一点。</p>
+<p>如果程序请求的内存范围不在 fast bin 的范围内，就会考虑small bin。简单点说就是大于 80 Bytes 小于某一个值时，就会选择他。</p>
+<h3 id="unsorted-bin"><a href="#unsorted-bin" class="headerlink" title="unsorted bin"></a>unsorted bin</h3><blockquote>
+<p>当 fast bin、small bin 中的 chunk 都不能满足用户请求 chunk 大小时，堆管理器就会考虑使用 unsorted bin 。它会在分配 large chunk 之前对堆中碎片 chunk 进行合并，以便减少堆中的碎片。</p>
+</blockquote>
+<ul>
+<li><p>unsorted bin 与 fast bin 不同，他使用<strong>双向链表</strong>对 chunk 进行连接</p>
+</li>
+<li><p>unsorted 的字面意思就是”不可回收”的意思，可以看作将不可回收的垃圾（不满足能够进行内存分配的堆块）都放到这个”垃圾桶”中。</p>
+</li>
+</ul>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="tag"> <i class="fa fa-tag"></i> 二进制</a>
+              <a href="/tags/pwn/" rel="tag"> <i class="fa fa-tag"></i> pwn</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/11/ELF%E6%96%87%E4%BB%B6%E7%BB%93%E6%9E%84%E8%A7%A3%E6%9E%90%EF%BC%88%E6%9E%84%E5%BB%BArop%E6%A8%A1%E6%9D%BF%EF%BC%89/" rel="prev" title="ELF文件结构解析（构建rop模板）">
+                  <i class="fa fa-chevron-left"></i> ELF文件结构解析（构建rop模板）
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2022/07/12/csapp_lab1/" rel="next" title="csapp_DataLab">
+                  csapp_DataLab <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
