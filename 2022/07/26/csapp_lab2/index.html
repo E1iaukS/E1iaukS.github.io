@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="csapp_BombLab（待完成3 程序的机器级表示 编译器基于编程语言的规则、操作系统的惯例、目标机器的指令集生成机器代码。 汇编代码是机器代码的一种形式，它是机器代码的文本表示。 高级代码可移植性好，而汇编代码与特定机器密切相关。 能够阅读汇编代码：  好处：可以理解编译器的优化能力，并分析代码中隐含的低效率  条件：了解编译器将高级语言转换为机器代码的转换方式。   精通细节很重要，是理解">
+<meta property="og:type" content="article">
+<meta property="og:title" content="csapp_BombLab">
+<meta property="og:url" content="https://e1iauks.github.io/2022/07/26/csapp_lab2/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="csapp_BombLab（待完成3 程序的机器级表示 编译器基于编程语言的规则、操作系统的惯例、目标机器的指令集生成机器代码。 汇编代码是机器代码的一种形式，它是机器代码的文本表示。 高级代码可移植性好，而汇编代码与特定机器密切相关。 能够阅读汇编代码：  好处：可以理解编译器的优化能力，并分析代码中隐含的低效率  条件：了解编译器将高级语言转换为机器代码的转换方式。   精通细节很重要，是理解">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/fc45065e632e1d7a6f07ab4b11152fbe/xmlnote/C48232938D984A2BAE77556E75599457/14185">
+<meta property="og:image" content="https://note.youdao.com/yws/public/resource/fc45065e632e1d7a6f07ab4b11152fbe/xmlnote/A4D988D637244C2B8C7DC439F7AD9DE2/14239">
+<meta property="article:published_time" content="2022-07-25T16:00:01.000Z">
+<meta property="article:modified_time" content="2022-07-25T16:51:53.523Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="二进制">
+<meta property="article:tag" content="pwn">
+<meta property="article:tag" content="csapp">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://note.youdao.com/yws/public/resource/fc45065e632e1d7a6f07ab4b11152fbe/xmlnote/C48232938D984A2BAE77556E75599457/14185">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2022/07/26/csapp_lab2/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2022/07/26/csapp_lab2/","path":"2022/07/26/csapp_lab2/","title":"csapp_BombLab"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>csapp_BombLab | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#csapp-BombLab%EF%BC%88%E5%BE%85%E5%AE%8C%E6%88%90"><span class="nav-number">1.</span> <span class="nav-text">csapp_BombLab（待完成</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">14</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">5</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">9</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/07/26/csapp_lab2/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          csapp_BombLab
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2022-07-26 00:00:01 / 修改时间：00:51:53" itemprop="dateCreated datePublished" datetime="2022-07-26T00:00:01+08:00">2022-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%E5%AD%A6%E4%B9%A0/" itemprop="url" rel="index"><span itemprop="name">PWN学习</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="csapp-BombLab（待完成"><a href="#csapp-BombLab（待完成" class="headerlink" title="csapp_BombLab（待完成"></a>csapp_BombLab（待完成</h1><p><strong>3 程序的机器级表示</strong></p>
+<p>编译器基于编程语言的规则、操作系统的惯例、目标机器的指令集生成机器代码。</p>
+<p><strong>汇编代码</strong>是机器代码的一种形式，它是机器代码的文本表示。</p>
+<p>高级代码可移植性好，而汇编代码与特定机器密切相关。</p>
+<p>能够阅读汇编代码：</p>
+<ul>
+<li><p>好处：可以理解编译器的优化能力，并分析代码中隐含的低效率</p>
+</li>
+<li><p>条件：<strong>了解编译器将高级语言转换为机器代码的转换方式。</strong></p>
+</li>
+</ul>
+<p><strong>精通细节很重要，是理解更深和更基本概念的先决条件。要认真研究示例、完成练习。</strong></p>
+<p>32位机器可以使用约 4GB 的随机访问存储器，64位机器可以使用 256TB(2^48) 的内存空间(这里说的是主存)。</p>
+<p><strong>3.2 程序编码</strong></p>
+<p>汇编器产生的目标代码是机器代码的一种形式，它包含二进制形式表示的所有指令，但还没有填入全局值的地址。</p>
+<p><strong>3.2.1 机器级代码</strong></p>
+<p>影响机器级程序的两种抽象：</p>
+<ul>
+<li><strong>指令集架构</strong>：定义了处理器状态、指令的格式、指令对状态的影响。</li>
+<li><strong>虚拟地址</strong>：机器代码将内存看成一个按字节寻址的数组。</li>
+</ul>
+<p>对机器代码可见的处理器状态：</p>
+<ol>
+<li><strong>程序计数器</strong></li>
+<li><strong>整数寄存器文件</strong>：保存临时数据或重要的程序状态</li>
+<li><strong>条件码寄存器</strong>：保存最近执行的算术或逻辑指令的状态信息。</li>
+<li><strong>一组向量寄存器</strong>：保存一个或多个整数或浮点数值</li>
+</ol>
+<p>C 语言中的数组和结构，在机器代码中用一组连续的字节来表示。</p>
+<p>汇编代码<strong>不区分有符号数和无符号数，不区分指针的不同类型，不区分指针和整数</strong>。</p>
+<p>一条机器指令只执行一个非常基本的操作。</p>
+<p><strong>3.2.2 代码示例</strong></p>
+<p><strong>反汇编</strong></p>
+<p>使用反汇编器可以根据机器代码产生汇编代码。如：48 89 d3 → mov %rdx,%rbx</p>
+<p>机器代码与反汇编表示的特性：</p>
+<ol>
+<li>x86-64 的指令长度范围为 1~15 字节。常用指令和操作数少的指令所需字节少。</li>
+<li>从十六进制字节值到汇编指令，格式为：某个数字唯一地对应某个汇编指令，比如 mov 指令以 48 开头。</li>
+<li>指令结尾的 ‘q’ 是大小指示符，大多数情况下可以省略。</li>
+</ol>
+<p>从源程序转换来的可执行目标文件中，除了程序过程的代码，还包含启动和终止程序的代码，与操作系统交互的代码。</p>
+<p>链接器的任务之一就是为函数调用找到匹配的函数的可执行代码的位置。</p>
+<p><strong>3.2.3 关于格式的注解</strong></p>
+<p>在汇编代码中，以 ‘.’ (点) 开头的行是指导汇编器和链接器工作的伪指令。</p>
+<p><strong>3.3 数据格式</strong></p>
+<p>字节：byte，8位；字：word，16位；双字：double words，32位；四字：quad words，64位。</p>
+<p>对应的指令后缀：movb, movw, movl, movq。</p>
+<p>这里说的都是整数，浮点数使用一组完全不同的指令和寄存器。</p>
+<p><strong>3.4 访问信息</strong></p>
+<p>一个 64 位 CPU 中包含<strong>一组 16 个存储 64 位值的通用目的寄存器</strong>，用来存储整数和指针。</p>
+<p>16 个寄存器标号为 <strong>rax<del>rbp，r8</del>r15</strong></p>
+<p>16 个寄存器的低位部分都可以作为字节、字、双字、四字来单独访问。分别表示为 al, ax, eax, rax。</p>
+<p><strong>低位操作的规则：</strong></p>
+<ol>
+<li>将寄存器作为目标位置时，生成字节和字的指令会保持剩下的字节不变</li>
+<li>生成双字的指令会把高位四字节置为 0.</li>
+</ol>
+<p><strong>16个寄存器的作用</strong></p>
+<ol>
+<li><strong>rax：返回值</strong></li>
+<li><strong>rsp：栈指针</strong></li>
+<li><strong>rdi, rsi,</strong> rdx, rcx,  r8, r9：第 1 到第 6 个参数</li>
+<li><strong>rbx, rbp</strong>, r12~r15：被调用者保存</li>
+<li>r10, r11：调用者保存</li>
+</ol>
+<p><strong>3.4.1 操作数指示符</strong></p>
+<p>指令的操作数有三种类型：<strong>立即数</strong>，<strong>寄存器</strong>，<strong>内存引用</strong></p>
+<p><strong>最常用的寻址方式：Imm(rb, ri, s)：Imm + rb + ri*s</strong></p>
+<p>s 为比例因子，只能是 1，2，4，8 中的某一个</p>
+<p><strong>3.4.2 数据传送指令</strong></p>
+<p><strong>mov类</strong></p>
+<p>mov 只会更新目的操作数指定的寄存器字节或内存位置。</p>
+<p>mov 类是最简单的数据传送指令，mov 类有 5 种：</p>
+<ol>
+<li>movb, movw, movl：传送字节、字、双字</li>
+<li>movq：传送四字。如果源操作数是立即数，只能是双字，然后符号扩展到四字（假的四字）</li>
+<li>movabsq：传送绝对的四字。只能以立即数作为源操作数，以寄存器为目的。可以传送任意 64 位立即数。</li>
+</ol>
+<p>movq 用来传送<strong>寄存器和内存引用中的四字</strong>，movabsq 用来传送<strong>四字的立即数</strong></p>
+<p>mov 类的源操作数和目的操作数不能同时为内存，即不能将值从内存复制到内存。</p>
+<p>mov 指令中寄存器的大小必须与 mov 的后缀字符大小匹配。</p>
+<p>​                movb $-17, %al              </p>
+<p><strong>movz类</strong></p>
+<p>movz 系列和 movs 系列可以把较小的源值复制到较大的目的，<strong>目的都是寄存器</strong>。</p>
+<p>movz 将目的寄存器剩余字节做<strong>零扩展</strong>，movs 做<strong>符号扩展</strong></p>
+<p>movz类：movzbw, movzbl, movzbq, movzwl, movzwq（movzbw 即从字节复制到字，其他类似）</p>
+<p>movs类：movsbw, movsbl, movsbq, movswl, movswq, movslq, cltq</p>
+<ul>
+<li><strong>cltq：</strong>没有操作数，将 eax 符号扩展到 rax，等价于 movslq %eax,%rax</li>
+</ul>
+<p><strong>3.4.3 数据传送示例</strong></p>
+<p>局部变量通常保存在寄存器中。</p>
+<p>函数返回指令 ret 返回的值为<strong>寄存器 rax</strong> 中的值</p>
+<p><strong>强制类型转换</strong>是通过 mov 指令实现的。</p>
+<p>当指针存在寄存器中时，a = *p 的汇编指令为： mov (rdi), rax</p>
+<p><strong>3.4.4 压入和弹出栈数据</strong></p>
+<p><strong>栈向下增长</strong>，栈顶的地址是栈中元素地址中最低的。栈指针 rsp 保存栈顶元素的地址。</p>
+<p>出入栈指令：</p>
+<ul>
+<li>pushq rax：压栈，<strong>栈指针减 8</strong> 并将 rax 中的值写入新的栈顶地址，等价于：subq $8, (rsp) ; movq rax,(rsp)。</li>
+<li>popq rax：出栈，<strong>栈指针加 8</strong> 并将出栈的值写入 rax 中，等价于：movq (rsp),rax ; add $8,(rasp)</li>
+</ul>
+<p>使用 mov 指令和标准的内存寻址方法可以访问<strong>栈内的任意位置</strong>，而非仅限于栈顶。</p>
+<p><strong>3.5 算术和逻辑操作</strong></p>
+<p>x86-64 的每个指令类都有<strong>对应四种不同大小数据</strong>的指令</p>
+<p>算术和逻辑操作共有四组：</p>
+<ol>
+<li><p>加载有效地址</p>
+</li>
+<li><ol>
+<li>leaq S, D：将 S 的地址保存到 D 中，D 必须是寄存器</li>
+</ol>
+</li>
+<li><p>一元操作</p>
+</li>
+<li><ol>
+<li>inc D: D+1</li>
+<li>dec D: D-1</li>
+<li>neg D：取负</li>
+<li>not D：取补</li>
+</ol>
+</li>
+<li><p>二元操作（加减乘，与或异或，没有除法）</p>
+</li>
+<li><ol>
+<li>add s, d: d=d+s</li>
+<li>sub s, d:  d=d-s</li>
+<li>imul s, d: d=d*s 乘</li>
+<li>xor s, d: d=d^s 异或</li>
+<li>or s, d: d=d|s 或</li>
+<li>and s,d: d=d&amp;s 与</li>
+</ol>
+</li>
+<li><p>移位</p>
+</li>
+<li><ol>
+<li>sal k,d: d=d&lt;</li>
+<li>shl k,d: d=d&lt;</li>
+<li>sar k,d: d=d&lt;</li>
+<li>shr k,d: d=d&lt;</li>
+</ol>
+</li>
+</ol>
+<p><strong>3.5.1 加载有效地址</strong></p>
+<p>leaq 实际上是 movq 指令的变形。操作是从内存读数据地址到寄存器。</p>
+<p>leaq 在实际应用中常常不用来取地址，而用来计算加法和有限形式的乘法</p>
+<p>​                leaq 9(rdi, rsi, 4), rax;//x in rdi,y in rsi。此操作实际上等于将 x+4*y+9 的结果存入 rax              </p>
+<p><strong>3.5.2 一元和二元操作</strong></p>
+<p>一元操作中的操作数既是源又是目的。</p>
+<p>二元操作中的第二个操作数既是源又是目的。</p>
+<p>因为不能从内存到内存，因此当第二个操作数是内存地址时，要先从内存读出值，执行操作后再把结果写回去。</p>
+<p>注意 sub s,d 是 d-s 而不是 s-d</p>
+<p><strong>3.5.3 移位操作</strong></p>
+<p>移位操作的移位量可以是一个立即数或放在单字节寄存器 cl 中。</p>
+<p>当移位量大于目的数的长度时，只取移位量低字节中的值（小于目的数长度）来作为真实的移位量。</p>
+<p><strong>3.5.4 特殊的算术操作</strong></p>
+<p>两个 64 位数的乘积需要 128 位来表示，x86-64指令集可以有限的支持对 128 位数的操作，包括乘法和除法。</p>
+<p>128 位数需要两个寄存器来存储，移动时也需要两个 movq 指令来移动。</p>
+<p>这种情况对于有符号数和无符号数采用了不同的指令。</p>
+<p><strong>3.6 控制</strong></p>
+<p>条件语句、循环语句、分支语句都要求有条件的执行。</p>
+<p>机器代码提供两种低级机制来实现有条件的行为：</p>
+<ol>
+<li><strong>测试数据值</strong>，然后根据测试的结果来改变控制流或数据流</li>
+<li><strong>使用 jump 指令进行跳转</strong></li>
+</ol>
+<p><strong>3.6.1 条件码</strong></p>
+<p><strong>条件码寄存器</strong>都是单个位的，是不同于整数寄存器的另一组寄存器。</p>
+<p>条件码描述了最近的算术或逻辑操作的属性，可以通过检测这些寄存器来执行条件分支指令。</p>
+<p>常用条件码：</p>
+<ol>
+<li><strong>CF：进位标志。</strong>最近的操作使最高位产生了进位。可以用来检查无符号数的溢出</li>
+<li><strong>ZF：零标志。</strong>最近的操作的结果为 0</li>
+<li><strong>SF：符号标志。</strong>最近的操作的结果为负数。</li>
+<li><strong>OF：溢出标志。</strong>最近的操作导致了补码溢出</li>
+</ol>
+<p>除了 leaq 指令外，其余的所有算术和逻辑指令都会<strong>根据运算结果设置条件码</strong>。</p>
+<p>此外还有两类特殊的指令，他们只设置条件码不更新目的寄存器：</p>
+<ul>
+<li><strong>cmp s1, s2：</strong>除了不更新目的寄存器外与 sub 指令的行为相同</li>
+<li><strong>test s1, s2：</strong>除了不更新目的寄存器外与 and 指令的行为相同</li>
+</ul>
+<p><strong>3.6.2 访问条件码</strong></p>
+<p>条件码一般不直接读取，常用的使用方法有 3 种：</p>
+<ol>
+<li>根据条件码的某种组合，使用 set 指令类将一个字节设置为 0 或 1。</li>
+<li>条件跳转到程序的某个其他部分</li>
+<li>有条件地传送数据</li>
+</ol>
+<p><strong>set 指令类</strong></p>
+<p>set 指令的目的操作数是低位单字节寄存器元素或一个字节的内存位置。set 会将该字节设置为 0 或 1</p>
+<p>set 指令类的后缀指明了所考虑的条件码的组合，如 setl (set less) 表示“小于时设置”</p>
+<p>​    <img src="https://note.youdao.com/yws/public/resource/fc45065e632e1d7a6f07ab4b11152fbe/xmlnote/C48232938D984A2BAE77556E75599457/14185" alt="0"></p>
+<p>注意到上图中，set 指令对于大于、小于的比较分为了有符号和无符号两类。</p>
+<p>大多数时候，机器代码对无符号和有符号两种情况使用一样的指令。</p>
+<p>使用不同指令来处理无符号和有符号操作的情况：</p>
+<ol>
+<li>不同的条件码组合：</li>
+<li>不同版本的右移：sar 和 shr</li>
+<li>不同的乘法和除法指令</li>
+</ol>
+<p>汇编语言中数据本身不区分有符号和无符号，通过不同的指令来区分有符号操作和无符号操作。</p>
+<p>注意在汇编代码中，8字节的操作数可能是 long，long long 或 指针</p>
+<p><strong>3.6.3 跳转指令</strong></p>
+<p>跳转指令的目的地由一个标号指明</p>
+<p>​                    jmp .L1 ;//跳转到 .L1 。在实际的跳转指令中，.L1 会直接编码为跳转目标的地址。    movq (rax),rdx .L1:    popq rdx              </p>
+<p>jmp 可以是直接跳转，即操作数为标号。也可以间接跳转，即操作数是寄存器或内存引用，这种情况下跳转到寄存器中存储的地址处。</p>
+<p>跳转指令分为<strong>有条件跳转</strong>和<strong>无条件跳转</strong>，只有 jmp 是无条件跳转。有条件跳转都只能是直接跳转。</p>
+<p>有条件跳转类似 set 指令系列，根据条件码寄存器的值来判断是否进行跳转。</p>
+<p>​    <img src="https://note.youdao.com/yws/public/resource/fc45065e632e1d7a6f07ab4b11152fbe/xmlnote/A4D988D637244C2B8C7DC439F7AD9DE2/14239" alt="0"></p>
+<p><strong>3.6.4 跳转指令的编码</strong></p>
+<p><strong>跳转指令的机器编码</strong>（就是纯粹数字表示的机器语言）有几种方式，其中两种如下：</p>
+<ul>
+<li><strong>PC 相对跳转</strong>：使用目标地址与跳转指令之后下一条指令的地址之间的差来编码。可以用 1、2 或 4 个字节来编码。</li>
+<li><strong>绝对地址编码</strong>：使用目标的绝对地址。用 4 个字节直接指出。</li>
+</ul>
+<p>汇编器和链接器会自己选择适当的编码方式</p>
+<p><strong>3.6.5 用条件控制来实现条件分支</strong></p>
+<p>汇编代码层面的条件控制类似于 c 语言的 goto 语句。</p>
+<p>汇编语言使用条件码和条件跳转来起到和 c 语言中 if 相似的作用</p>
+<p>​                ‘C 语言’ if( x&lt;y ) { i++ } else { i– } ‘汇编’ cmpq rsi,rdi jge .L2 incl rax; .L2:    decl rax;              </p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%8C%E8%BF%9B%E5%88%B6/" rel="tag"> <i class="fa fa-tag"></i> 二进制</a>
+              <a href="/tags/pwn/" rel="tag"> <i class="fa fa-tag"></i> pwn</a>
+              <a href="/tags/csapp/" rel="tag"> <i class="fa fa-tag"></i> csapp</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/12/csapp_lab1/" rel="prev" title="csapp_DataLab">
+                  <i class="fa fa-chevron-left"></i> csapp_DataLab
+                </a>
+            </div>
+            <div class="post-nav-item">
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2022</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
