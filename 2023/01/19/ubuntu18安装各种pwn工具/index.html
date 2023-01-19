@@ -1,0 +1,486 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="ubuntu18安装各种pwn工具 更换系统镜像为清华镜像源https:&#x2F;&#x2F;blog.csdn.net&#x2F;ifreewolf_csdn&#x2F;article&#x2F;details&#x2F;83185505不换的话以后下载东西会很慢  遇到报错 12E: Could not get lock &#x2F;var&#x2F;lib&#x2F;dpkg&#x2F;lock-open(11: Resource temporarily unavailable)E: U">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ubuntu18安装各种pwn工具">
+<meta property="og:url" content="https://e1iauks.github.io/2023/01/19/ubuntu18%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8Dpwn%E5%B7%A5%E5%85%B7/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="ubuntu18安装各种pwn工具 更换系统镜像为清华镜像源https:&#x2F;&#x2F;blog.csdn.net&#x2F;ifreewolf_csdn&#x2F;article&#x2F;details&#x2F;83185505不换的话以后下载东西会很慢  遇到报错 12E: Could not get lock &#x2F;var&#x2F;lib&#x2F;dpkg&#x2F;lock-open(11: Resource temporarily unavailable)E: U">
+<meta property="og:locale" content="zh_CN">
+<meta property="article:published_time" content="2023-01-18T16:41:59.000Z">
+<meta property="article:modified_time" content="2023-01-19T06:52:50.662Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="基础知识">
+<meta name="twitter:card" content="summary">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2023/01/19/ubuntu18%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8Dpwn%E5%B7%A5%E5%85%B7/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2023/01/19/ubuntu18%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8Dpwn%E5%B7%A5%E5%85%B7/","path":"2023/01/19/ubuntu18安装各种pwn工具/","title":"ubuntu18安装各种pwn工具"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>ubuntu18安装各种pwn工具 | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#ubuntu18%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8Dpwn%E5%B7%A5%E5%85%B7"><span class="nav-number">1.</span> <span class="nav-text">ubuntu18安装各种pwn工具</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E6%9B%B4%E6%8D%A2%E7%B3%BB%E7%BB%9F%E9%95%9C%E5%83%8F%E4%B8%BA%E6%B8%85%E5%8D%8E%E9%95%9C%E5%83%8F%E6%BA%90"><span class="nav-number">2.</span> <span class="nav-text">更换系统镜像为清华镜像源</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#%E5%9F%BA%E7%A1%80%E5%B7%A5%E5%85%B7%E5%AE%89%E8%A3%85"><span class="nav-number">3.</span> <span class="nav-text">基础工具安装</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwntools"><span class="nav-number">4.</span> <span class="nav-text">pwntools</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#gdb"><span class="nav-number">5.</span> <span class="nav-text">gdb</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#pwndbg"><span class="nav-number">6.</span> <span class="nav-text">pwndbg</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#LibcSearcher"><span class="nav-number">7.</span> <span class="nav-text">LibcSearcher</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#libc-database%E5%BA%93%E7%9A%84%E4%BD%BF%E7%94%A8"><span class="nav-number">7.1.</span> <span class="nav-text">libc-database库的使用</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ROPgadget"><span class="nav-number">8.</span> <span class="nav-text">ROPgadget</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#one-gadget"><span class="nav-number">9.</span> <span class="nav-text">one_gadget</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#roputils"><span class="nav-number">10.</span> <span class="nav-text">roputils</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#edb-debugger"><span class="nav-number">11.</span> <span class="nav-text">edb-debugger</span></a></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2023/01/19/ubuntu18%E5%AE%89%E8%A3%85%E5%90%84%E7%A7%8Dpwn%E5%B7%A5%E5%85%B7/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          ubuntu18安装各种pwn工具
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-01-19 00:41:59 / 修改时间：14:52:50" itemprop="dateCreated datePublished" datetime="2023-01-19T00:41:59+08:00">2023-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%EF%BC%81/" itemprop="url" rel="index"><span itemprop="name">PWN！</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="ubuntu18安装各种pwn工具"><a href="#ubuntu18安装各种pwn工具" class="headerlink" title="ubuntu18安装各种pwn工具"></a>ubuntu18安装各种pwn工具</h1><hr>
+<h1 id="更换系统镜像为清华镜像源"><a href="#更换系统镜像为清华镜像源" class="headerlink" title="更换系统镜像为清华镜像源"></a>更换系统镜像为清华镜像源</h1><p><a target="_blank" rel="noopener" href="https://blog.csdn.net/ifreewolf_csdn/article/details/83185505">https://blog.csdn.net/ifreewolf_csdn/article/details/83185505</a><br>不换的话以后下载东西会很慢</p>
+<p> 遇到报错</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">E: Could not get lock /var/lib/dpkg/lock-open(11: Resource temporarily unavailable)</span><br><span class="line">E: Unable to lock the administration directory (/var/lib/dpkg/), is another process using it?</span><br></pre></td></tr></table></figure>
+
+<p>解决：<a target="_blank" rel="noopener" href="https://www.cnblogs.com/yun6853992/p/9343816.html">https://www.cnblogs.com/yun6853992/p/9343816.html</a><br>然后重启终端即可，后面还有遇到，直接kill进程，不用再删除文件了</p>
+<span id="more"></span>
+
+<h1 id="基础工具安装"><a href="#基础工具安装" class="headerlink" title="基础工具安装"></a>基础工具安装</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">//安装python</span><br><span class="line">$ sudo apt install python</span><br><span class="line">//pip</span><br><span class="line">$ sudo apt install python-pip</span><br><span class="line">//git</span><br><span class="line">$ sudo apt install git</span><br><span class="line">//gem</span><br><span class="line">$ sudo apt install ruby</span><br></pre></td></tr></table></figure>
+
+<p>先来个<strong>放工具的文件夹</strong>吧嘿嘿</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir tools</span><br><span class="line">$ cd ./tools</span><br></pre></td></tr></table></figure>
+
+<h1 id="pwntools"><a href="#pwntools" class="headerlink" title="pwntools"></a>pwntools</h1><p>在此附上pwntools的<a target="_blank" rel="noopener" href="https://pwntools.readthedocs.io/en/stable/">官方文档</a><br>pwntools支持python &gt;= 2.7<br><strong>先别用</strong>，往下看再自己选择叭！</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get update</span><br><span class="line">$ sudo apt-get install python3 python3-pip python3-dev git libssl-dev libffi-dev build-essential</span><br><span class="line">$ sudo python3 -m pip install --upgrade pip</span><br><span class="line">$ sudo python3 -m pip install --upgrade</span><br><span class="line">git+https://github.com/Gallopsled/pwntools.git@dev3</span><br></pre></td></tr></table></figure>
+
+<p>听说这个py3不完备</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ python2 -m pip install pwntools</span><br></pre></td></tr></table></figure>
+
+<h1 id="gdb"><a href="#gdb" class="headerlink" title="gdb"></a>gdb</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt install gdb</span><br></pre></td></tr></table></figure>
+
+<h1 id="pwndbg"><a href="#pwndbg" class="headerlink" title="pwndbg"></a>pwndbg</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ mkdir pwndbg</span><br><span class="line">$ git clone https://github.com/pwndbg/pwndbg$ cd pwndbg$ ./setup.sh</span><br></pre></td></tr></table></figure>
+
+<p>后面有空再下载<em>peda</em>，<em>gef</em>那些吧~</p>
+<h1 id="LibcSearcher"><a href="#LibcSearcher" class="headerlink" title="LibcSearcher"></a>LibcSearcher</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/lieanu/LibcSearcher.git</span><br><span class="line">$ cd LibcSearcher$ python setup.py develop</span><br></pre></td></tr></table></figure>
+
+<p>使用示例</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">from LibcSearcher import * </span><br><span class="line"></span><br><span class="line">#第二个参数，为已泄露的实际地址,或最后12位(比如：d90)，int类型</span><br><span class="line">obj = LibcSearcher(&quot;fgets&quot;, 0X7ff39014bd90) obj.dump(&quot;system&quot;)    #system 偏移obj.dump(&quot;str_bin_sh&quot;)  #/bin/sh 偏移</span><br><span class="line">obj.dump(&quot;__libc_start_main_ret&quot;)  </span><br><span class="line"></span><br><span class="line"># sys_addr = libc_base + obj.dump(&quot;system&quot;)</span><br></pre></td></tr></table></figure>
+
+<p>如果遇到返回多个libc版本库的情况，可以通过<code>add_condition(leaked_func, leaked_address)</code>来添加限制条件，也可以手工选择其中一个libc版本。</p>
+<h2 id="libc-database库的使用"><a href="#libc-database库的使用" class="headerlink" title="libc-database库的使用"></a>libc-database库的使用</h2><p>更新数据库</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./get</span><br></pre></td></tr></table></figure>
+
+<p>将自定义libc添加到数据库中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./add /usr/lib/libc-2.21.so</span><br></pre></td></tr></table></figure>
+
+<p>在数据库中找到在给定地址上具有给定名称的所有libc，仅检查最后12位，因为随机化通常在页面大小级别上进行</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./find printf 260 puts f30archive-glibc (id libc6_2.19-10ubuntu2_i386)</span><br></pre></td></tr></table></figure>
+
+<p>从泄露的返回地址中找到一个libc到__libc_start_main中</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./find __libc_start_main_ret a83ubuntu-trusty-i386-libc6 (id libc6_2.19-0ubuntu6.6_i386)archive-eglibc (id libc6_2.19-0ubuntu6_i386)ubuntu-utopic-i386-libc6 (id libc6_2.19-10ubuntu2.3_i386)archive-glibc (id libc6_2.19-10ubuntu2_i386)archive-glibc (id libc6_2.19-15ubuntu2_i386)</span><br></pre></td></tr></table></figure>
+
+<p>给定一个libc ID，转储一些有用的偏移量。您也可以提供自己的名称进行转储。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./dump libc6_2.19-0ubuntu6.6_i386offset___libc_start_main_ret = 0x19a83offset_system = 0x00040190offset_dup2 = 0x000db590offset_recv = 0x000ed2d0offset_str_bin_sh = 0x160a24</span><br></pre></td></tr></table></figure>
+
+<p>检查数据库中是否已存在库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./identify /usr/lib/libc.so.6id local-f706181f06104ef6c7008c066290ea47aa4a82c5</span><br></pre></td></tr></table></figure>
+
+<p>下载与libc ID对应的整个库。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ./download libc6_2.23-0ubuntu10_amd64Getting libc6_2.23-0ubuntu10_amd64  -&gt; Location: http://security.ubuntu.com/ubuntu/pool/main/g/glibc/libc6_2.23-0ubuntu10_amd64.deb  -&gt; Downloading package  -&gt; Extracting package  -&gt; Package saved to libs/libc6_2.23-0ubuntu10_amd64$ ls libs/libc6_2.23-0ubuntu10_amd64ld-2.23.so ... libc.so.6 ... libpthread.so.0 ...</span><br></pre></td></tr></table></figure>
+
+<h1 id="ROPgadget"><a href="#ROPgadget" class="headerlink" title="ROPgadget"></a>ROPgadget</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">$ sudo pip install capstone$ ROPgadget.py</span><br><span class="line">$ python setup.py install//或者$ pip install ropgadget$ ROPgadget</span><br></pre></td></tr></table></figure>
+
+<p>用法：</p>
+<p> 查找可存储寄存器的代码（rop表示二进制文件名）</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ROPgadget --binary rop --only &#x27;pop|ret&#x27; | grep &#x27;eax&#x27;</span><br></pre></td></tr></table></figure>
+
+<p>查找字符串</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ROPgadget --binary rop --string &quot;/bin/sh&quot;</span><br></pre></td></tr></table></figure>
+
+<p>查找有int 0x80的地址</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ ROPgadget --binary rop --only &#x27;int&#x27;</span><br></pre></td></tr></table></figure>
+
+<h1 id="one-gadget"><a href="#one-gadget" class="headerlink" title="one_gadget"></a>one_gadget</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo gem install one_gadget</span><br></pre></td></tr></table></figure>
+
+<h1 id="roputils"><a href="#roputils" class="headerlink" title="roputils"></a>roputils</h1><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ git clone https://github.com/inaz2/roputils</span><br></pre></td></tr></table></figure>
+
+<h1 id="edb-debugger"><a href="#edb-debugger" class="headerlink" title="edb-debugger"></a>edb-debugger</h1><p>这就相当于linux的od，用od用惯了，用这个调试就比较好用</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">$ sudo apt-get install cmake$ sudo apt-get install build-essential$ sudo apt-get install libboost-dev$ sudo apt-get install libqt5xmlpatterns5-dev$ sudo apt-get install qtbase5-dev$ sudo apt-get install qt5-default$ sudo apt-get install libqt5svg5-dev$ sudo apt-get install libgraphviz-dev$ sudo apt-get install libcapstone-dev//以上其实可以写在一条命令行。。。 $ git clone --recursive https://github.com/eteran/edb-debugger$ cd edb-debugger$ mkdir build$ cd build$ cmake ..$ make$ ./edb</span><br></pre></td></tr></table></figure>
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag"> <i class="fa fa-tag"></i> 基础知识</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2022/07/26/csapp_lab2/" rel="prev" title="csapp_BombLab">
+                  <i class="fa fa-chevron-left"></i> csapp_BombLab
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/01/19/pwntools%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" rel="next" title="pwntools使用指南">
+                  pwntools使用指南 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
