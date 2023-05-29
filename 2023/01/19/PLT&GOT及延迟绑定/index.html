@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="PLT&amp;GOT及延迟绑定linux 下的动态链接是通过 PLT&amp;GOT 来实现的，这里做一个实验，通过这个实验来理解 使用如下源代码 test.c： 12345678910#include &lt;stdio.h&gt;void print_banner()&amp;#123;  	printf(&quot;Welcome to World of PLT and GOT\n&quot;);">
+<meta property="og:type" content="article">
+<meta property="og:title" content="PLT&amp;GOT及延迟绑定">
+<meta property="og:url" content="https://e1iauks.github.io/2023/01/19/PLT&GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="PLT&amp;GOT及延迟绑定linux 下的动态链接是通过 PLT&amp;GOT 来实现的，这里做一个实验，通过这个实验来理解 使用如下源代码 test.c： 12345678910#include &lt;stdio.h&gt;void print_banner()&amp;#123;  	printf(&quot;Welcome to World of PLT and GOT\n&quot;);">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_4YBDSW67P6KWC6K.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_4EMZFRKNEXE9XVJ.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_3QNTDTTWNXBKS5Z.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_5Z8XUGEXSED5RXF.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_SFBGWHQ8YEMKNDP.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_FM29NGMC75ENVMM.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_MQGWQW873JW6S7M.jpg">
+<meta property="og:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_9TZYGD6KKPXZXJ9.jpg">
+<meta property="article:published_time" content="2023-01-18T16:41:59.000Z">
+<meta property="article:modified_time" content="2023-01-19T10:52:28.336Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="基础知识">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://bbs.kanxue.com/upload/attach/202002/837755_4YBDSW67P6KWC6K.jpg">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2023/01/19/PLT&GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2023/01/19/PLT&GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A/","path":"2023/01/19/PLT&GOT及延迟绑定/","title":"PLT&GOT及延迟绑定"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>PLT&GOT及延迟绑定 | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#PLT-amp-GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A"><span class="nav-number">1.</span> <span class="nav-text">PLT&amp;GOT及延迟绑定</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A"><span class="nav-number">1.0.1.</span> <span class="nav-text">延迟绑定</span></a></li></ol></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">18</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">6</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">10</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2023/01/19/PLT&GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          PLT&GOT及延迟绑定
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-01-19 00:41:59 / 修改时间：18:52:28" itemprop="dateCreated datePublished" datetime="2023-01-19T00:41:59+08:00">2023-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%EF%BC%81/" itemprop="url" rel="index"><span itemprop="name">PWN！</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="PLT-amp-GOT及延迟绑定"><a href="#PLT-amp-GOT及延迟绑定" class="headerlink" title="PLT&amp;GOT及延迟绑定"></a>PLT&amp;GOT及延迟绑定</h1><p>linux 下的动态链接是通过 PLT&amp;GOT 来实现的，这里做一个实验，通过这个实验来理解</p>
+<p>使用如下源代码 test.c：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_banner</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Welcome to World of PLT and GOT\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">	print_banner();  </span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>依次使用下列命令进行编译：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -Wall -g -o test.o -c test.c -m32</span><br><span class="line">gcc -o test test.o -m32</span><br></pre></td></tr></table></figure>
+
+<p>这样除了原有的 test.c 还有个 test.o 以及可执行文件 test</p>
+<p>通过 objdump -d test.o 可以查看反汇编</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_4YBDSW67P6KWC6K.jpg" alt="img"></p>
+<p>printf () 和函数是在 glibc 动态库里面的，只有当程序运行起来的时候才能确定地址，所以此时的 printf () 函数先用 fc ff ff ff 也就是有符号数的 -4 代替</p>
+<p>运行时进行重定位是无法修改代码段的，只能将 printf 重定位到数据段，但是已经编译好的程序，调用 printf 的时候怎么才能找到这个地址呐？</p>
+<p>链接器会额外生成一小段代码，通过这段代码来获取 printf () 的地址，像下面这样，进行链接的时候只需要对 printf_stub () 进行重定位操作就可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">...</span><br><span class="line">// 调用printf的call指令</span><br><span class="line">call printf_stub</span><br><span class="line">...</span><br><span class="line">printf_stub:  </span><br><span class="line">	mov rax, [printf函数的储存地址] // 获取printf重定位之后的地址  </span><br><span class="line">	jmp rax // 跳过去执行printf函数</span><br><span class="line">.data</span><br><span class="line">...</span><br><span class="line">printf函数的储存地址,这里储存printf函数重定位后的地址</span><br></pre></td></tr></table></figure>
+
+<p>总体来说，动态链接每个函数需要两个东西：</p>
+<p>1、用来存放外部函数地址的数据段</p>
+<p>2、用来获取数据段记录的外部函数地址的代码</p>
+<p>对应有两个表，一个用来存放外部的函数地址的数据表称为全局偏移表（GOT, Global Offset Table），那个存放额外代码的表称为程序链接表（PLT，Procedure Link Table）</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_4EMZFRKNEXE9XVJ.jpg" alt="img"></p>
+<p>可执行文件里面保存的是 PLT 表的地址，对应 PLT 地址指向的是 GOT 的地址，GOT 表指向的就是 glibc 中的地址</p>
+<p>那我们可以发现，在这里面想要通过 plt 表获取函数的地址，首先要保证 got 表已经获取了正确的地址，但是在一开始就进行所有函数的重定位是比较麻烦的，为此，linux 引入了延迟绑定机制</p>
+<h3 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h3><p>只有动态库函数在被调用时，才会地址解析和重定位工作，为此可以使用类似这样的代码来实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//一开始没有重定位的时候将 printf@got 填成 lookup_printf 的地址</span><br><span class="line">void printf@plt()</span><br><span class="line">&#123;</span><br><span class="line">address_good:  </span><br><span class="line">	jmp *printf@got </span><br><span class="line">lookup_printf:  </span><br><span class="line">	//调用重定位函数查找 printf 地址，并写到 printf@got  </span><br><span class="line">	goto address_good;//再返回去执行address_good</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明一下这段代码工作流程，一开始，printf@got 是 lookup_printf 函数的地址，这个函数用来寻找 printf () 的地址，然后写入 printf@got，lookup_printf 执行完成后会返回到 address_good，这样再 jmp 的话就可以直接跳到 printf 来执行了</p>
+<p>也就是说这样的机制的话如果不知道 printf 的地址，就去找一下，知道的话就直接去 jmp 执行 printf 了</p>
+<p>接下来，我们就来看一下这个 “找” 的工作是怎么实现的：</p>
+<p>通过 objdump -d test &gt; test.asm 可以看到其中 plt 表项有三条指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Disassembly of section .plt:</span><br><span class="line">080482d0 &lt;common@plt&gt;: </span><br><span class="line">80482d0:  ff 35 04 a0 04 08       pushl 0x804a004 </span><br><span class="line">80482d6:  ff 25 08 a0 04 08       jmp  *0x804a008 </span><br><span class="line">80482dc:  00 00                   add  %al,(%eax)  </span><br><span class="line">  ...</span><br><span class="line">080482e0 &lt;puts@plt&gt;: </span><br><span class="line">80482e0:  ff 25 0c a0 04 08       jmp  *0x804a00c </span><br><span class="line">80482e6:  68 00 00 00 00          push  $0x0 </span><br><span class="line">80482eb:  e9 e0 ff ff ff          jmp  80482d0 &lt;_init+0x28&gt;</span><br><span class="line">080482f0 &lt;__libc_start_main@plt&gt;: </span><br><span class="line">80482f0:  ff 25 10 a0 04 08       jmp  *0x804a010 </span><br><span class="line">80482f6:  68 08 00 00 00          push  $0x8 </span><br><span class="line">80482fb:  e9 d0 ff ff ff          jmp  80482d0 &lt;_init+0x28&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>ps. 这里 plt 表的第一项使用 objdump 的时候给没有符号名的一项自动改成了离他最近的一项，为了避免引起误会，改成了 common，而且随着不断深入，会发现，确实可以叫 common</p>
+<p>其中除第一个表项以外，plt 表的第一条都是跳转到对应的 got 表项，而 got 表项的内容我们可以通过 gdb 来看一下，如果函数还没有执行的时候，这里的地址是对应 plt 表项的下一条命令，即 push 0x0</p>
+<p>（说一下怎么查看，先 gdb test 然后 b main，再 run， 再 x/x jmp的那个地址 就可以）</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_3QNTDTTWNXBKS5Z.jpg" alt="img"></p>
+<p>还记得之前我们说的，在还没有执行过函数之前 printf@got 的内容是 lookup_printf 函数的地址吗，这就是要去找 printf 函数的地址了</p>
+<p>现在要做的是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">push  $0x0       //将数据压到栈上，作为将要执行的函数的参数</span><br><span class="line">jmp  0x80482d0   //去到了第一个表项</span><br></pre></td></tr></table></figure>
+
+<p>接下来继续</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">080482d0 &lt;common@plt&gt;:pushl </span><br><span class="line">0x804a004 		//将数据压到栈上，作为后面函数的参数</span><br><span class="line">jmp  *0x804a008 //跳转到函数</span><br><span class="line">add  %al,(%eax) </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>我们同样可以使用 gdb 来看一下这里面到底是什么，可以看到，在没有执行之前是全 0</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_5Z8XUGEXSED5RXF.jpg" alt="img"></p>
+<p>当执行后他有了值</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_SFBGWHQ8YEMKNDP.jpg" alt="img"></p>
+<p>这个值对应的函数是 _dl_runtime_resolve</p>
+<p>那现在做一个小总结：</p>
+<p>在想要调用的函数没有被调用过，想要调用他的时候，是按照这个过程来调用的</p>
+<p>xxx@plt -&gt; xxx@got -&gt; xxx@plt -&gt; 公共 @plt -&gt; _dl_runtime_resolve</p>
+<p>到这里我们还需要知道</p>
+<ol>
+<li>_dl_runtime_resolve 是怎么知道要查找 printf 函数的</li>
+<li>_dl_runtime_resolve 找到 printf 函数地址之后，它怎么知道回填到哪个 GOT 表项</li>
+</ol>
+<p>第一个问题，在 xxx@plt 中，我们在 jmp 之前 push 了一个参数，每个 xxx@plt 的 push 的操作数都不一样，那个参数就相当于函数的 id，告诉了 _dl_runtime_resolve 要去找哪一个函数的地址</p>
+<p>在 elf 文件中 .rel.plt 保存了重定位表的信息，使用 readelf -r test 命令可以查看 test 可执行文件中的重定位信息</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_FM29NGMC75ENVMM.jpg" alt="img"></p>
+<p>这里有些问题，对应着大佬博客说 plt 中 push 的操作数，就是对应函数在.rel.plt 段的偏移量，但是没对比出来</p>
+<p>第二个问题，看 .rel.plt 的位置就对应着 xxx@plt 里 jmp 的地址</p>
+<p>在 i386 架构下，除了每个函数占用一个 GOT 表项外，GOT 表项还保留了３个公共表项，也即 got 的前３项，分别保存：</p>
+<ul>
+<li>got [0]: 本 ELF 动态段 (.dynamic 段）的装载地址</li>
+<li>got [1]：本 ELF 的 link_map 数据结构描述符地址</li>
+<li>got [2]：_dl_runtime_resolve 函数的地址</li>
+</ul>
+<p>动态链接器在加载完 ELF 之后，都会将这３地址写到 GOT 表的前３项</p>
+<p>跟着大佬的流程图来走一遍：</p>
+<p>第一次调用</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_MQGWQW873JW6S7M.jpg" alt="img"></p>
+<p>之后再次调用<img src="https://bbs.kanxue.com/upload/attach/202002/837755_9TZYGD6KKPXZXJ9.jpg" alt="img"></p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E5%9F%BA%E7%A1%80%E7%9F%A5%E8%AF%86/" rel="tag"> <i class="fa fa-tag"></i> 基础知识</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/01/19/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/" rel="prev" title="简述动态链接">
+                  <i class="fa fa-chevron-left"></i> 简述动态链接
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/01/19/pwntools%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/pwntools%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" rel="next" title="pwntools使用指南">
+                  pwntools使用指南 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>

@@ -145,7 +145,7 @@
   <nav class="site-state">
       <div class="site-state-item site-state-posts">
         <a href="/archives/">
-          <span class="site-state-item-count">16</span>
+          <span class="site-state-item-count">18</span>
           <span class="site-state-item-name">日志</span>
         </a>
       </div>
@@ -338,6 +338,267 @@
             </div>
           <!--/noindex-->
         
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2023/01/19/PLT&GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/19/PLT&GOT%E5%8F%8A%E5%BB%B6%E8%BF%9F%E7%BB%91%E5%AE%9A/" class="post-title-link" itemprop="url">PLT&GOT及延迟绑定</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-01-19 00:41:59 / 修改时间：18:52:28" itemprop="dateCreated datePublished" datetime="2023-01-19T00:41:59+08:00">2023-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%EF%BC%81/" itemprop="url" rel="index"><span itemprop="name">PWN！</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="PLT-amp-GOT及延迟绑定"><a href="#PLT-amp-GOT及延迟绑定" class="headerlink" title="PLT&amp;GOT及延迟绑定"></a>PLT&amp;GOT及延迟绑定</h1><p>linux 下的动态链接是通过 PLT&amp;GOT 来实现的，这里做一个实验，通过这个实验来理解</p>
+<p>使用如下源代码 test.c：</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#<span class="meta-keyword">include</span> <span class="meta-string">&lt;stdio.h&gt;</span></span></span><br><span class="line"><span class="function"><span class="keyword">void</span> <span class="title">print_banner</span><span class="params">()</span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">	<span class="built_in">printf</span>(<span class="string">&quot;Welcome to World of PLT and GOT\n&quot;</span>);</span><br><span class="line">&#125;</span><br><span class="line"><span class="function"><span class="keyword">int</span> <span class="title">main</span><span class="params">(<span class="keyword">void</span>)</span></span></span><br><span class="line"><span class="function"></span>&#123;  </span><br><span class="line">	print_banner();  </span><br><span class="line">	<span class="keyword">return</span> <span class="number">0</span>;</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>依次使用下列命令进行编译：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">gcc -Wall -g -o test.o -c test.c -m32</span><br><span class="line">gcc -o test test.o -m32</span><br></pre></td></tr></table></figure>
+
+<p>这样除了原有的 test.c 还有个 test.o 以及可执行文件 test</p>
+<p>通过 objdump -d test.o 可以查看反汇编</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_4YBDSW67P6KWC6K.jpg" alt="img"></p>
+<p>printf () 和函数是在 glibc 动态库里面的，只有当程序运行起来的时候才能确定地址，所以此时的 printf () 函数先用 fc ff ff ff 也就是有符号数的 -4 代替</p>
+<p>运行时进行重定位是无法修改代码段的，只能将 printf 重定位到数据段，但是已经编译好的程序，调用 printf 的时候怎么才能找到这个地址呐？</p>
+<p>链接器会额外生成一小段代码，通过这段代码来获取 printf () 的地址，像下面这样，进行链接的时候只需要对 printf_stub () 进行重定位操作就可以</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br></pre></td><td class="code"><pre><span class="line">.text</span><br><span class="line">...</span><br><span class="line">// 调用printf的call指令</span><br><span class="line">call printf_stub</span><br><span class="line">...</span><br><span class="line">printf_stub:  </span><br><span class="line">	mov rax, [printf函数的储存地址] // 获取printf重定位之后的地址  </span><br><span class="line">	jmp rax // 跳过去执行printf函数</span><br><span class="line">.data</span><br><span class="line">...</span><br><span class="line">printf函数的储存地址,这里储存printf函数重定位后的地址</span><br></pre></td></tr></table></figure>
+
+<p>总体来说，动态链接每个函数需要两个东西：</p>
+<p>1、用来存放外部函数地址的数据段</p>
+<p>2、用来获取数据段记录的外部函数地址的代码</p>
+<p>对应有两个表，一个用来存放外部的函数地址的数据表称为全局偏移表（GOT, Global Offset Table），那个存放额外代码的表称为程序链接表（PLT，Procedure Link Table）</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_4EMZFRKNEXE9XVJ.jpg" alt="img"></p>
+<p>可执行文件里面保存的是 PLT 表的地址，对应 PLT 地址指向的是 GOT 的地址，GOT 表指向的就是 glibc 中的地址</p>
+<p>那我们可以发现，在这里面想要通过 plt 表获取函数的地址，首先要保证 got 表已经获取了正确的地址，但是在一开始就进行所有函数的重定位是比较麻烦的，为此，linux 引入了延迟绑定机制</p>
+<h3 id="延迟绑定"><a href="#延迟绑定" class="headerlink" title="延迟绑定"></a>延迟绑定</h3><p>只有动态库函数在被调用时，才会地址解析和重定位工作，为此可以使用类似这样的代码来实现：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">//一开始没有重定位的时候将 printf@got 填成 lookup_printf 的地址</span><br><span class="line">void printf@plt()</span><br><span class="line">&#123;</span><br><span class="line">address_good:  </span><br><span class="line">	jmp *printf@got </span><br><span class="line">lookup_printf:  </span><br><span class="line">	//调用重定位函数查找 printf 地址，并写到 printf@got  </span><br><span class="line">	goto address_good;//再返回去执行address_good</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<p>说明一下这段代码工作流程，一开始，printf@got 是 lookup_printf 函数的地址，这个函数用来寻找 printf () 的地址，然后写入 printf@got，lookup_printf 执行完成后会返回到 address_good，这样再 jmp 的话就可以直接跳到 printf 来执行了</p>
+<p>也就是说这样的机制的话如果不知道 printf 的地址，就去找一下，知道的话就直接去 jmp 执行 printf 了</p>
+<p>接下来，我们就来看一下这个 “找” 的工作是怎么实现的：</p>
+<p>通过 objdump -d test &gt; test.asm 可以看到其中 plt 表项有三条指令</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">Disassembly of section .plt:</span><br><span class="line">080482d0 &lt;common@plt&gt;: </span><br><span class="line">80482d0:  ff 35 04 a0 04 08       pushl 0x804a004 </span><br><span class="line">80482d6:  ff 25 08 a0 04 08       jmp  *0x804a008 </span><br><span class="line">80482dc:  00 00                   add  %al,(%eax)  </span><br><span class="line">  ...</span><br><span class="line">080482e0 &lt;puts@plt&gt;: </span><br><span class="line">80482e0:  ff 25 0c a0 04 08       jmp  *0x804a00c </span><br><span class="line">80482e6:  68 00 00 00 00          push  $0x0 </span><br><span class="line">80482eb:  e9 e0 ff ff ff          jmp  80482d0 &lt;_init+0x28&gt;</span><br><span class="line">080482f0 &lt;__libc_start_main@plt&gt;: </span><br><span class="line">80482f0:  ff 25 10 a0 04 08       jmp  *0x804a010 </span><br><span class="line">80482f6:  68 08 00 00 00          push  $0x8 </span><br><span class="line">80482fb:  e9 d0 ff ff ff          jmp  80482d0 &lt;_init+0x28&gt;</span><br></pre></td></tr></table></figure>
+
+
+
+<p>ps. 这里 plt 表的第一项使用 objdump 的时候给没有符号名的一项自动改成了离他最近的一项，为了避免引起误会，改成了 common，而且随着不断深入，会发现，确实可以叫 common</p>
+<p>其中除第一个表项以外，plt 表的第一条都是跳转到对应的 got 表项，而 got 表项的内容我们可以通过 gdb 来看一下，如果函数还没有执行的时候，这里的地址是对应 plt 表项的下一条命令，即 push 0x0</p>
+<p>（说一下怎么查看，先 gdb test 然后 b main，再 run， 再 x/x jmp的那个地址 就可以）</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_3QNTDTTWNXBKS5Z.jpg" alt="img"></p>
+<p>还记得之前我们说的，在还没有执行过函数之前 printf@got 的内容是 lookup_printf 函数的地址吗，这就是要去找 printf 函数的地址了</p>
+<p>现在要做的是：</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">push  $0x0       //将数据压到栈上，作为将要执行的函数的参数</span><br><span class="line">jmp  0x80482d0   //去到了第一个表项</span><br></pre></td></tr></table></figure>
+
+<p>接下来继续</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">080482d0 &lt;common@plt&gt;:pushl </span><br><span class="line">0x804a004 		//将数据压到栈上，作为后面函数的参数</span><br><span class="line">jmp  *0x804a008 //跳转到函数</span><br><span class="line">add  %al,(%eax) </span><br><span class="line">...</span><br></pre></td></tr></table></figure>
+
+<p>我们同样可以使用 gdb 来看一下这里面到底是什么，可以看到，在没有执行之前是全 0</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_5Z8XUGEXSED5RXF.jpg" alt="img"></p>
+<p>当执行后他有了值</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_SFBGWHQ8YEMKNDP.jpg" alt="img"></p>
+<p>这个值对应的函数是 _dl_runtime_resolve</p>
+<p>那现在做一个小总结：</p>
+<p>在想要调用的函数没有被调用过，想要调用他的时候，是按照这个过程来调用的</p>
+<p>xxx@plt -&gt; xxx@got -&gt; xxx@plt -&gt; 公共 @plt -&gt; _dl_runtime_resolve</p>
+<p>到这里我们还需要知道</p>
+<ol>
+<li>_dl_runtime_resolve 是怎么知道要查找 printf 函数的</li>
+<li>_dl_runtime_resolve 找到 printf 函数地址之后，它怎么知道回填到哪个 GOT 表项</li>
+</ol>
+<p>第一个问题，在 xxx@plt 中，我们在 jmp 之前 push 了一个参数，每个 xxx@plt 的 push 的操作数都不一样，那个参数就相当于函数的 id，告诉了 _dl_runtime_resolve 要去找哪一个函数的地址</p>
+<p>在 elf 文件中 .rel.plt 保存了重定位表的信息，使用 readelf -r test 命令可以查看 test 可执行文件中的重定位信息</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_FM29NGMC75ENVMM.jpg" alt="img"></p>
+<p>这里有些问题，对应着大佬博客说 plt 中 push 的操作数，就是对应函数在.rel.plt 段的偏移量，但是没对比出来</p>
+<p>第二个问题，看 .rel.plt 的位置就对应着 xxx@plt 里 jmp 的地址</p>
+<p>在 i386 架构下，除了每个函数占用一个 GOT 表项外，GOT 表项还保留了３个公共表项，也即 got 的前３项，分别保存：</p>
+<ul>
+<li>got [0]: 本 ELF 动态段 (.dynamic 段）的装载地址</li>
+<li>got [1]：本 ELF 的 link_map 数据结构描述符地址</li>
+<li>got [2]：_dl_runtime_resolve 函数的地址</li>
+</ul>
+<p>动态链接器在加载完 ELF 之后，都会将这３地址写到 GOT 表的前３项</p>
+<p>跟着大佬的流程图来走一遍：</p>
+<p>第一次调用</p>
+<p><img src="https://bbs.kanxue.com/upload/attach/202002/837755_MQGWQW873JW6S7M.jpg" alt="img"></p>
+<p>之后再次调用<img src="https://bbs.kanxue.com/upload/attach/202002/837755_9TZYGD6KKPXZXJ9.jpg" alt="img"></p>
+
+      
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+        <div class="post-eof"></div>
+      
+    </footer>
+  </article>
+</div>
+
+
+
+
+    
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2023/01/19/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h2 class="post-title" itemprop="name headline">
+          <a href="/2023/01/19/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/" class="post-title-link" itemprop="url">简述动态链接</a>
+        </h2>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+      
+
+      <time title="创建时间：2023-01-19 00:41:59 / 修改时间：15:02:42" itemprop="dateCreated datePublished" datetime="2023-01-19T00:41:59+08:00">2023-01-19</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/PWN%EF%BC%81/" itemprop="url" rel="index"><span itemprop="name">PWN！</span></a>
+        </span>
+    </span>
+
+  
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+          <h1 id="简述动态链接"><a href="#简述动态链接" class="headerlink" title="简述动态链接"></a>简述动态链接</h1><hr>
+<h1 id="0x00-前言"><a href="#0x00-前言" class="headerlink" title="0x00 前言"></a>0x00 前言</h1><p>  本文主要分析了在延迟绑定中，调用某函数之后如何找到正确的地址。文章中深入的分析了这个过程，并且分析完之后针对该链接介绍了一些攻击手法和程序所作的一些保护。</p>
+<h1 id="0x01-基础知识"><a href="#0x01-基础知识" class="headerlink" title="0x01 基础知识"></a>0x01 基础知识</h1><h3 id="一、动态链接"><a href="#一、动态链接" class="headerlink" title="一、动态链接"></a>一、动态链接</h3><p>  在动态链接方式实现以前，普遍采用静态链接的方式来生成可执行文件。 如果一个程序使用了外部的库函数，那么整个库都会被直接编译到可执行文件中。ELF 支持动态链接，这在处理共享库的时候就会非常高效。 当一个程序被加载进内存时，动态链接器会把需要的共享库加载并绑定到该进程的地址空间中。随后在调用某个函数时，对该函数地址进行解析，以达到对该函数调用的目的。</p>
+<h3 id="二、两个表"><a href="#二、两个表" class="headerlink" title="二、两个表"></a>二、两个表</h3><h5 id="1-PLT表-Procedure-Linkage-Table"><a href="#1-PLT表-Procedure-Linkage-Table" class="headerlink" title="1.PLT表(Procedure Linkage Table)"></a>1.PLT表(Procedure Linkage Table)</h5><p><strong>（1）简介：</strong> 过程连接表，在程序中以 .plt 节表示，该表处于代码段，每一个表项表示了一个与要重定位的函数相关的若干条指令，每个表项长度为 16 个字节，存储的是用于做延迟绑定的代码。<br><strong>（2）结构简介：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br></pre></td><td class="code"><pre><span class="line">PLT[0] --&gt; 与每个函数第一次链接相关指令</span><br><span class="line">例：</span><br><span class="line">0x4004c0:</span><br><span class="line">0x4004c0: ff 35 42 0b 20 00     push  QWORD PTR [rip+0x200b42]   // push [GOT[1]]</span><br><span class="line">0x4004c6: ff 25 44 0b 20 00     jmp  QWORD PTR [rip+0x200b44]    // jmp [GOT[2]]</span><br><span class="line">0x4004cc: 0f 1f 40 00           op  DWORD PTR [rax+0x0]</span><br><span class="line">即：   </span><br><span class="line">	第一条指令为 push 一个值，该值为 GOT[1] 处存放的地址，  </span><br><span class="line">	第二条指令为 jmp 到一个地址执行，该值为 GOT[2] 处存放的地址 </span><br><span class="line"></span><br><span class="line">PLT[1] --&gt; 某个函数链接时所需要的指令,与 got 表一一对应</span><br><span class="line">例：</span><br><span class="line">0x4004d0 &lt;__stack_chk_fail@plt&gt;:</span><br><span class="line">0x4004d0: ff 25 42 0b 20 00        jmp  QWORD PTR [rip+0x200b42] // jmp GOT[3] </span><br><span class="line">0x4004d6: 68 00 00 00 00           push  0x0				   // push reloc_arg</span><br><span class="line">0x4004db: e9 e0 ff ff ff           jmp  0x4004c0 &lt;_init+0x20&gt;   // jmp PLT[0]</span><br><span class="line">即：  </span><br><span class="line">	第一条指令为: jmp 到一个地址执行，该地址为对应 GOT 表项处存放的地址</span><br><span class="line">	第二条指令为: push 一个值，该值作用在下文提到 </span><br><span class="line">	第三个指令为: jmp 一个地址执行，其实该地址就是上边提到的 PLT[0] 的地址，也就是说接下来要执行 PLT[0] 中保存的两条指令 </span><br></pre></td></tr></table></figure>
+
+<h5 id="2-GOT表-Global-Offset-Table"><a href="#2-GOT表-Global-Offset-Table" class="headerlink" title="2.GOT表(Global Offset Table)"></a>2.GOT表(Global Offset Table)</h5><p><strong>（1）简介：</strong> 全局偏移表，在程序中以 .got.plt 表示，该表处于数据段，每一个表项存储的都是一个地址，每个表项长度是当前程序的对应需要寻址长度（32位程序：4字节，64位程序：8字节）。d_tag = DT_PLTGOT<br><strong>（2）结构简介：</strong></p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">GOT[0] --&gt; 此处存放的是 .dynamic 的地址；该节(段)的作用会在下文讨论</span><br><span class="line">GOT[1] --&gt; 此处存放的是 link_map 的地址；该结构也会在下文讨论</span><br><span class="line">GOT[2] --&gt; 此处存放的是 dl_runtime_resolve 函数的地址</span><br><span class="line">GOT[3] --&gt; 与 PLT[1] 对应，存放的是与该表项 (PLT[1]) 要解析的函数相关地址，      </span><br><span class="line">		  由于延迟绑定的原因，开始未调用对应函数时该项存的是 PLT[1] 中第二条指令的地址，                  当进行完一次延迟绑定之后存放的才是所要解析的函数的真实地址</span><br><span class="line">GOT[4] --&gt; 与 PLT[2] 对应，所以存放的是与 PLT[2] 所解析的函数相关的地址 </span><br></pre></td></tr></table></figure>
+
+<h5 id="3-两个表之间的关系"><a href="#3-两个表之间的关系" class="headerlink" title="3.两个表之间的关系"></a>3.两个表之间的关系</h5><figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line">GOT[<span class="number">0</span>]: .dynamic 地址          PLT[<span class="number">0</span>]: 与每个函数第一次链接相关指令</span><br><span class="line">GOT[<span class="number">1</span>]: link_map 地址G</span><br><span class="line">OT[<span class="number">2</span>]: dl_runtime_resolve 函数地址   </span><br><span class="line">GOT[<span class="number">3</span>] --&gt; PLT[<span class="number">1</span>]  <span class="comment">// 一一对应</span></span><br><span class="line">GOT[<span class="number">4</span>] --&gt; PLT[<span class="number">2</span>]  <span class="comment">// 相互协同，作用于一个函数</span></span><br><span class="line">GOT[<span class="number">5</span>] --&gt; PLT[<span class="number">3</span>]  <span class="comment">// 一个保存的是该函数所需要的延迟绑定的指令</span></span><br><span class="line">GOT[<span class="number">6</span>] --&gt; PLT[<span class="number">4</span>]  <span class="comment">// 一个是保存个该函数链接所需要的地址</span></span><br></pre></td></tr></table></figure>
+
+<h3 id="三、一个段-节-三个节"><a href="#三、一个段-节-三个节" class="headerlink" title="三、一个段(节)三个节"></a>三、一个段(节)三个节</h3><p>  在下面只对一些接下来要用到的结构体成员做一些中文解释。</p>
+<h5 id="1-dynmic"><a href="#1-dynmic" class="headerlink" title="1. .dynmic"></a>1. .dynmic</h5><p><strong>（1）介绍：</strong><br>  因为在加载过程中，.dynmic 节整个以一个段的形式加载进内存，所以说在程序中的 .dynmic 节也就是运行后的 .dynmic 段。该段主要与动态链接的整个过程有关，所以保存的是与动态链接相关信息，此处主要用于寻找与动态链接相关的其他节( .dynsym .dynstr .rela.plt 等节)。该段保存了许多 Elf64_Dyn 结构，该数据结构保存了一些其他节的信息。下面展示该段所保存的数据结构。p_type = PT_DYNAMIC（值为 0x2）的段。</p>
+<p><strong>（2）结构：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// 该结构都有 64 位程序和 32 位程序的区别，不过大致结构相似，此处只讨论 64 位程序中的</span></span><br><span class="line"><span class="comment">// /usr/include/elf.h  </span></span><br><span class="line"></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span> </span><br><span class="line">	Elf64_Sxword d_tag;         <span class="comment">/* Dynamic entry type */</span>                     </span><br><span class="line">							 <span class="comment">// d_tag 识别该结构体表示的哪一个节，通过以此字段不同来寻找不同的节  </span></span><br><span class="line">	<span class="class"><span class="keyword">union</span>   </span></span><br><span class="line"><span class="class">	&#123;</span>   </span><br><span class="line">    	Elf64_Xword d_val;        <span class="comment">/* Integer value */</span>                     </span><br><span class="line">    							<span class="comment">// 对应节的地址，用于存储该结构体表示下的节所在的地址   </span></span><br><span class="line">        Elf64_Addr d_ptr;         <span class="comment">/* Address value */</span>                     </span><br><span class="line">    							<span class="comment">// 一般于上一个字段表示的值相同，所以笔者现在并不了解他们的区别   </span></span><br><span class="line">     &#125; d_un;</span><br><span class="line">&#125; Elf64_Dyn;</span><br></pre></td></tr></table></figure>
+
+<h5 id="2-dynsym"><a href="#2-dynsym" class="headerlink" title="2. .dynsym"></a>2. .dynsym</h5><p><strong>（1）介绍：</strong><br>  动态符号表，存储着在动态链接中所需要的每个函数所对应的符号信息，每个结构体分别对应一个符号 (函数) 。结构体数组。 d_tag = DT_SYMTAB(值为 0x6) 的节。<br><strong>（2）结构：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span> </span><br><span class="line">	Elf64_Word  st_name;     <span class="comment">/* Symbol name (string tbl index) */</span>                 </span><br><span class="line">						   <span class="comment">// 保存着该函数函数名在 .dynstr 中的偏移，可以结合 .dynstr 找到准确函数名。</span></span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_info;   <span class="comment">/* Symbol type and binding */</span> </span><br><span class="line">	<span class="keyword">unsigned</span> <span class="keyword">char</span> st_other;  <span class="comment">/* Symbol visibility */</span> </span><br><span class="line">	Elf64_Section st_shndx;  <span class="comment">/* Section index */</span> </span><br><span class="line">	Elf64_Addr  st_value;    <span class="comment">/* Symbol value */</span>                   </span><br><span class="line">					       <span class="comment">// 如果这个符号被导出，则存有这个导出函数的虚拟地址，否则为NULL.  	 Elf64_Xword  st_size;    /* Symbol size */</span></span><br><span class="line">&#125; Elf64_Sym;</span><br></pre></td></tr></table></figure>
+
+<h5 id="3-dynstr"><a href="#3-dynstr" class="headerlink" title="3. .dynstr"></a>3. .dynstr</h5><p><strong>（1）介绍：</strong><br>  动态字符串表，表中存放了一系列字符串，这些字符串代表了符号的名称，在此处可以看成函数名，以空字符作为终止符。 该结构是一个字符串数组。d_tag = DT_STRTAB(值为 0x5) 的节。<br><strong>（2）结构：</strong><br>  一个字符串数组</p>
+<h5 id="4-rel-plt-rela-plt"><a href="#4-rel-plt-rela-plt" class="headerlink" title="4. .rel.plt (.rela.plt)"></a>4. .rel.plt (.rela.plt)</h5><p><strong>（1）介绍：</strong><br>  重定位节，保存了重定位相关的信息，这些信息描述了如何在链接或者运行时，对 ELF 目标文件的某部分内容或者进程镜像进行补充或修改。每个结构体也与某一个重定位的函数相关。结构体数组。d_tag = DT_REL(值为 0x11) / d_tag = DT_RELA(值为 0x7) 的节。<br><strong>（2）结构：</strong></p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span></span></span><br><span class="line"><span class="class">&#123;</span> </span><br><span class="line">	Elf64_Addr  r_offset;      <span class="comment">/* Address */</span>                   </span><br><span class="line">							<span class="comment">// 此处表示的是解析完的函数真实地址存放的位置，              </span></span><br><span class="line">							<span class="comment">// 即对应解析函数的 GOT 表项地址 </span></span><br><span class="line">	Elf64_Xword  r_info;       <span class="comment">/* Relocation type and symbol index */</span>                   										<span class="comment">// 该结构主要用到高某位，表示索引，低位表示类型               </span></span><br><span class="line">							<span class="comment">//每一个表项的第二条指令， PUSH 了一个索引，所 PUSH 的索引与此相关，         </span></span><br><span class="line">							<span class="comment">//也就是通过 PLT 中 PUSH 的索引找到当时解析的函数对应的此结构体的</span></span><br><span class="line">&#125; Elf64_Rel; </span><br><span class="line">							<span class="comment">//与上一结构体类似，只是不同编译环境下产生的不同结构，作用相同，就不再次讨论 </span></span><br><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> </span></span><br><span class="line"><span class="class">&#123;</span>  </span><br><span class="line">	Elf32_Addr  r_offset;     <span class="comment">/* Address */</span>  </span><br><span class="line">	Elf32_Word  r_info;       <span class="comment">/* Relocation type and symbol index */</span>  </span><br><span class="line">	Elf32_Sword  r_addend;    <span class="comment">/* Addend */</span> </span><br><span class="line">&#125; Elf32_Rela;</span><br></pre></td></tr></table></figure>
+
+<h3 id="四、扩充结构体（在-Full-RELRO-用到）"><a href="#四、扩充结构体（在-Full-RELRO-用到）" class="headerlink" title="四、扩充结构体（在 Full RELRO 用到）"></a>四、扩充结构体（在 Full RELRO 用到）</h3><p>  本节讨论的是在 Full RELRO 攻击中用到的结构，所以如果不打算研究该攻击手法可以跳过该节。d_tag = DT_DEBUG。</p>
+<figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="class"><span class="keyword">struct</span> <span class="title">r_debug</span>&#123;</span> <span class="comment">//由于并没有找到该结构体的定义，所以没有声明类型  </span></span><br><span class="line">	r_version  </span><br><span class="line">	r_map    <span class="comment">//指向 link_map  </span></span><br><span class="line">	r_brk  </span><br><span class="line">	r_state  </span><br><span class="line">	r_ldbase</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+
+<h3 id="五、link-map结构"><a href="#五、link-map结构" class="headerlink" title="五、link_map结构"></a>五、link_map结构</h3><h5 id="1-简介："><a href="#1-简介：" class="headerlink" title="1.简介："></a>1.简介：</h5><p>  保存着 Binary 里面所有信息的一个结构体，该结构体很大，内容丰富。</p>
+<h5 id="2-主要字段："><a href="#2-主要字段：" class="headerlink" title="2.主要字段："></a>2.主要字段：</h5><figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">l_next：链接着该程序所有用到的 libary    </span><br><span class="line">	上边提到的 GOT[1] 中保存的地址是第一层 link_map 中所表示的 libary，此时是指向的程序本身，    </span><br><span class="line">	不过可以用 l_next 结构寻找下一层表示的 libary，以此来遍历程序中所用到的 libary，    </span><br><span class="line">	并利用下边所提到的字段找到该层 libary 的名字、基地址、以及所有的 section 等信息。</span><br><span class="line">l_name：表示 libary 的名字</span><br><span class="line">l_addr：表示 libary 的基地址</span><br><span class="line">	l_info[x]：指向该 libary 下的 .dynamic。      </span><br><span class="line">	l_info[1] 指向 d_tag = 1 时所表示的 section ，所以可以改变 x 的值找到每个相关 section 的地址。      </span><br><span class="line">	在链接过程中 binary 中的 section 地址，以及 libary 中的地址都是通过此方法确定的。</span><br></pre></td></tr></table></figure>
+
+<h1 id="0x02-链接过程"><a href="#0x02-链接过程" class="headerlink" title="0x02 链接过程"></a>0x02 链接过程</h1><h3 id="一、概括描述"><a href="#一、概括描述" class="headerlink" title="一、概括描述"></a>一、概括描述</h3><p>  完成延迟绑定的函数主要是 dl_runtime__resolve(link_map_obj, reloc_arg) ，该函数的第一个参数是一个 link_map 结构，第二个参数是一个重定位参数，即运行 PLT 中的代码时 PUSH 进栈中的参数。该函数主要是调用一个 dl_fixup(link_map_obj, reloc_arg) 完成了主要功能。参数一的主要作用是：获得重定位函数所在了 libary 的基地址，以及获取在 libary 中寻找需要定位函数时所需要的 Section (.dynstr .dynsym 等)。第二个函数主要是确定需要解析的函数名，以及解析完之后写回的地址。<br>  该过程可以先大概理解为，dl_fixup 函数通过 reloc_arg 参数确定当前正在解析的函数名。之后，拿着这个函数名，再利用 link_map 结构找到 libary 中的 .dynsym .dynstr 。利用 .dynsym .dynstr 进行匹配。若匹配成功，则从 .dynsym 中获取该函数的函数地址。</p>
+<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line">// 上边的详细过程</span><br><span class="line">reloc_arg  --&gt;  函数名 A </span><br><span class="line"></span><br><span class="line">利用 link_map --&gt; l_info[x] 通过改变 x 的值，确定 .dynsym .dynstr</span><br><span class="line">再用 .dynsym 与 .dynstr 对整个动态符号表 .dynstym 进行遍历，去匹配函数名 A</span><br><span class="line">若 某一个 Elf64_Sym(符号) 的 st_name + .dynstr == A</span><br><span class="line">则 该 Elf64_Sym 表示的符号即为函数 A </span><br><span class="line"></span><br><span class="line">// 整个过程可以这样理解，不过真实情况使用的 Hash 方法去寻找的这个 Elf64_Sym(符号)</span><br></pre></td></tr></table></figure>
+
+<h3 id="二、具体过程"><a href="#二、具体过程" class="headerlink" title="二、具体过程"></a>二、具体过程</h3><h5 id="1-调用某个函数后进入该函数的-PLT-x-，在-PLT-x-中-push-一个参数-reloc-arg-。"><a href="#1-调用某个函数后进入该函数的-PLT-x-，在-PLT-x-中-push-一个参数-reloc-arg-。" class="headerlink" title="1.调用某个函数后进入该函数的 PLT[x] ，在 PLT[x] 中 push 一个参数 reloc_arg 。"></a>1.调用某个函数后进入该函数的 PLT[x] ，在 PLT[x] 中 push 一个参数 reloc_arg 。</h5><p><img src="/2023/01/19/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/%E7%AE%80%E8%BF%B0%E5%8A%A8%E6%80%81%E9%93%BE%E6%8E%A5/Blog\E1iaukBlog\source_posts\新建文件夹\863295_KURHWFJD7CFYYA4.jpg" alt="通过参数确定作用函数"><br>【问题 1】通过这个 reloc_arg 可以干什么？<br>【答案 1】拿到这个 reloc_arg 后，链接器会通过该值找到对应函数的 Elf_Rel 结构，通过该结构的 r_info 变量中的偏移量找到对应函数的 Elf_Sym 结构，然后再通过 Elf_Sym 结构的 st_name 结合之前已经确定的 .dynstr 地址，通过 st_name + .dynstr 获得对应函数的函数名。这就是拿到 reloc_arg 参数后链接器获得的信息，即知道了本次链接中的函数的函数名。（注：此处用到的 binary 中的 Elf_Rel Elf_Sym .dynstr 等地址都是通过 link_map-&gt;l_info[x] 的方式寻找的。）</p>
+<h5 id="2-在链接过程中-PLT-0-会-push-dl-runtime-resolve-函数的第二个参数-link-map。"><a href="#2-在链接过程中-PLT-0-会-push-dl-runtime-resolve-函数的第二个参数-link-map。" class="headerlink" title="2.在链接过程中 PLT[0] 会 push dl_runtime_resolve 函数的第二个参数 link_map。"></a>2.在链接过程中 PLT[0] 会 push dl_runtime_resolve 函数的第二个参数 link_map。</h5><p>【问题 2】通过 link_map 我们能获得什么？<br>【答案 2】拿到这个变量后链接器会获得所要解析的函数的函数库(通过 link_map 的 l_next 字段)，然后拿到这个外部库之后 link_map 的 l_addr 字段会记录该库的基地址，然后链接器通过 new_hash 函数求出要链接函数的 hash（new_hash(st_name + .dynstr)），然后通过该 hash 和之前的保存值进行匹配，如果匹配上就获得了该函数在外部库的 Elf64_Sym 结构，然后通过该结构的 st_value 获取该函数在外部库里面的偏移，最后通过 st_value + l_addr 获取该函数的真实地址，最后通过 Elf64_Rel 的 r_offset 定位该函数在 GOT 中对应的地址，然后将最后结果写入该地址中。(其中有通过这两个参数共同获得的东西，不过为了便于理解就不再分开讨论。)</p>
+<h1 id="0x03-攻击"><a href="#0x03-攻击" class="headerlink" title="0x03 攻击"></a>0x03 攻击</h1><h3 id="一、保护手段-RELRO"><a href="#一、保护手段-RELRO" class="headerlink" title="一、保护手段 (RELRO)"></a>一、保护手段 (RELRO)</h3><p>  RELRO：重定位只读手段</p>
+<h5 id="1-无保护"><a href="#1-无保护" class="headerlink" title="1.无保护"></a>1.无保护</h5><p>  在这种模式下关于重定位并不进行任何保护。</p>
+<h5 id="2-部分保护"><a href="#2-部分保护" class="headerlink" title="2.部分保护"></a>2.部分保护</h5><p>  在这种模式下，一些段 (包括.dynamic) 在初始化后将会被标识为只读。</p>
+<h5 id="3-完全保护"><a href="#3-完全保护" class="headerlink" title="3.完全保护"></a>3.完全保护</h5><p>  在这种模式下，除了会开启部分保护外。惰性解析会被禁用（所有的导入符号将在开始时被解析，.got.plt 段会被完全初始化为目标函数的终地址，并被标记为只读）。此外，既然惰性解析被禁用，GOT[1] 与 GOT[2] 条目将不会被初始化，存值为0。</p>
+<h3 id="二、对应攻击方法"><a href="#二、对应攻击方法" class="headerlink" title="二、对应攻击方法"></a>二、对应攻击方法</h3><p>  动态装载器认为它接收到的参数都是值得信任的，因为它假设这些都是直接由 ELF 文件提供的或者是它自己在开始时初始化的。然而，当一个攻击者能够修改这些数据时，这个假设就不成立 了。一些动态装载器(FreeBSD)会验证自己接收到的输入。然而，他们还是完全地信任控制结构 ，但这些也会可以轻易地破坏。</p>
+<h5 id="1-无保护-1"><a href="#1-无保护-1" class="headerlink" title="1.无保护"></a>1.无保护</h5><p><strong>原理：</strong><br>  动态装载器从 .rel.plt 中的 Elf_Rel 结构开始工作，顺着其中的下标找到 .dynsym 段中对应 Elf_Sym 结构的位置，并终使用它确定待解析符号的名称(在 .dynstr 段中的一段字符串)。简单的调用任意函数的办法就是使用希望的函数的名称覆盖字符串表中的条目 ，然后再调用动态装载器，但这是不可能的，因为保存着动态符号字符串表的段，即.dynstr，是不可写的。<br><strong>过程：</strong><br>  动态装载器是从 .dynamic 段的 DT_STRTAB 条目中获得 .dynstr 段的地址的，而且 DT_STRTAB 条目的位置是已知的，默认情况下也可写。我们可以将这个条目的 d_val 域覆盖为 .bss 段。 这块内存区域上将会包含一段字符串，比如 system。到了这一步，攻击者需要选择一个已经存在的符号，它的偏移在伪造的字符串表中正好指向 system 的位置，接着调用其对应的符号解析重定位过程。可以通过将其重定位项的偏移压栈并跳转到 PLT0 实现。<br><strong>限制：</strong><br>   这种方式非常简单，但仅当二进制程序的 .dynamic 段可写时有效。对于使用部分或完全 RELRO 编译的二进制程序，需要使用更复杂的攻击。</p>
+<h5 id="2-部分保护-1"><a href="#2-部分保护-1" class="headerlink" title="2.部分保护"></a>2.部分保护</h5><p><strong>原理：</strong><br>  _dl_runtime_resolve 函数的第二个参数是 Elf_Rel 条目在 .rel.plt 段中对应当前请求函数的偏移。动态装载器将这个值加上 .rel.plt 的基地址来得到目标 Elf_Rel 结构的绝对地址。然而多数动态装载器实现不去检查重定位表的边界。这就表明如果一个大于 .rel.plt 的值传到 _dl_runtime_resolve 中，装载器将会认为特定的地址上的数据是一个 Elf_Rel 结构并使用它，即使那里已经超出了.rel .plt段的范围。<br><strong>过程：</strong><br>  计算一个新的 reloc_arg 参数，将 _dl_runtime_resolve 解析的位置劫持到一个可控内存。然后在那里构造一个 Elf_Rel 结构，并填写 r_offset 的值为一个可写的内存地址，将最后解析出的函数地址写在那里。同时，r_info 也要修改成一个可控区域处。并在该区域伪造一个 Elf_Sym 结构，其中的 st_name 域，指向另一个可控区域，并在该处填写要伪造成的函数名(例：system)。<br>  简而言之，该过程伪造了函数链接中所需要的所有结构(Elf_Sym Elf_Rel .dynstr)，通过控制 reloc_arg 指向到伪造的 Elf_Rel ，再通过Elf_Rel 中的 r_info 找到伪造的 Elf_Sym 最后通过 Elf_Sym 的 st_name 找到最终伪造后需要解析的函数(例：system)，解析完后通过 Elf_Rel 的 r_offset 写回到正确位置，达到劫持函数解析的目的，最终执行自己想要执行的函数。<br><strong>限制：</strong><br>  首先，Elf_Rel 的下标需要是正数，因为 r_info 域在 ELF 标准中规定是一个无符号整数。这就意味着在实际中这块可写的内存空间(例如.bss段)必须是位于 .dynsym 段之后。这种情况总是满足的。另一个限制是 ELF 会使用的符号版本系统。在这种情况下，Elf_Rel 的 r_info 域不仅用作动态符号表中的下标，也用作符号版本表(.gnu.version段)中的下标。<br><strong>扩充方法：</strong><br>  可以通过修改指向程序那一层的 link_map，具体做法是把该层 link_map-&gt;l_info[DT_STRTAB]-&gt;st_value 的值劫持到一个我们可控的区域，然后在该区域填充伪造函数，其实该方法也是通过修改 .dynstr 的方式实现攻击的手法。不过该方法必须有能够改写 st_value 值所需要的 gadget。</p>
+<h5 id="3-完全保护-1"><a href="#3-完全保护-1" class="headerlink" title="3.完全保护"></a>3.完全保护</h5><p><strong>原理：</strong><br>  DT_DEBUG 条目的值是动态装载器在加载时设置好的，它指向一个 r_debug 类型的数据结构。这个数据结构保存着调试 器用来标识动态装载器的基地址并拦截相应事件需要的信息。此外，这个结构的 r_map 域保存着一个指向 link_map 链表头部的指针。<br><strong>过程：</strong><br>  攻击者使用 DT_DEBUG 这个动态条目来获取 r_debug 结构。接着，解引用 r_map 域从而得到主程序的 link_map 结构。然后像上边<strong>扩充方法</strong>那样破坏 l_info[DT_STRTAB]。接着攻击者同样需要恢复 _dl_runtime_resolve 函数的指针，通过 link_map-&gt;l_next 获取其他链接库中用到的该函数。具体获取手法是攻击者通过 l_info[DT_PLTGOT] 来获取对应的符号，然后通过 st_value 获取 .plt.got 节所在的地址，前面讨论过，该节的第三个偏移所存放的内容即为 _dl_runtime_resolve 函数地址。不过在这一切都做好之后，还有一个问题值得关注，_dl_runtime_resolve 不仅仅会调用目标函数，还会尝试将它的地址写到 GOT 项中。因为完全 RELRO 保护下 GOT 是不可写的，所以程序就会崩溃。不过我们可以通过伪造 link_map 中的 DT_JMPREL 动态条目来绕过这个问题。(具体操作方式和<strong>扩充方法</strong>中修改 .dynstr 类似)原本 DT_JMPREL 指向 .rel.dyn 段，我们将其改为一块可控区域，并那里写有一个 Elf_Rel 结构，并将其 r_offset 域指向一块可写的内存区域，其 r_info 指向我们的目标符号。至此，我们就完成了整个攻击过程。</p>
+
       
     </div>
 
@@ -1091,171 +1352,6 @@
           <!--noindex-->
             <div class="post-button">
               <a class="btn" href="/2022/03/08/%E5%85%AD%E3%80%81%E6%9B%B4%E7%81%B5%E6%B4%BB%E7%9A%84%E5%AE%9A%E4%BD%8D%E5%86%85%E5%AD%98%E5%9C%B0%E5%9D%80%E7%9A%84%E6%96%B9%E6%B3%95/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/03/08/%E4%BA%94%E3%80%81%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E6%AE%B5%E7%9A%84%E7%A8%8B%E5%BA%8F/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/03/08/%E4%BA%94%E3%80%81%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E6%AE%B5%E7%9A%84%E7%A8%8B%E5%BA%8F/" class="post-title-link" itemprop="url">五、包含多个段的程序</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-03-08 00:41:59 / 修改时间：00:53:05" itemprop="dateCreated datePublished" datetime="2022-03-08T00:41:59+08:00">2022-03-08</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%B1%87%E7%BC%96%EF%BC%9A%E4%BB%8E%E9%9B%B6%E5%BC%80%E5%A7%8B%E7%9A%84%E5%BC%82%E4%B8%96%E7%95%8C/" itemprop="url" rel="index"><span itemprop="name">汇编：从零开始的异世界</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <h1 id="五、包含多个段的程序"><a href="#五、包含多个段的程序" class="headerlink" title="五、包含多个段的程序"></a>五、包含多个段的程序</h1><p><em><strong><u>程序中对段名的引用，将被编译器处理为一个表示段地址的数值。</u></strong></em></p>
-<figure class="highlight plaintext"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">mov ax, data </span><br><span class="line"></span><br><span class="line">mov ds, ax </span><br><span class="line"></span><br><span class="line">mov bx, ds:[6]</span><br></pre></td></tr></table></figure>
-
-<h2 id="在代码段中使用数据"><a href="#在代码段中使用数据" class="headerlink" title="在代码段中使用数据"></a>在代码段中使用数据</h2>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/03/08/%E4%BA%94%E3%80%81%E5%8C%85%E5%90%AB%E5%A4%9A%E4%B8%AA%E6%AE%B5%E7%9A%84%E7%A8%8B%E5%BA%8F/#more" rel="contents">
-                阅读全文 &raquo;
-              </a>
-            </div>
-          <!--/noindex-->
-        
-      
-    </div>
-
-    
-    
-    
-
-    <footer class="post-footer">
-        <div class="post-eof"></div>
-      
-    </footer>
-  </article>
-</div>
-
-
-
-
-    
-
-
-<div class="post-block">
-  
-  
-
-  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="">
-    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2022/02/14/Love%204%20u/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="image" content="/images/avatar.gif">
-      <meta itemprop="name" content="E1iauk_S">
-      <meta itemprop="description" content="卷死他们捏！">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="E1iaukのblog">
-    </span>
-      <header class="post-header">
-        <h2 class="post-title" itemprop="name headline">
-          <a href="/2022/02/14/Love%204%20u/" class="post-title-link" itemprop="url">情人节快乐（bushi</a>
-        </h2>
-
-        <div class="post-meta-container">
-          <div class="post-meta">
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-calendar"></i>
-      </span>
-      <span class="post-meta-item-text">发表于</span>
-      
-
-      <time title="创建时间：2022-02-14 15:48:57 / 修改时间：16:11:59" itemprop="dateCreated datePublished" datetime="2022-02-14T15:48:57+08:00">2022-02-14</time>
-    </span>
-    <span class="post-meta-item">
-      <span class="post-meta-item-icon">
-        <i class="far fa-folder"></i>
-      </span>
-      <span class="post-meta-item-text">分类于</span>
-        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
-          <a href="/categories/%E6%95%B4%E6%B4%BB/" itemprop="url" rel="index"><span itemprop="name">整活</span></a>
-        </span>
-    </span>
-
-  
-</div>
-
-        </div>
-      </header>
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-          <p>今天是情人节啊<br>好像和我也没啥关系<br>所以<br>呃呃 就整个活算了<br>在网页后面输入Love 4 u即可进入快乐星球~</p>
-          <!--noindex-->
-            <div class="post-button">
-              <a class="btn" href="/2022/02/14/Love%204%20u/#more" rel="contents">
                 阅读全文 &raquo;
               </a>
             </div>
