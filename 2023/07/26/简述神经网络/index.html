@@ -1,0 +1,519 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: light)">
+<meta name="theme-color" content="#222" media="(prefers-color-scheme: dark)"><meta name="generator" content="Hexo 6.0.0">
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png">
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png">
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png">
+  <link rel="mask-icon" href="/images/logo.svg" color="#222">
+
+<link rel="stylesheet" href="/css/main.css">
+
+
+
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free@5.15.4/css/all.min.css" integrity="sha256-mUZM63G8m73Mcidfrv5E+Y61y7a12O5mW4ezU3bxqW4=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/animate.css@3.1.1/animate.min.css" integrity="sha256-PR7ttpcvz8qrF57fur/yAx1qXMFJeJFiA6pSzWi0OIE=" crossorigin="anonymous">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/themes/blue/pace-theme-minimal.css">
+  <script src="https://cdn.jsdelivr.net/npm/pace-js@1.2.4/pace.min.js" integrity="sha256-gqd7YTjg/BtfqWSwsJOvndl0Bxc8gFImLEkXQT8+qj0=" crossorigin="anonymous"></script>
+
+<script class="next-config" data-name="main" type="application/json">{"hostname":"e1iauks.github.io","root":"/","images":"/images","scheme":"Gemini","darkmode":true,"version":"8.9.0","exturl":false,"sidebar":{"position":"left","display":"post","padding":18,"offset":12},"copycode":true,"bookmark":{"enable":false,"color":"#222","save":"auto"},"mediumzoom":false,"lazyload":false,"pangu":false,"comments":{"style":"tabs","active":null,"storage":true,"lazyload":false,"nav":null},"stickytabs":false,"motion":{"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"fadeInDown","post_body":"fadeInDown","coll_header":"fadeInLeft","sidebar":"fadeInUp"}},"prism":false,"i18n":{"placeholder":"搜索...","empty":"没有找到任何搜索结果：${query}","hits_time":"找到 ${hits} 个搜索结果（用时 ${time} 毫秒）","hits":"找到 ${hits} 个搜索结果"}}</script><script src="/js/config.js"></script>
+<meta name="description" content="简述神经网络任务描述如下图，我们已知四个数据点(1,1)(-1,1)(-1,-1)(1,-1)，这四个点分别对应I~IV象限，如果这时候给我们一个新的坐标点（比如(2,2)），那么它应该属于哪个象限呢？（没错，当然是第I象限，但我们的任务是要让机器知道） “分类”是神经网络的一大应用，我们使用神经网络完成这个分类任务。">
+<meta property="og:type" content="article">
+<meta property="og:title" content="简述神经网络">
+<meta property="og:url" content="https://e1iauks.github.io/2023/07/26/%E7%AE%80%E8%BF%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/index.html">
+<meta property="og:site_name" content="E1iaukのblog">
+<meta property="og:description" content="简述神经网络任务描述如下图，我们已知四个数据点(1,1)(-1,1)(-1,-1)(1,-1)，这四个点分别对应I~IV象限，如果这时候给我们一个新的坐标点（比如(2,2)），那么它应该属于哪个象限呢？（没错，当然是第I象限，但我们的任务是要让机器知道） “分类”是神经网络的一大应用，我们使用神经网络完成这个分类任务。">
+<meta property="og:locale" content="zh_CN">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-69dd9ac61229c3e891c11343443d814e_720w.webp">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-6fac69d2abab24639943ebaab0b70bde_720w.webp">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-7ee8cabcbd707dd4deab7155af2ba4cd_720w.webp">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-b31ecd1eea01a5e52968075778cb9699_720w.webp">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-0c8c9f5ea2376623cb31ba74e9256627_720w.webp">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-5600c3448f3cb260702e7460cfb0be31_720w.webp">
+<meta property="og:image" content="https://pic1.zhimg.com/80/v2-0ced86f32dfa241fc9de10421edbd9b4_720w.webp">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-3ad93ae576918ff385485dab6a2e6b87_720w.webp">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-01285f87ff9d523f62d2d4f6586583c5_720w.webp">
+<meta property="og:image" content="https://pic3.zhimg.com/80/v2-55f56e273500c8881440877d9c43ebba_720w.webp">
+<meta property="og:image" content="https://pic2.zhimg.com/80/v2-ce4acebca3fecaf429a077e16ff989d9_720w.webp">
+<meta property="og:image" content="https://pic4.zhimg.com/80/v2-4dfad8b96d10df776afdcaa618d59857_720w.webp">
+<meta property="article:published_time" content="2023-07-26T09:48:59.000Z">
+<meta property="article:modified_time" content="2023-07-27T16:00:16.973Z">
+<meta property="article:author" content="E1iauk_S">
+<meta property="article:tag" content="人工智能">
+<meta property="article:tag" content="AI">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://pic3.zhimg.com/80/v2-69dd9ac61229c3e891c11343443d814e_720w.webp">
+
+
+<link rel="canonical" href="https://e1iauks.github.io/2023/07/26/%E7%AE%80%E8%BF%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+
+
+
+<script class="next-config" data-name="page" type="application/json">{"sidebar":"","isHome":false,"isPost":true,"lang":"zh-CN","comments":true,"permalink":"https://e1iauks.github.io/2023/07/26/%E7%AE%80%E8%BF%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/","path":"2023/07/26/简述神经网络/","title":"简述神经网络"}</script>
+
+<script class="next-config" data-name="calendar" type="application/json">""</script>
+<title>简述神经网络 | E1iaukのblog</title>
+  
+
+  <script data-pjax>
+    var _hmt = _hmt || [];
+    (function() {
+      var host = window.location.host;
+      if (host.indexOf("127.0.0.1") == -1 && host.indexOf("localhost") == -1) {
+        var hm = document.createElement("script");
+        hm.src = "https://hm.baidu.com/hm.js?tug63d4s3hlw9lz2hdtfwhtl0rxay";
+        var s = document.getElementsByTagName("script")[0];
+        s.parentNode.insertBefore(hm, s);
+      }
+    })();
+  </script>
+
+
+
+
+  <noscript>
+    <link rel="stylesheet" href="/css/noscript.css">
+  </noscript>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" class="use-motion">
+  <div class="headband"></div>
+
+  <main class="main">
+    <header class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-container">
+  <div class="site-nav-toggle">
+    <div class="toggle" aria-label="切换导航栏" role="button">
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+        <span class="toggle-line"></span>
+    </div>
+  </div>
+
+  <div class="site-meta">
+
+    <a href="/" class="brand" rel="start">
+      <i class="logo-line"></i>
+      <p class="site-title">E1iaukのblog</p>
+      <i class="logo-line"></i>
+    </a>
+  </div>
+
+  <div class="site-nav-right">
+    <div class="toggle popup-trigger">
+    </div>
+  </div>
+</div>
+
+
+
+<nav class="site-nav">
+  <ul class="main-menu menu">
+        <li class="menu-item menu-item-home"><a href="/" rel="section"><i class="fa fa-home fa-fw"></i>首页</a></li>
+        <li class="menu-item menu-item-tags"><a href="/tags/" rel="section"><i class="fa fa-tags fa-fw"></i>标签</a></li>
+        <li class="menu-item menu-item-categories"><a href="/categories/" rel="section"><i class="fa fa-th fa-fw"></i>分类</a></li>
+        <li class="menu-item menu-item-archives"><a href="/archives/" rel="section"><i class="fa fa-archive fa-fw"></i>归档</a></li>
+  </ul>
+</nav>
+
+
+
+
+</div>
+        
+  
+  <div class="toggle sidebar-toggle" role="button">
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+    <span class="toggle-line"></span>
+  </div>
+
+  <aside class="sidebar">
+
+    <div class="sidebar-inner sidebar-nav-active sidebar-toc-active">
+      <ul class="sidebar-nav">
+        <li class="sidebar-nav-toc">
+          文章目录
+        </li>
+        <li class="sidebar-nav-overview">
+          站点概览
+        </li>
+      </ul>
+
+      <div class="sidebar-panel-container">
+        <!--noindex-->
+        <div class="post-toc-wrap sidebar-panel">
+            <div class="post-toc animated"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#%E7%AE%80%E8%BF%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.</span> <span class="nav-text">简述神经网络</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%BB%BB%E5%8A%A1%E6%8F%8F%E8%BF%B0"><span class="nav-number">1.1.</span> <span class="nav-text">任务描述</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#%E4%B8%A4%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C"><span class="nav-number">1.2.</span> <span class="nav-text">两层神经网络</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#1-%E7%AE%80%E5%8C%96%E7%9A%84%E4%B8%A4%E5%B1%82%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C%E5%88%86%E6%9E%90"><span class="nav-number">1.3.</span> <span class="nav-text">1.简化的两层神经网络分析</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#2-%E6%BF%80%E6%B4%BB%E5%B1%82"><span class="nav-number">1.4.</span> <span class="nav-text">2.激活层</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#3-%E8%BE%93%E5%87%BA%E7%9A%84%E6%AD%A3%E8%A7%84%E5%8C%96"><span class="nav-number">1.5.</span> <span class="nav-text">3.输出的正规化</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#4-%E5%A6%82%E4%BD%95%E8%A1%A1%E9%87%8F%E8%BE%93%E5%87%BA%E7%9A%84%E5%A5%BD%E5%9D%8F"><span class="nav-number">1.6.</span> <span class="nav-text">4.如何衡量输出的好坏</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#5-%E5%8F%8D%E5%90%91%E4%BC%A0%E6%92%AD%E4%B8%8E%E5%8F%82%E6%95%B0%E4%BC%98%E5%8C%96"><span class="nav-number">1.7.</span> <span class="nav-text">5.反向传播与参数优化</span></a></li></ol></li></ol></div>
+        </div>
+        <!--/noindex-->
+
+        <div class="site-overview-wrap sidebar-panel">
+          <div class="site-author site-overview-item animated" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <img class="site-author-image" itemprop="image" alt="E1iauk_S"
+      src="/images/avatar.gif">
+  <p class="site-author-name" itemprop="name">E1iauk_S</p>
+  <div class="site-description" itemprop="description">卷死他们捏！</div>
+</div>
+<div class="site-state-wrap site-overview-item animated">
+  <nav class="site-state">
+      <div class="site-state-item site-state-posts">
+        <a href="/archives/">
+          <span class="site-state-item-count">21</span>
+          <span class="site-state-item-name">日志</span>
+        </a>
+      </div>
+      <div class="site-state-item site-state-categories">
+          <a href="/categories/">
+        <span class="site-state-item-count">7</span>
+        <span class="site-state-item-name">分类</span></a>
+      </div>
+      <div class="site-state-item site-state-tags">
+          <a href="/tags/">
+        <span class="site-state-item-count">12</span>
+        <span class="site-state-item-name">标签</span></a>
+      </div>
+  </nav>
+</div>
+
+
+
+        </div>
+      </div>
+    </div>
+  </aside>
+  <div class="sidebar-dimmer"></div>
+
+
+    </header>
+
+    
+  <div class="back-to-top" role="button" aria-label="返回顶部">
+    <i class="fa fa-arrow-up"></i>
+    <span>0%</span>
+  </div>
+  <div class="reading-progress-bar"></div>
+
+<noscript>
+  <div class="noscript-warning">Theme NexT works best with JavaScript enabled</div>
+</noscript>
+
+
+    <div class="main-inner post posts-expand">
+
+
+  
+
+
+<div class="post-block">
+  
+  
+
+  <article itemscope itemtype="http://schema.org/Article" class="post-content" lang="zh-CN">
+    <link itemprop="mainEntityOfPage" href="https://e1iauks.github.io/2023/07/26/%E7%AE%80%E8%BF%B0%E7%A5%9E%E7%BB%8F%E7%BD%91%E7%BB%9C/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="image" content="/images/avatar.gif">
+      <meta itemprop="name" content="E1iauk_S">
+      <meta itemprop="description" content="卷死他们捏！">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="E1iaukのblog">
+    </span>
+      <header class="post-header">
+        <h1 class="post-title" itemprop="name headline">
+          简述神经网络
+        </h1>
+
+        <div class="post-meta-container">
+          <div class="post-meta">
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar"></i>
+      </span>
+      <span class="post-meta-item-text">发表于</span>
+
+      <time title="创建时间：2023-07-26 17:48:59" itemprop="dateCreated datePublished" datetime="2023-07-26T17:48:59+08:00">2023-07-26</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-calendar-check"></i>
+      </span>
+      <span class="post-meta-item-text">更新于</span>
+      <time title="修改时间：2023-07-28 00:00:16" itemprop="dateModified" datetime="2023-07-28T00:00:16+08:00">2023-07-28</time>
+    </span>
+    <span class="post-meta-item">
+      <span class="post-meta-item-icon">
+        <i class="far fa-folder"></i>
+      </span>
+      <span class="post-meta-item-text">分类于</span>
+        <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+          <a href="/categories/%E4%BA%A4%E5%8F%89%E5%AD%A6%E7%A7%91/" itemprop="url" rel="index"><span itemprop="name">交叉学科</span></a>
+        </span>
+    </span>
+
+  
+    <span class="post-meta-item" title="阅读次数" id="busuanzi_container_page_pv">
+      <span class="post-meta-item-icon">
+        <i class="far fa-eye"></i>
+      </span>
+      <span class="post-meta-item-text">阅读次数：</span>
+      <span id="busuanzi_value_page_pv"></span>
+    </span>
+</div>
+
+        </div>
+      </header>
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+        <h1 id="简述神经网络"><a href="#简述神经网络" class="headerlink" title="简述神经网络"></a>简述神经网络</h1><h2 id="任务描述"><a href="#任务描述" class="headerlink" title="任务描述"></a>任务描述</h2><p>如下图，我们已知四个数据点(1,1)(-1,1)(-1,-1)(1,-1)，这四个点分别对应I~IV象限，如果这时候给我们一个新的坐标点（比如(2,2)），那么它应该属于哪个象限呢？（没错，当然是第I象限，但我们的任务是要让机器知道）</p>
+<p>“分类”是神经网络的一大应用，我们使用神经网络完成这个分类任务。</p>
+<span id="more"></span>
+
+<p><img src="https://pic3.zhimg.com/80/v2-69dd9ac61229c3e891c11343443d814e_720w.webp" alt="img"></p>
+<p>分类任务</p>
+<h2 id="两层神经网络"><a href="#两层神经网络" class="headerlink" title="两层神经网络"></a>两层神经网络</h2><p>这里我们构建一个两层神经网络，理论上两层神经网络已经可以拟合任意函数。这个神经网络的结构如下图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-6fac69d2abab24639943ebaab0b70bde_720w.webp" alt="img"></p>
+<p>图1.两层神经网络的一种典型结构</p>
+<p>是不是觉得有点复杂，没关系，我们一步步看，其实很容易理解。</p>
+<h2 id="1-简化的两层神经网络分析"><a href="#1-简化的两层神经网络分析" class="headerlink" title="1.简化的两层神经网络分析"></a><strong>1.简化的两层神经网络分析</strong></h2><p>首先去掉图1中一些难懂的东西，如下图（请仔细看一下图中的标注）：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-7ee8cabcbd707dd4deab7155af2ba4cd_720w.webp" alt="img"></p>
+<p>图2.简化过后的两层神经网络</p>
+<p><strong>1.1.输入层</strong></p>
+<p>在我们的例子中，输入层是坐标值，例如（1,1），这是一个包含两个元素的数组，也可以看作是一个1<em>2的矩阵。输入层的元素维度与输入量的特征息息相关，如果输入的是一张32</em>32像素的灰度图像，那么输入层的维度就是32*32。</p>
+<p><strong>1.2.从输入层到隐藏层</strong></p>
+<p>连接输入层和隐藏层的是W1和b1。由X计算得到H十分简单，就是矩阵运算：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-b31ecd1eea01a5e52968075778cb9699_720w.webp" alt="img"></p>
+<p>如果你学过线性代数，对这个式子一定不陌生。如上图中所示，在设定隐藏层为50维（也可以理解成50个神经元）之后，矩阵H的大小为（1*50）的矩阵。</p>
+<p><strong>1.3.从隐藏层到输出层</strong></p>
+<p>连接隐藏层和输出层的是W2和b2。同样是通过矩阵运算进行的：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-0c8c9f5ea2376623cb31ba74e9256627_720w.webp" alt="img"></p>
+<p><strong>1.4.分析</strong></p>
+<p>通过上述两个线性方程的计算，我们就能得到最终的输出Y了，但是如果你还对线性代数的计算有印象的话，应该会知道：***一系列线性方程的运算最终都可以用一个线性方程表示***。也就是说，上述两个式子联立后可以用一个线性方程表达。对于两次神经网络是这样，就算网络深度加到100层，也依然是这样。这样的话神经网络就失去了意义。</p>
+<p>所以这里要对网络注入灵魂：<strong>激活层</strong>。</p>
+<h2 id="2-激活层"><a href="#2-激活层" class="headerlink" title="2.激活层"></a>2.激活层</h2><p>简而言之，激活层是为矩阵运算的结果添加非线性的。常用的激活函数有三种，分别是阶跃函数、Sigmoid和ReLU。不要被奇怪的函数名吓到，其实它们的形式都很简单，如下图：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-5600c3448f3cb260702e7460cfb0be31_720w.webp" alt="img"></p>
+<p>图3.三种常用的激活函数</p>
+<p>阶跃函数：当输入小于等于0时，输出0；当输入大于0时，输出1。</p>
+<p>Sigmoid：当输入趋近于正无穷/负无穷时，输出无限接近于1/0。</p>
+<p>ReLU：当输入小于0时，输出0；当输入大于0时，输出等于输入。</p>
+<p>其中，阶跃函数输出值是跳变的，且只有二值，较少使用；Sigmoid函数在当x的绝对值较大时，曲线的斜率变化很小（梯度消失），并且计算较复杂；ReLU是当前较为常用的激活函数。</p>
+<p>激活函数具体是怎么计算的呢？</p>
+<p>假如经过公式<strong>H=X*W1+b1</strong>计算得到的H值为：(1,-2,3,-4,7…)，那么经过阶跃函数激活层后就会变为(1,0,1,0,1…)，经过ReLU激活层之后会变为(1,0,3,0,7…)。</p>
+<p>需要注意的是，每个隐藏层计算（矩阵线性运算）之后，都需要加一层激活层，要不然该层线性计算是没有意义的。</p>
+<p>此时的神经网络变成了如下图所示的形式：</p>
+<p><img src="https://pic1.zhimg.com/80/v2-0ced86f32dfa241fc9de10421edbd9b4_720w.webp" alt="img"></p>
+<p>图4.加上激活层的两层神经网络</p>
+<p>我们都知道（？）神经网络是分为“训练”和“使用”两个步骤的。如果是在“使用”的步骤，图4就已经完成整个过程了，在求得的Y（大小为1*4）矩阵中，数值最大的就代表着当前分类。</p>
+<p>但是对于用于“训练”的网络，图4还远远不够。起码当前的输出Y，还不够“漂亮”。</p>
+<h2 id="3-输出的正规化"><a href="#3-输出的正规化" class="headerlink" title="3.输出的正规化"></a><strong>3.输出的正规化</strong></h2><p>在图4中，输出Y的值可能会是(3,1,0.1,0.5)这样的矩阵，诚然我们可以找到里边的最大值“3”，从而找到对应的分类为I，但是这并不直观。我们想让最终的输出为<strong>概率</strong>，也就是说可以生成像(90%,5%,2%,3%)这样的结果，这样做不仅可以找到最大概率的分类，而且可以知道各个分类计算的概率值。</p>
+<p>具体是怎么计算的呢？</p>
+<p>计算公式如下：</p>
+<p><img src="https://pic4.zhimg.com/80/v2-3ad93ae576918ff385485dab6a2e6b87_720w.webp" alt="img"></p>
+<p>简单来说分三步进行：（1）以e为底对所有元素求指数幂；（2）将所有指数幂求和；（3）分别将这些指数幂与该和做商。</p>
+<p>这样求出的结果中，所有元素的和一定为1，而每个元素可以代表概率值。</p>
+<p>我们将使用这个计算公式做输出结果正规化处理的层叫做“Softmax”层。此时的神经网络将变成如下图所示：</p>
+<p><img src="https://pic2.zhimg.com/80/v2-01285f87ff9d523f62d2d4f6586583c5_720w.webp" alt="img"></p>
+<p>图5.输出正规化之后的神经网络</p>
+<h2 id="4-如何衡量输出的好坏"><a href="#4-如何衡量输出的好坏" class="headerlink" title="4.如何衡量输出的好坏"></a>4.如何衡量输出的好坏</h2><p>通过Softmax层之后，我们得到了I，II，III和IV这四个类别分别对应的概率，但是要注意，这是神经网络计算得到的概率值结果，而非真实的情况。</p>
+<p>比如，Softmax输出的结果是(90%,5%,3%,2%)，真实的结果是(100%,0,0,0)。虽然输出的结果可以正确分类，但是与真实结果之间是有差距的，一个优秀的网络对结果的预测要无限接近于100%，为此，我们需要将Softmax输出结果的好坏程度做一个“量化”。</p>
+<p>一种直观的解决方法，是用1减去Softmax输出的概率，比如1-90%=0.1。不过更为常用且巧妙的方法是，求<strong>对数的负数</strong>。</p>
+<p>还是用90%举例，对数的负数就是：-log0.9=0.046</p>
+<p>可以想见，概率越接近100%，该计算结果值越接近于0，说明结果越准确，该输出叫做“<strong>交叉熵损失</strong>（Cross Entropy Error）”。</p>
+<p>我们训练神经网络的目的，就是尽可能地减少这个“交叉熵损失”。</p>
+<p>此时的网络如下图：</p>
+<p><img src="https://pic3.zhimg.com/80/v2-55f56e273500c8881440877d9c43ebba_720w.webp" alt="img"></p>
+<p>图6.计算交叉熵损失后的神经网络</p>
+<h2 id="5-反向传播与参数优化"><a href="#5-反向传播与参数优化" class="headerlink" title="5.反向传播与参数优化"></a>5.反向传播与参数优化</h2><p>上边的1~4节，讲述了神经网络的正向传播过程。一句话复习一下：<strong>神经网络的传播都是形如Y=WX+b的矩阵运算；为了给矩阵运算加入非线性，需要在隐藏层中加入激活层；输出层结果需要经过Softmax层处理为概率值，并通过交叉熵损失来量化当前网络的优劣。</strong></p>
+<p>算出交叉熵损失后，就要开始反向传播了。其实反向传播就是一个<strong>参数优化</strong>的过程，优化对象就是网络中的所有W和b（因为其他所有参数都是确定的）。</p>
+<p>神经网络的神奇之处，就在于它可以自动做W和b的优化，在深度学习中，参数的数量有时会上亿，不过其优化的原理和我们这个两层神经网络是一样的。</p>
+<p>这里举一个形象的例子描述一下这个参数优化的原理和过程：</p>
+<p>假设我们操纵着一个球型机器行走在沙漠中</p>
+<p><img src="https://pic2.zhimg.com/80/v2-ce4acebca3fecaf429a077e16ff989d9_720w.webp" alt="img"></p>
+<p>我们在机器中操纵着四个旋钮，分别叫做W1，b1，W2，b2。当我们旋转其中的某个旋钮时，球形机器会发生移动，但是旋转旋钮大小和机器运动方向之间的对应关系是不知道的。而我们的目的就是<strong>走到沙漠的最低点</strong>。</p>
+<p><img src="https://pic4.zhimg.com/80/v2-4dfad8b96d10df776afdcaa618d59857_720w.webp" alt="img"></p>
+<p>此时我们该怎么办？只能挨个试喽。</p>
+<p>如果增大W1后，球向上走了，那就减小W1。</p>
+<p>如果增大b1后，球向下走了，那就继续增大b1。</p>
+<p>如果增大W2后，球向下走了一大截，那就多增大些W2。</p>
+<p>。。。</p>
+<p>这就是进行参数优化的形象解释（有没有想到求导？），这个方法叫做梯度下降法。</p>
+<p>当我们的球形机器走到最低点时，也就代表着我们的交叉熵损失达到最小（接近于0）。</p>
+<p>关于反向传播，还有许多可以讲的，但是因为内容较多，就放在下一篇文章中说吧。不过上述例子对于理解神经网络参数优化的过程，还是很有帮助的。</p>
+<p><strong>6.迭代</strong></p>
+<p>神经网络需要反复迭代。</p>
+<p>如上述例子中，第一次计算得到的概率是90%，交叉熵损失值是0.046；将该损失值反向传播，使W1,b1,W2,b2做相应微调；再做第二次运算，此时的概率可能就会提高到92%，相应地，损失值也会下降，然后再反向传播损失值，微调参数W1,b1,W2,b2。依次类推，损失值越来越小，直到我们满意为止。</p>
+<p>此时我们就得到了理想的W1,b1,W2,b2。</p>
+<p>此时如果将任意一组坐标作为输入，利用图4或图5的流程，就能得到分类结果。</p>
+<p>好了，你已经了解了神经网络的典型结构了，有没有超过15分钟捏？</p>
+
+    </div>
+
+    
+    
+    
+
+    <footer class="post-footer">
+          <div class="post-tags">
+              <a href="/tags/%E4%BA%BA%E5%B7%A5%E6%99%BA%E8%83%BD/" rel="tag"> <i class="fa fa-tag"></i> 人工智能</a>
+              <a href="/tags/AI/" rel="tag"> <i class="fa fa-tag"></i> AI</a>
+          </div>
+
+        
+
+          <div class="post-nav">
+            <div class="post-nav-item">
+                <a href="/2023/07/25/PyTorch%E4%BD%BF%E7%94%A8%E6%8C%87%E5%8D%97/" rel="prev" title="PyTorch使用指南">
+                  <i class="fa fa-chevron-left"></i> PyTorch使用指南
+                </a>
+            </div>
+            <div class="post-nav-item">
+                <a href="/2023/07/27/Linux%20%E4%BA%8C%E8%BF%9B%E5%88%B6%E7%A8%8B%E5%BA%8F%E4%BF%9D%E6%8A%A4%E6%9C%BA%E5%88%B6%E8%AF%A6%E8%A7%A3/" rel="next" title="Linux 二进制程序保护机制详解">
+                  Linux 二进制程序保护机制详解 <i class="fa fa-chevron-right"></i>
+                </a>
+            </div>
+          </div>
+    </footer>
+  </article>
+</div>
+
+
+
+
+
+
+</div>
+  </main>
+
+  <footer class="footer">
+    <div class="footer-inner">
+
+
+<div class="copyright">
+  &copy; 
+  <span itemprop="copyrightYear">2023</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">E1iauk_S</span>
+</div>
+<div class="busuanzi-count">
+    <span class="post-meta-item" id="busuanzi_container_site_uv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-user"></i>
+      </span>
+      <span class="site-uv" title="总访客量">
+        <span id="busuanzi_value_site_uv"></span>
+      </span>
+    </span>
+    <span class="post-meta-item" id="busuanzi_container_site_pv">
+      <span class="post-meta-item-icon">
+        <i class="fa fa-eye"></i>
+      </span>
+      <span class="site-pv" title="总访问量">
+        <span id="busuanzi_value_site_pv"></span>
+      </span>
+    </span>
+</div>
+  <div class="powered-by">由 <a href="https://hexo.io/" rel="noopener" target="_blank">Hexo</a> & <a href="https://theme-next.js.org/" rel="noopener" target="_blank">NexT.Gemini</a> 强力驱动
+  </div>
+  <div id="site-runtime">
+  <span class="post-meta-item-icon">
+    <i class="fa fa-clock-o"></i>
+  </span>
+  <span id="runtime"></span>
+</div>
+
+<script language="javascript">
+  function isPC() {
+    var userAgentInfo = navigator.userAgent;
+    var agents = ["Android", "iPhone", "SymbianOS", "Windows Phone", "iPad", "iPod"];
+    for (var i = 0; i < agents.length; i++) {
+      if (userAgentInfo.indexOf(agents[i]) > 0) {
+        return false;
+      }
+    }
+    return true;
+  }
+
+  function siteTime(openOnPC, start) {
+    window.setTimeout("siteTime(openOnPC, start)", 1000);
+    var seconds = 1000;
+    var minutes = seconds * 60;
+    var hours = minutes * 60;
+    var days = hours * 24;
+    var years = days * 365;
+      start = new Date("2022-1-26 19:50:00 +0800");
+    var now = new Date();
+    var year = now.getFullYear();
+    var month = now.getMonth() + 1;
+    var date = now.getDate();
+    var hour = now.getHours();
+    var minute = now.getMinutes();
+    var second = now.getSeconds();
+    var diff = now - start;
+
+    var diffYears = Math.floor(diff / years);
+    var diffDays = Math.floor((diff / days) - diffYears * 365);
+    var diffHours = Math.floor((diff - (diffYears * 365 + diffDays) * days) / hours);
+    var diffMinutes = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours) / minutes);
+    var diffSeconds = Math.floor((diff - (diffYears * 365 + diffDays) * days - diffHours * hours - diffMinutes * minutes) / seconds);
+
+    if (openOnPC) {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + " years " + diffDays + " days " + diffHours + " hours " + diffMinutes + " mins " + diffSeconds + " secs";
+    } else {
+      document.getElementById("runtime").innerHTML = "Running: " + diffYears + "y " + diffDays + "d " + diffHours + "h " + diffMinutes + "m " + diffSeconds + "s";
+    }
+  }
+
+  var showOnMobile = false;
+  var openOnPC = isPC();
+  var start = new Date();
+  siteTime(openOnPC, start);
+
+  if (!openOnPC && !showOnMobile) {
+    document.getElementById('site-runtime').style.display = 'none';
+  }
+</script>
+
+
+
+    </div>
+  </footer>
+
+  
+  <script size="300" alpha="0.6" zIndex="-1" src="https://cdn.jsdelivr.net/npm/ribbon.js@1.0.2/dist/ribbon.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/animejs@3.2.1/lib/anime.min.js" integrity="sha256-XL2inqUJaslATFnHdJOi9GfQ60on8Wx1C2H8DYiN1xY=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@next-theme/pjax@0.5.0/pjax.min.js" integrity="sha256-3NkoLDrmHLTYj7csHIZSr0MHAFTXth7Ua/DDt4MRUAg=" crossorigin="anonymous"></script>
+<script src="/js/comments.js"></script><script src="/js/utils.js"></script><script src="/js/motion.js"></script><script src="/js/next-boot.js"></script><script src="/js/pjax.js"></script>
+
+  
+
+
+
+
+  <script src="/js/third-party/pace.js"></script>
+
+  
+  <script data-pjax async src="https://busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script>
+
+
+
+
+  
+
+  <script class="next-config" data-name="enableMath" type="application/json">false</script><script class="next-config" data-name="mathjax" type="application/json">{"enable":true,"tags":"none","js":{"url":"https://cdn.jsdelivr.net/npm/mathjax@3.2.0/es5/tex-mml-chtml.js","integrity":"sha256-r+3itOMtGGjap0x+10hu6jW/gZCzxHsoKrOd7gyRSGY="}}</script>
+<script src="/js/third-party/math/mathjax.js"></script>
+
+
+
+</body>
+</html>
